@@ -1,0 +1,137 @@
+/* main {
+    background: pink;
+    width: 70%;
+    float: left; /
+  }
+  
+  aside {
+    background: green;
+    width: 30%;
+    float: left; 
+  }
+  
+  footer {
+    background: gray;
+    clear: both; 
+  } */
+
+/* CSS ------------------------------------------ INLINE BLOCK ----------------------------------------- */
+
+/* main { 
+  background: pink; 
+  width: 70%; 
+  display: inline-block; 
+  vertical-align: top; 
+} 
+
+aside { 
+  background: green; 
+  width: 30%; 
+  display: inline-block;  
+  margin-left: -4px; 
+} 
+
+footer { 
+  background: gray; 
+  min-height: 150px;
+ }   */
+
+
+/* FLEX ----------------------------------------------------------------------------------------- */
+
+/* body {
+    margin: 0%;
+}
+
+.page .container {
+    display: flex;
+}
+
+.page header {
+    background-color: #ccc;
+    height: 100px;
+}
+
+@media (max-width: 800px) {
+    .page header .div.content-header {
+        width: 100%;
+    }
+}
+
+
+.page header div.content-header {
+    width: 800px;
+    margin: 0 auto;
+}
+
+
+.page .container main {
+    background: pink;
+}
+
+.page .container aside {
+    background: green;
+}
+
+.page footer {
+    background: gray;
+} */
+
+
+/* Com @media screnn ----------------------------------------------------------------------------------------- */
+
+body {
+    margin: 0;
+}
+
+
+header {
+    background-color: #ccc;
+    height: 100px;
+}
+
+header .content-header,
+.page,
+footer .content-footer {
+    width: 800px;
+    margin: 0 auto;
+}
+
+.page .container {
+    display: flex;
+}
+
+.page .container main {
+    background: pink;
+}
+
+.page .container aside {
+    background: green;
+}
+
+footer {
+    background: gray;
+}
+
+/* Responsividade */
+@media screen and (max-width: 500px) {
+
+    header .content-header,
+    .page,
+    footer .content-footer {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .container {
+        flex-direction: row-reverse;
+    }
+}
+
+@media screen and (max-width: 300px) {
+    .container {
+        flex-wrap: wrap;
+    }
+}
+
