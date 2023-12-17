@@ -1,0 +1,56 @@
+{
+  "alunos": [
+    {
+      "nome": "Nélio Frazão Chaves2123",
+      "matricula": "204764522",
+      "curso": "Sistemas para internet",
+      "id": 1
+    },
+    {
+      "nome": "Nélio Frazão Chaves",
+      "matricula": "2047645",
+      "curso": "Sistemas para internet",
+      "id": 2
+    },
+    {
+      "nome": "Nélio Frazão Chaves",
+      "matricula": "0031",
+      "curso": "Sistemas para internet",
+      "id": 3
+    }
+  ],
+  "disciplinas": [
+    {
+      "id": 1,
+      "nome": "Introdução a progração com scripts",
+      "cargaHoraria": "36h",
+      "professor": "Tiago Daniel Fernando Baptista",
+      "status": "Obrigatória",
+      "observacos": "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+    },
+    {
+      "id": 2,
+      "nome": "Fundamentos da Computação",
+      "cargaHoraria": "60h",
+      "professor": "Marcela Vera Mendes",
+      "status": "Obrigatória",
+      "observacos": "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+    },
+    {
+      "id": 2,
+      "nome": "Linguagens de Marcação",
+      "cargaHoraria": "67h",
+      "professor": "Marcela Vera Mendes",
+      "status": "Obrigatória",
+      "observacos": "Lorem ipsum dolor sit amet consectetur adipisicing."
+    },
+    {
+      "id": 3,
+      "nome": "Português Instrumental",
+      "cargaHoraria": "50h",
+      "professor": "Maitê Analu Carolina Aragão",
+      "status": "Opcional",
+      "observacos": "Lorem ipsum dolor sit adipisicing elit."
+    }
+  ]
+}

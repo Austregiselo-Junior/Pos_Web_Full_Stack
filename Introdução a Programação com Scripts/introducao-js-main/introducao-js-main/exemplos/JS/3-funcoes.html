@@ -1,0 +1,55 @@
+<!-- como criar uma funcao -->
+<!-- armazenando o resultado da funcao em uma constante -->
+<!-- funcao de callback  -->
+<!-- funcao anonima  -->
+<!-- arrow function  -->
+<!-- function and destructuring  -->
+<!-- template-string -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <script>
+    function minhaFuncao(param, param2) {
+      console.log('meu Nome:' + param + ' Meu email é' + param2)
+    }
+    const minhaConstFuncao = function (param) {
+      console.log('Sou um função anoônima' + param)
+    }
+
+    
+
+    const funcaoExtra = (paramExtra) => console.log('Nao o que recebo' + { paramExtra })
+    const arr = ['ss', 'bb']
+    const test = 'ssss'
+
+    console.log('typeof', typeof arr === 'object')
+
+    minhaFuncao('email@email.com', 'Nélio');
+    minhaConstFuncao('com params');
+    // função com destructuring 
+    const minhaArrow = ({ param, param1, param2, param3, param4 }) => {
+      
+      // template string
+      console.log(`Sou um arrow func ${param}  ${param1}  ${param2} ${param3}  ${param4}`)
+      
+    }
+    minhaArrow(
+      {
+        param: ' param ',
+        param1: 'param1',
+        param2: 'param2 ',
+        param3: 'param3 ',
+        param4: 'param4 '
+      }
+    )
+    
+
+
+  </script>
+</head>
+
+<body>
+</body>
+
+</html>

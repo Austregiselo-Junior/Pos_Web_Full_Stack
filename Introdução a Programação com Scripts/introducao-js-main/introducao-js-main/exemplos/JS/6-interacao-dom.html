@@ -1,0 +1,78 @@
+<!-- pegar elemento pela tag -->
+<!-- pegar elemento pelo ID -->
+<!-- pegar elemento pela class -->
+<!-- pegar elemento querySelector -->
+<!-- pegar elemento querySelectorAll -->
+<!-- criar um p -->
+<!-- adicionar texto -->
+<!-- adicionar classe -->
+<!-- adicionar id -->
+<!-- adicionar um estilo -->
+<!-- pega um elemento filho -->
+<!-- pega um elemento pai -->
+<!-- pega um elemento irmao nextElementSibling  -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+</head>
+
+<body>
+  <h1 id="t1" class="titulo">Meu cabeçalho</h1>
+  <h2 class="titulo">Meu cabeçalho</h2>
+  <a href="#" id="link">Meu link</a>
+  <div class="container">
+    <p class="text-test">Texto teste</p>
+    <p >Texto teste2</p>
+  </div>
+  <footer>
+    <span>opa</span>
+    <div>epa</div>
+  </footer>
+  <script>
+    // pegar elemento pela tag
+    const tagH1 = document.getElementsByTagName('h1')
+    const tagFooter = document.getElementsByTagName('footer')
+    console.log(tagH1)
+    // console.log(tagFooter)
+    // pegar elemento pelo ID
+    const idH1 = document.getElementById('t1')
+    console.log(idH1)
+    // pegar elemento pela class
+    const classElemnts = document.getElementsByClassName('titulo')
+    console.log(classElemnts)
+    // <!-- pegar elemento querySelector -->
+    const getQuerySelector = document.querySelector('#t1')
+    console.log(getQuerySelector)
+    // <!-- pegar elemento querySelectorAll -->
+    const getQuerySelectorAll = document.querySelectorAll('.titulo')
+    console.log(getQuerySelectorAll)
+    // <!-- criar um p -->
+    const createP = document.createElement('p')
+    console.log(createP)
+    // <!-- adicionar texto -->
+    createP.innerText = 'Um texto qualquer'
+    // <!-- adicionar classe -->
+    createP.classList.add('texto')
+    // createP.classList.remove('texto')
+    // <!-- adicionar id -->
+    createP.id = 'textoid'
+    // <!-- adicionar um atrituto -->
+    createP.setAttribute('role', 'text')
+    // createP.removeAttribute('role')
+    const container = document.querySelector('.container')
+    container.appendChild(createP)
+    // <!-- pega um elemento filho -->
+    const getChild = container.children
+
+    // <!-- pega um elemento pai -->
+    const getP = document.querySelector('.text-test')
+    const getFather = getP.parentNode;
+    getFather.classList.add('teste')
+    console.log(getFather)
+    // <!-- pega um elemento irmao nextElementSibling  -->
+  </script>
+</body>
+
+</html>

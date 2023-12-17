@@ -1,0 +1,133 @@
+<!-- Array -->
+<!-- acessando valores do Array -->
+<!-- acessando valores do objeto -->
+<!-- array de objetos -->
+<!-- destructuring -->
+<!-- destructuring pulando itens -->
+<!-- Object.values -->
+<!-- Object.keys -->
+<!-- some-->
+<!-- every-->
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <script>
+    const myArr = ['String', 2, true];
+    const myObj = {
+      name: 'Nome da Pessa',
+      email: 'email@email.com',
+      phone: '22222222',
+      age: 30,
+      isBoolean: true,
+      func: () => 'string'
+    }
+
+    const myArrObj = [
+      {
+        data: [
+          {
+            name: 'Nome da Pessa',
+            email: 'email@email.com',
+            phone: '22222222',
+          },
+          {
+            name: 'Nome da Pessa2',
+            email: 'email@email.com',
+            phone: '22222222',
+          }
+        ]
+      },
+      {
+        novaChave: 'valor',
+      }
+    ]
+    const index1 = myArr[0]
+    console.log(myObj.name)
+    console.log(index1)
+    console.log(myArrObj[0].data[0].name)
+
+    const myArrObj2 = {
+        name: 'Nome da Pessa',
+        email: 'email@email.com',
+        phone: '22222222',
+        curso: 'informatica',
+        disciplina: 'js',
+      }      
+    
+
+    const [idxString, , idxBoolean] = myArr
+    const { name, phone} = myArrObj2
+
+    console.log(idxString)
+    console.log(name)
+
+    const objKey =  Object.keys(myArrObj2);
+    const objValues =  Object.values(myArrObj2)
+    const objentries =  Object.entries(myArrObj2)
+
+    console.log('objKey', objKey);
+    console.log('objValues', objValues)
+    console.log('objentries', objentries)
+
+    const ages = [12, 44, 22, 50]
+
+    const getAges = ages.some((age) => age > 49)
+
+    console.log('getAges', getAges)
+
+    const canAlura = objValues.some((arg) => arg === 'js') 
+    const canAlura2 = objValues.some((arg) => console.log(arg)) 
+    console.log(canAlura)
+
+    {
+      const arrayDeNumeros = [1, 2, 3, 4, 5, 'ss'];
+      const saoNumeros = (elemento) => typeof elemento === 'string';
+      const todosNumeros = arrayDeNumeros.every(saoNumeros);
+      console.log('todosNumeros', todosNumeros); // Saída: true
+    }
+
+    const objOriginal = {
+      name: 'nome da pessoa',
+      age: 33,
+      email: 'email@email.com',
+      isStudent: true,
+    }
+
+    // spread operator
+    const newObj = {
+      ...objOriginal,
+      subject: 'JS',
+      isStudent: false,
+    }
+
+    const originalState = {
+      data: [],
+      isLoading: true,
+      hasError: false,
+    }
+    const apiDataState = {
+      ...originalState,
+      data: [{
+        name:'pessoa'
+      }],
+      isLoading: false,
+    }
+
+    const apiErrorDataState = {
+      ...originalState,
+      isLoading: false,
+      hasError: true,
+    }
+
+
+    console.log('objOriginal', objOriginal)
+    console.log('newObj', newObj)
+    
+  </script>
+</head>
+
+<body>
+</body>
+
+</html>

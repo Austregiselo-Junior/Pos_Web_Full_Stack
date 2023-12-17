@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Gerador de Números da Mega Sena</title>
+
+  <!-- Bootstrap CSS via CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title">Gerador de Números da Mega Sena</h5>
+          </div>
+          <div class="card-body">
+            <p>Clique no botão abaixo para gerar 6 números aleatórios da Mega Sena:</p>
+            <button 
+              type="button" 
+              class="btn btn-primary" 
+              onclick="gerarNumeros()"
+            >
+                Gerar Números
+            </button>
+            <hr>
+            <h6>Números Gerados:</h6>
+            <ul id="numerosGerados" class="list-group">
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const listGroup = document.querySelector('#numerosGerados');
+
+
+      // Crie um array para armazenar os números gerados
+     
+    const gerarNumeros = () => {
+      let numeros = [];
+      // Adicione a lógica para gerar 6 números da Mega Sena aqui
+      while(numeros.length < 6) {
+        const numeroAleatorio = Math.floor(Math.random() * 60) + 1;
+      // chega se o mesmo numero ja foi gerado
+        if(!numeros.includes(numeroAleatorio)) {
+          numeros.push(numeroAleatorio); 
+        }
+      }
+      listGroup.innerHTML = '';
+      for( const numero of numeros) {
+        const li = document.createElement('li');
+        li.classList.add('list-group-item');
+        li.textContent = numero;
+        listGroup.appendChild(li);
+      }
+    }
+  </script>
+</body>
+
+</html>

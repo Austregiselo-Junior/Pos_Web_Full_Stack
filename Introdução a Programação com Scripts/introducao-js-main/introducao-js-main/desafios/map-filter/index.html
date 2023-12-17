@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // Filtrar apenas os alunos que estão matriculados no curso especificado.
+    // Mapear o resultado para um novo array contendo apenas os nomes e idades desses alunos.
+    // Saída esperada: [{ nome: 'Alice', idade: 20 }, { nome: 'Eva', idade: 25 }, { nome: 'Frank', idade: 24 }]
+    const alunos = [
+      { nome: 'Alice', idade: 20, curso: 'Ciência da Computação' },
+      { nome: 'Bob', idade: 22, curso: 'Engenharia Elétrica' },
+      { nome: 'Carol', idade: 21, curso: 'Matemática' },
+      { nome: 'David', idade: 23, curso: 'Física' },
+      { nome: 'Eva', idade: 25, curso: 'Ciência da Computação' },
+      { nome: 'Frank', idade: 24, curso: 'Ciência da Computação' },
+    ];
+
+
+    const alunosFiltrados = (value) => alunos.filter(aluno => aluno.curso === value)
+      .map(aluno => ({ nome: aluno.nome, idade: aluno.idade }));
+
+    const aluno = alunosFiltrados('Engenharia Elétrica');
+    console.log('alunosFiltrados', aluno)
+
+    console.log(alunos);
+
+    const primeiroNome =[ 'Alice', 'Bob', 'Carol', 'David', 'Eva', 'Frank' ]
+    const segundoNome = ['Silva', 'Santos', 'Souza', 'Santana']
+  
+    const randonFullname = () => {
+      const first = primeiroNome[Math.floor(Math.random() * primeiroNome.length)]
+      const second = segundoNome[Math.floor(Math.random() * segundoNome.length)]
+      return `${first} ${second}`
+    }
+
+    const array = new Array(20).fill(undefined)
+    .map((_, index) => ({ id: index + 1, nome: randonFullname() }));
+
+    const arr1 = ['Pessoa', 'Fulano', 'Sicrano', 'Beltrano']
+    const fill = arr1.fill('Pessoa', 1, 2)
+
+    console.log('fill', fill);
+  
+    console.log(array);
+
+  </script>
+</body>
+
+</html>

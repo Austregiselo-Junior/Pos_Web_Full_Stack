@@ -1,0 +1,86 @@
+<!-- if -->
+<!-- if else -->
+<!-- ternário -->
+<!-- boas práticas -->
+<!-- switch case -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    
+  </head>
+  <body>
+    <script>
+      const ifFunction = () => {
+        const age = 35
+        if(age === 35) {
+          console.log('Tenho 35 anos');
+        } else {
+           console.log('Não Tenho 35 anos')
+        }
+
+        const ternario = age === 35 ? 
+          console.log('ternario Tenho 35 anos') : 
+          console.log('ternario Não Tenho 35 anos')
+
+        console.log('Estou carregando fora do IF')
+      }
+
+      const weekDays = () => {
+        const days = new Date().getDay();
+        // if( days === 0) {
+        //   console.log('Hje é Domingo')
+        // } else if (days === 6) {
+        //   console.log('Hje é sábado')
+        // } else if (days === 5) {
+        //   console.log('Hje é Sexta')
+        // }
+          
+        switch (days) {
+          case 6:
+            console.log('Hje é Sábado');
+            break;
+          case 5:
+            console.log('Hje é Sexta');
+            break;
+          case 4:
+            console.log('Hje é Quinta');
+            break;
+          default:
+            console.log('Nenhum dia selecionado');
+            break;
+        }
+      }
+
+      // booleanos
+      const isBooleanFunc = () => true
+      const hasBooleanFunc = () => true 
+      const canBooleanFunc = () => {
+       return true
+      }
+      
+      const name = 'pessoa'
+
+      const isNamePessoa = () => 
+        name === 'pessoa' ? 
+        'O nome está checado' : 
+        'Nome errado'
+
+        const Istring = () => typeof name === 'string'
+
+      // nome de funcao
+      const minhaFuncaoSiginificado = () => console.log('minha função tem um bom nome')
+
+
+      weekDays()
+
+      const defineAge = () => {
+        const age = 35
+        console.log('Tenho 35 anos');
+      }
+
+      
+      ifFunction()
+
+    </script>  
+  </body>
+</html>

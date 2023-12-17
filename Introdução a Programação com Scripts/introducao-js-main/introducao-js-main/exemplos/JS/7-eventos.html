@@ -1,0 +1,76 @@
+<!-- click -->
+<!-- focus -->
+<!-- blur -->
+<!-- change -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <style>
+      .ativo {
+        border: 5px solid green;
+        outline: none;
+      }
+
+      .result {
+        background-color: blue;
+      }
+      .display {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="t1" class="titulo" >Meu cabeçalho</h1>
+    <a href="#" id="link" >Meu link</a>
+    
+    <input type="text" value="" id="input-text" >
+    <div>
+      <button id="btn" >Mostrar/esconder resultado</button>
+    </div>
+    <select>
+      <option value="" >Selecione sua profissão</option>
+      <option value="Front-end">Front-end</option>
+      <option value="back-end">back-end</option>
+      <option value="Devops">Devops</option>
+    </select>
+
+    <div id="result">
+      <p>Teste</p>
+    </div>
+
+    <footer> 
+      <span>opa</span>
+      <div>epa</div>
+    </footer>
+    
+    <script>
+      const btn = document.querySelector('#btn');
+      const result = document.querySelector('#result');
+      const inputField = document.querySelector('#input-text')
+      inputField.addEventListener('focus', (event) => {
+        console.log(event.target)
+        event.target.classList.add('ativo')
+      })
+
+      inputField.addEventListener('blur', (event) => {
+        event.target.classList.remove('ativo')
+      })
+
+      btn.addEventListener('click', (event) => {
+        result.classList.toggle('display')
+      })
+
+      // setTimeout(() => {
+       
+      //   alert('opa');
+      //  }, 3000);
+
+      const select = document.querySelector('select');
+      select.addEventListener('change', (event) => {
+        console.log(event.target.value)
+        result.innerHTML = `<p class="text"> ${event.target.value} <p>`
+      })
+      console.log(select)
+    </script>
+  </body>
+</html>

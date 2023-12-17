@@ -1,0 +1,42 @@
+<!-- var -->
+<!-- let -->
+<!-- const -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    
+  </head>
+  <body>
+    <div class="test">Minha div</div>
+    <script>
+     
+        // const document = document
+        // console.log('O que estou logando', document)
+        // const minhaDiv = document.querySelector('div')
+        // console.log('div',minhaDiv)
+        const texto = 'texto' + 3
+        const isText = false 
+
+        console.log( typeof texto)
+
+        const pegarDocumentoAntes = document.querySelector('body')
+        console.log('pegarDocumentoAntes', pegarDocumentoAntes)
+        const meuP = document.createElement('p')
+        meuP.innerText = 'Meu texto'
+        
+        console.log(meuP)
+
+        const minhaDiv =  document.querySelector('div')
+
+        console.log(minhaDiv)
+
+        minhaDiv.appendChild(meuP)
+
+        const pegarDocumento = document.querySelector('body')
+
+        console.log(pegarDocumento)
+      
+      
+    </script>
+  </body>
+</html>
