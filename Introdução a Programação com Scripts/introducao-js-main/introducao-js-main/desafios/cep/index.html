@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulário de Contato</title>
+  <!-- Bootstrap CSS via CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+
+  <div class="container mt-5">
+    <h2>Formulário de Contato</h2>
+    <form id="contactForm">
+      <div class="mb-3">
+        <label for="cep" class="form-label">CEP</label>
+        <input type="text" class="form-control" id="cep" name="cep">
+      </div>
+      <div class="mb-3">
+        <label for="logradouro" class="form-label">Logradouro</label>
+        <input type="text" class="form-control" id="logradouro" name="logradouro" disabled>
+      </div>
+      <div class="mb-3">
+        <label for="bairro" class="form-label">Bairro</label>
+        <input type="text" class="form-control" id="bairro" name="bairro" disabled>
+      </div>
+      <div class="mb-3">
+        <label for="localidade" class="form-label">Cidade</label>
+        <input type="text" class="form-control" id="localidade" name="localidade" disabled>
+      </div>
+      <div class="mb-3">
+        <label for="uf" class="form-label">Estado</label>
+        <input type="text" class="form-control" id="uf" name="uf" disabled>
+      </div>
+      <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+  </div>
+  <script>
+    // selecionas os elementos do formulário
+    const cep = document.querySelector('#cep');
+    const logradouro = document.querySelector('#logradouro');
+    const bairro = document.querySelector('#bairro');
+    const localidade = document.querySelector('#localidade');
+    const uf = document.querySelector('#uf');
+
+
+    const fieldsToEnable = ['logradouro', 'bairro', 'localidade', 'uf'];
+
+    const getCep = (cepValue) => {
+      fetch(`https://viacep.com.br/ws/${cepValue}/json/`, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => response.json())
+        .then(
+          data => {
+            logradouro.value = data.logradouro ?? '';
+            // Nullish coalescing operator
+            bairro.value = data.bairro ?? '';
+            localidade.value = data.localidade ?? '';
+            uf.value = data.uf ?? '';
+
+            fieldsToEnable.forEach(fieldName => {
+              const field = document.getElementById(fieldName);
+              console.log(data[fieldName])
+              if (data[fieldName]) {
+                field.setAttribute('disabled', true);
+              } else {
+                field.removeAttribute('disabled');
+              }
+            });
+          }
+        )
+        .catch(err => alert('Cep inválido'))
+    }
+
+    ( async () => {
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/58036442/json/`)
+        return response.json();
+      } catch (err) {
+        alert('Cep inválido')
+      }
+    })();
+
+    const promise1 = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('promise1')
+      }, 1000)
+    })
+
+    const promise2 = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('promise2')
+      }, 2000)
+    })
+
+    // exemplo de Promise.all
+    Promise.all([promise1, promise2]).then((response) => {
+      console.log('promisse all', response)
+    }).catch(err => {
+      console.log(err)
+    })
+
+    // Exemplo de Promise Race
+    Promise.race([promise1, promise2]).then((response) => {
+      console.log('promisse race', response)
+    }).catch(err => {
+      console.log(err)
+    });
+
+    ( async () => {
+      const response = await fetch(`https://viacep.com.br/ws/58036442/json/`)
+      if (response.ok) {
+        const data = response.json();
+        console.log(data)
+      } else {
+        throw new Error('Cep inválido')
+      }
+    })();
+
+
+
+    cep.addEventListener('focusout', (event) => {
+      const cepValue = event.target.value;
+      const cepValueSecondWay = cep.value;
+      // cep.value
+      getCep(cepValue)
+      // getCepResponseOK('50670350')
+    })
+    
+
+
+
+
+
+    // Tarefas a serem realizadas:
+    // https://viacep.com.br/ws/50670350/json/
+    //1 - Utilizar JavaScript para detectar quando o usuário sai do campo CEP (focusout).
+    //2 - Fazer uma requisição à API dos Correios (ViaCEP) para obter informações com base no CEP inserido.
+    //3 - Preencher automaticamente os campos de logradouro, bairro, cidade e estado com os dados recebidos da API.
+    //4 - Desafio extra: Desabilitar os campos que foram preenchidos pela API ou habilitá-los apenas se o logradouro não for fornecido.
+
+  </script>
+
+</body>
+
+</html>

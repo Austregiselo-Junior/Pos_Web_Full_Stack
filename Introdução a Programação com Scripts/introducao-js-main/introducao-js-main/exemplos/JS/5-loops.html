@@ -1,0 +1,133 @@
+<!-- for...in -->
+<!-- for...of: -->
+<!-- for each -->
+<!-- map -->
+<!-- filter -->
+
+<!-- 
+Use o FOR...IN quando quiser iterar sobre as propriedades enumeráveis de um objeto.
+Use o FOR...OF quando quiser iterar sobre os valores de um objeto iterável, como um array ou uma string.
+Use o FOREACH quando quiser uma abordagem mais funcional para iterar sobre elementos de um array. -->
+<!-- usar o exemplo das divs -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+</head>
+
+<body>
+  <div>Teste1</div>
+  <div>Teste2</div>
+  <div>Teste3</div>
+  <script>
+
+    const person = [
+      {
+        name: 'Pessoa',
+        age: 34,
+        occupation: 'Dev'
+      },
+      {
+        name: 'Pessoa Nova',
+        age: 25,
+        occupation: 'PD'
+      },
+      {
+        name: 'Pessoa Nova2',
+        age: 40,
+        occupation: 'PD'
+      }
+    ]
+
+    const newPerson = [];
+
+    for (let index = 0; index < person.length; index++) {
+      const element = person[index];
+      const personData = {
+        nome: person[index].name,
+        idade: person[index].age,
+        ocupacao: person[index].occupation
+      }
+      newPerson.push(personData)
+    }
+
+    for (const key in person) {
+      if (Object.hasOwnProperty.call(person, key)) {
+        const element = person[key];
+        console.log(element)
+      }
+    }
+
+    const objPerson =
+    {
+      name: 'Pessoa',
+      age: 34,
+      occupation: 'Dev'
+    }
+
+
+    for (const iterator of person) {
+      console.log('iterator', iterator)
+    }
+
+    console.log('newPerson', newPerson)
+
+    const getDiv = document.querySelectorAll('div')
+    console.log('getDiv', getDiv);
+
+    for (const idx in getDiv) {
+      if (Object.hasOwnProperty.call(getDiv, idx)) {
+        const element = getDiv[idx];
+        element.innerText = `Minha Div`
+      }
+    }
+
+
+    for (const key of getDiv) {
+      const element = getDiv;
+      console.log(element)
+    }
+
+    getDiv.forEach(element => {
+      console.log('forEach', element)
+    });
+
+    const personMapped = person.map((item) => (
+      {
+        id: `${item.name}-${item.age}`,
+        name: item.name,
+        age: item.age,
+      }
+    ))
+
+    const personFilter = person.filter((item) => {
+      // instrucao
+    //   const item = [
+    //   true,
+    //   false,
+    //   true
+    // ]]
+    console.log('filter', item.age > 30)
+      return item.age > 30
+    }).map((itemPerson) => ({
+        id: `${itemPerson.name}-${itemPerson.age}`,
+        name: 'Pessoa',
+        age: 34,
+        occupation: 'Dev'
+    }))
+
+    const personFilter2 = person.filter((item) => item.age > 30)
+
+    console.log('personFilter', personFilter2)
+   
+    const aluno = [{
+      name: 'aluno'
+    }]
+
+    aluno.length && aluno.map((item) => console.log(item))
+
+  </script>
+</body>
+
+</html>

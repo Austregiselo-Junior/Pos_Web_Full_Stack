@@ -1,0 +1,38 @@
+<!-- Relacionais == === -->
+<!-- Lógicos && || -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <script>
+      const idade = 3
+      const isEnable = false
+      // todas devem voltar true
+       if(idade === 3 && typeof idade === "number" && isEnable) {
+        console.log('Entrou na comparacao end')
+       }
+      // pelo menos uma deve voltar true
+       if((idade === 3 && typeof idade === "number") || isEnable ) {
+        console.log('Entrou na comparacao OU')
+       }
+
+       if ( idade >= 3) {
+        console.log('Entrou na comparacao maior igual')
+       }
+
+       if ( idade > 3) {
+        console.log('Entrou na comparacao maior')
+       }
+
+       if ( idade < 3) {
+        console.log('Entrou na comparacao menor')
+       }
+
+       if ( idade <= 3) {
+        console.log('Entrou na comparacao menor igual')
+       }
+
+    </script>
+  </head>
+  <body>      
+  </body>
+</html>

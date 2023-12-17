@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <!-- percorrer um array -->
+  <!-- pegar todas as notas -->
+  <!-- imprimir o nome e uma mensagem informando se passou ou reprovou -->
+  <!-- a condiçâo para passar de 
+        ano é a nota maior que 7 em cada disciplina -->
+  <script>
+    const alunos = [
+      { nome: 'João', disciplinas: { matematica: 8, portugues: 7, historia: 9 } },
+      { nome: 'Maria', disciplinas: { matematica: 6, portugues: 8, historia: 7 } },
+      { nome: 'Carlos', disciplinas: { matematica: 10, portugues: 8, historia: 9 } }
+    ];
+
+    const resultadoAlunos = []
+    alunos.forEach(aluno => {
+      const notas = Object.values(aluno.disciplinas);
+      const aprovado = notas.every((nota) => nota >= 7 )
+      const approvalMessage = aprovado ? 
+      'O aluno passou de ano' : 
+      'O aluno nâo passou de ano';
+
+      const result = {
+        nome: aluno.nome,
+        mensagem: approvalMessage
+      };
+      
+      resultadoAlunos.push(result)
+    })
+
+    console.log(resultadoAlunos) 
+
+    const resultex = [{
+      nome: 'aluno',
+      mensagem: 'O aluno passou de ano'
+    }]
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Tarefas</title>
+  <style>
+    .completed {
+      text-decoration: line-through;
+      color: #888;
+    }
+
+    .highlight {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Lista de Tarefas</h2>
+  <ul id="listaTarefas">
+    <li>Estudar para o exame</li>
+    <li>Fazer exercícios de matemática</li>
+    <li>Escrever um ensaio</li>d
+    <li>Praticar programação</li>
+  </ul>
+
+  <script>
+    // Adicionamos um evento de clique à lista de tarefas
+    
+    document.getElementById('listaTarefas').addEventListener('click', (event) => {
+      console.log('event', event)
+      const allTasks = document.querySelectorAll('#listaTarefas li');
+      allTasks.forEach((task) => task.classList.remove('highlight'))
+
+      event.target.classList.toggle('completed');
+
+      const nextTask = event.target.nextElementSibling;
+      const previousTask = event.target.previousElementSibling;
+      console.log(event.target)
+      console.log(nextTask)
+      console.log(previousTask)
+      if(previousTask.classList.contains('completed')) {
+       
+      }
+   
+      if (nextTask) {
+        nextTask.classList.add('highlight');
+      }
+    }); 
+
+
+
+    // Removemos a classe highlight de todas as tarefas
+    // Marcamos a tarefa como concluída
+    // Destacamos a próxima tarefa usando nextElementSibling, apenas se a tarefa atual não estiver concluída
+    // log previousElementSibling
+
+  </script>
+</body>
+
+</html>

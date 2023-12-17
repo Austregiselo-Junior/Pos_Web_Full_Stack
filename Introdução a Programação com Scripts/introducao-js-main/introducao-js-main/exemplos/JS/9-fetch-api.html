@@ -1,0 +1,61 @@
+<!-- get -->
+<!-- post -->
+<!-- put -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+</head>
+
+<body>
+  <!-- <p style="background-color: red;">
+      Usuário não encontrado
+    </p> -->
+  <script>
+    const alunosContiner = document.createElement('ul');
+    const errorText = document.createElement('p');
+    const displayError = (text) => {
+      
+      errorText.style.background = 'red';
+      errorText.innerHTML = text;
+      body.appendChild(errorText);
+    }
+
+
+    console.log(errorText);
+    const body = document.querySelector('body');
+
+
+    fetch('http://localhost:3000/a22lunos')
+      .then(response => response.json())
+      .then(data => {
+        data.forEach(aluno => {
+          let alunoItem = document.createElement('li');
+          alunoItem.innerHTML = aluno.nome;
+          alunosContiner.appendChild(alunoItem);
+          body.appendChild(alunosContiner);
+        })
+      })
+      .catch(err => {
+        displayError('Erro ao buscar alunos')
+      })
+
+    // fetch('http://localhost:3000/alunos',{
+    //     method:"POST",
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     },
+    //     body:JSON.stringify(
+    //       {
+    //       nome: "Patrícia Marcela Sara Novaes",
+    //       matricula: "003",
+    //       curso: "Sistemas para internet"
+    //     }
+    //   )
+    // })
+    // .then(res=>res.json())
+    // .then(json=>console.log(json))
+  </script>
+</body>
+
+</html>
