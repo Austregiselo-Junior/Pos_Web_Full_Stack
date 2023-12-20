@@ -1,5 +1,5 @@
-<!-- Array -->
-<!-- acessando valores do Array -->
+
+
 <!-- acessando valores do objeto -->
 <!-- array de objetos -->
 <!-- destructuring -->
@@ -13,9 +13,12 @@
 
 <head>
   <script>
+   // <!-- Array -->
     const myArr = ['String', 2, true];
+
+    // <!-- Obj -->
     const myObj = {
-      name: 'Nome da Pessa',
+      name: 'Nome da Pessoa',
       email: 'email@email.com',
       phone: '22222222',
       age: 30,
@@ -42,10 +45,12 @@
         novaChave: 'valor',
       }
     ]
+
+    //<!-- acessando valores do Array -->
     const index1 = myArr[0]
     console.log(myObj.name)
     console.log(index1)
-    console.log(myArrObj[0].data[0].name)
+    console.log('myArrObj:',myArrObj[0].data[0].name)
 
     const myArrObj2 = {
         name: 'Nome da Pessa',
@@ -59,12 +64,12 @@
     const [idxString, , idxBoolean] = myArr
     const { name, phone} = myArrObj2
 
-    console.log(idxString)
-    console.log(name)
+    console.log('idxString:' ,idxString)
+    console.log('name:',name)
 
-    const objKey =  Object.keys(myArrObj2);
-    const objValues =  Object.values(myArrObj2)
-    const objentries =  Object.entries(myArrObj2)
+    const objKey =  Object.keys(myArrObj2); //Pegando as chaves do objeto
+    const objValues =  Object.values(myArrObj2) //Pegando as valores do objeto
+    const objentries =  Object.entries(myArrObj2) //Pegando as chaves e os valores do objeto
 
     console.log('objKey', objKey);
     console.log('objValues', objValues)
@@ -72,19 +77,27 @@
 
     const ages = [12, 44, 22, 50]
 
+    // Verificando se há uma idade maior que 49 no array
     const getAges = ages.some((age) => age > 49)
-
     console.log('getAges', getAges)
 
     const canAlura = objValues.some((arg) => arg === 'js') 
+    console.log('canAlura',canAlura)
     const canAlura2 = objValues.some((arg) => console.log(arg)) 
-    console.log(canAlura)
+    console.log('canAlura2:',canAlura2)
 
     {
-      const arrayDeNumeros = [1, 2, 3, 4, 5, 'ss'];
+      const arrayDeNumeros = ['SS'];
       const saoNumeros = (elemento) => typeof elemento === 'string';
       const todosNumeros = arrayDeNumeros.every(saoNumeros);
-      console.log('todosNumeros', todosNumeros); // Saída: true
+      console.log('todosstrings', todosNumeros); // Saída: true
+    }
+
+    {
+      const arrayDeNumeros = [1,2,5];
+      const saoInteiros = (elemento) => Number.isInteger(elemento);
+      const todosNumeros = arrayDeNumeros.every(saoInteiros);
+      console.log('todosinteiros', todosNumeros); // Saída: true
     }
 
     const objOriginal = {
@@ -100,6 +113,7 @@
       subject: 'JS',
       isStudent: false,
     }
+    console.log('newObj1:', newObj)
 
     const originalState = {
       data: [],
