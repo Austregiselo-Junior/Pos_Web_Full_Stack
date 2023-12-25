@@ -38,15 +38,16 @@
 
       const nextTask = event.target.nextElementSibling;
       const previousTask = event.target.previousElementSibling;
-      console.log(event.target)
-      console.log(nextTask)
-      console.log(previousTask)
+      console.log("event.target",event.target)
+      console.log("nextTask",nextTask)
+      console.log("previousTask",previousTask)
       if(previousTask.classList.contains('completed')) {
-       
+       console.log("completed is ok");
       }
    
       if (nextTask) {
         nextTask.classList.add('highlight');
+        console.log("highlight was added");
       }
     }); 
 

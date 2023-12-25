@@ -1,8 +1,4 @@
-<!-- if -->
-<!-- if else -->
-<!-- ternário -->
-<!-- boas práticas -->
-<!-- switch case -->
+
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
@@ -11,9 +7,9 @@
   <body>
     <script>
       const ifFunction = () => {
-        const age = 35
-        if(age === 35) {
-          console.log('Tenho 35 anos');
+        const age = 34
+        if(age < 35) {
+          console.log('Tenho menos que 35 anos');
         } else {
            console.log('Não Tenho 35 anos')
         }
@@ -27,14 +23,6 @@
 
       const weekDays = () => {
         const days = new Date().getDay();
-        // if( days === 0) {
-        //   console.log('Hje é Domingo')
-        // } else if (days === 6) {
-        //   console.log('Hje é sábado')
-        // } else if (days === 5) {
-        //   console.log('Hje é Sexta')
-        // }
-          
         switch (days) {
           case 6:
             console.log('Hje é Sábado');
@@ -70,15 +58,12 @@
       // nome de funcao
       const minhaFuncaoSiginificado = () => console.log('minha função tem um bom nome')
 
-
-      weekDays()
-
       const defineAge = () => {
         const age = 35
-        console.log('Tenho 35 anos');
+        console.log('Tenho 34 anos');
       }
-
-      
+    weekDays()
+      defineAge()
       ifFunction()
 
     </script>  
