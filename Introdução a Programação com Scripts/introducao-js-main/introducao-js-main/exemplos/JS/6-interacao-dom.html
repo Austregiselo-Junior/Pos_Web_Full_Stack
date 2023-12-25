@@ -33,45 +33,61 @@
   <script>
     // pegar elemento pela tag
     const tagH1 = document.getElementsByTagName('h1')
+    console.log("tagH1:",tagH1)
     const tagFooter = document.getElementsByTagName('footer')
-    console.log(tagH1)
-    // console.log(tagFooter)
+    console.log("tagFooter:" ,tagFooter)
+
     // pegar elemento pelo ID
     const idH1 = document.getElementById('t1')
-    console.log(idH1)
+    console.log("idH1",idH1)
+
     // pegar elemento pela class
     const classElemnts = document.getElementsByClassName('titulo')
-    console.log(classElemnts)
+    console.log("classElemnts:",classElemnts)
+
     // <!-- pegar elemento querySelector -->
     const getQuerySelector = document.querySelector('#t1')
-    console.log(getQuerySelector)
+    console.log("getQuerySelector:",getQuerySelector)
+
     // <!-- pegar elemento querySelectorAll -->
     const getQuerySelectorAll = document.querySelectorAll('.titulo')
-    console.log(getQuerySelectorAll)
+    console.log("getQuerySelectorAll:",getQuerySelectorAll)
+
     // <!-- criar um p -->
     const createP = document.createElement('p')
-    console.log(createP)
+    console.log("createP:",createP)
+
     // <!-- adicionar texto -->
     createP.innerText = 'Um texto qualquer'
+    console.log("createP:",createP)
+
     // <!-- adicionar classe -->
     createP.classList.add('texto')
     // createP.classList.remove('texto')
+    
     // <!-- adicionar id -->
     createP.id = 'textoid'
+    console.log("createP:",createP)
+
     // <!-- adicionar um atrituto -->
     createP.setAttribute('role', 'text')
+    console.log("createP:",createP)
     // createP.removeAttribute('role')
+
     const container = document.querySelector('.container')
     container.appendChild(createP)
+    console.log("appendChild from container:",container)
+
     // <!-- pega um elemento filho -->
     const getChild = container.children
+    console.log("container.children:",container)
 
     // <!-- pega um elemento pai -->
     const getP = document.querySelector('.text-test')
     const getFather = getP.parentNode;
     getFather.classList.add('teste')
-    console.log(getFather)
-    // <!-- pega um elemento irmao nextElementSibling  -->
+    console.log("getFather:",getFather)
+
   </script>
 </body>
 

@@ -27,6 +27,9 @@
     <div>
       <button id="btn" >Mostrar/esconder resultado</button>
     </div>
+    <div>
+      <button id="btn1" >Mostrar/esconder resultado</button>
+    </div>
     <select>
       <option value="" >Selecione sua profissão</option>
       <option value="Front-end">Front-end</option>
@@ -56,8 +59,14 @@
         event.target.classList.remove('ativo')
       })
 
+// Pega o botão, adiciona o evento click e mostra o result
       btn.addEventListener('click', (event) => {
         result.classList.toggle('display')
+      })
+
+      // Pega o botão, adiciona o evento click e mostra o result
+      btn1.addEventListener('click', (event) => {
+        result.classList.toggle('result')
       })
 
       // setTimeout(() => {
