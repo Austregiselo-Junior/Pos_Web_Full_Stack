@@ -8,23 +8,29 @@
 
 const baseUrl = "http://localhost:3000";
 
-// Passo 1: Selecionar os elementos HTML necessários
+// Selecionar os elementos HTML necessários
 const studentModal = document.querySelector("#student-modal");
 const studentTable = document.querySelector("#student-table");
+const DisciplinaModal = document.querySelector("#Disciplina-modal");
+const DisciplinaTable = document.querySelector("#student-table");
 const studentForm = document.querySelector("#student-form");
 const studentModalTitle = document.querySelector("#student-modal-title");
 const saveStudentButton = document.querySelector("#save-student");
-// studentModal.showModal()
-// Passo 2: Definir função para abrir o modal do estudante
+const cancelStudentButton = document.querySelector("#Cancelar-student");
+
+
+// Funções para abrir e fechar o modal do estudante
 const openStudentModal = () => studentModal.showModal();
+const closeStudentModal = () => studentModal.close();
+
 const createStudent = () => {
   studentModalTitle.innerHTML = `Novo Aluno`;
   saveStudentButton.innerHTML = "Criar";
+  cancelStudentButton.innerHTML = "Cancelar"
   openStudentModal();
   saveStundentData(`${baseUrl}/alunos`, "POST");
 };
-// Passo 3: Definir função para fechar o modal do estudante
-const closeStudentModal = () => studentModal.close();
+
 // Passo 4: Criar uma linha na tabela do estudante
 const createStudentTableRow = (id, name, matricula, curso) => {
   const tableTr = document.createElement("tr");
@@ -127,4 +133,16 @@ const loadStudentTable2 = () => {
     });
 };
 
-loadStudentTable();
+// Funções para abrir e fechar o modal de disciplina
+const openDisciplinaModal = () => DisciplinaModal.showModal();
+const closeDisciplinaModal = () => studentModal.close();
+
+const AddDisciplina = () => {
+  studentModalTitle.innerHTML = `Novo Aluno`;
+  saveStudentButton.innerHTML = "Criar";
+  cancelStudentButton.innerHTML = "Cancelar"
+  openDisciplinaModal();
+  saveStundentData(`${baseUrl}/alunos`, "POST");
+};
+
+
