@@ -1,4 +1,4 @@
-.subject-list {
+.Cards {
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -14,7 +14,7 @@
 }
 
 @media screen and (min-width: 768px)  { 
-  .subject-list {
+  .Cards {
     flex-direction: row;
     justify-content: space-between;
     flex-wrap: wrap;

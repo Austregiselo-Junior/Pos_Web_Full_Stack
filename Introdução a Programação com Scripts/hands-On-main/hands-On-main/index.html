@@ -17,8 +17,6 @@
 
 <body>
   <header class="header">
-    <!-- BEM
-       Block - element - modify -->
     <img src="./assets/cse-marcas-unipe_50anos_va1.svg" alt="Sistema de Controle Acadêmico" class="header__logo" />
     <nav class="nav-header">
       <a href="#" title="Página principal" class="nav-header__link">Principal</a>
@@ -27,12 +25,14 @@
       <a href="#" title="Sair" class="button button--danger">Sair</a>
     </nav>
   </header>
+
   <main>
-    <section class="section-wrapper">
+    <section class="section-Studant">
       <header class="section-header">
         <h1 class="section-header__title">Alunos</h1>
-        <button class="button button--success" onclick="createStudent()">Novo Aluno</button>
+        <button class="button button--success" onclick="openStudentModal()">Novo Aluno</button>
       </header>
+
       <div class="table-container">
         <table class="table table--stripe" id="student-table">
           <thead>
@@ -43,23 +43,13 @@
               <th>Ações</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>Patrícia Marcela Sara Novaesww</td>
-              <td>0031</td>
-              <td>Sistemas para internet</td>
-              <td align="center">
-                <button class="button button--danger" onclick="deleteStudentTable(3)">Apagar</button>
-                <button class="button button--success" onclick="editdStudentModal(3)">Editar</button>
-              </td>
-            </tr>
-          </tbody>
         </table>
       </div>
+
       <dialog class="modal" id="student-modal">
         <div class="modal__container">
           <header class="modal__header">
-            <h3 id="student-modal-title"></h3>
+            <h3 id="student-modal-title">Novo Aluno</h3>
           </header>
           <form id="student-form" class="modal__form">
             <fieldset>
@@ -75,22 +65,27 @@
               </select>
             </fieldset>
             <div class="modal__form-buttons">
-              <button class="button button--danger" type="reset" id="Cancelar-student" onclick="closeStudentModal()"></button>
-              <button class="button button--success" type="submit" id="save-student"></button>
+              <button class="button button--danger" type="reset" id="Cancelar-student" onclick="closeStudentModal()">Cancelar</button>
+              <button class="button button--success" type="submit" id="save-student" onclick="createStudent()">Adicionar</button>
             </div>
           </form>
         </div>
       </dialog>
     </section>
-    <section class="section-wrapper">
+    
+    <section class="section-Disciplina">
       <header class="section-header">
         <h1 class="section-header__title">Disciplina</h1>
-        <button class="button button--success" onclick="AddDisciplina()">Nova Disciplina</button>
+        <button class="button button--success" onclick="openDisciplinaModal()">Nova Disciplina</button>
       </header>
+
+      <div class="Cards">
+      </div>
+
       <dialog class="modal" id="Disciplina-modal">
         <div class="modal__container">
           <header class="modal__header">
-            <h3 id="Disciplina-modal-title"></h3>
+            <h3 id="Disciplina-modal-title">Nova da disciplina</h3>
           </header>
           <form id="Disciplina-form" class="modal__form">
             <fieldset>
@@ -98,73 +93,30 @@
               <input type="text" placeholder="Nome o nome da disciplina..." name="nome" id="nome">
               <label>Carga Horária</label>
               <input type="text" placeholder="Digite a Carga horária" id="CargaHoraria" name="CargaHoraria">
-              <label>NomeProfessor</label>
+              <label>Nome do Professor</label>
               <input type="text" placeholder="Digite o nome do professor" id="NomeProfessor" name="NomeProfessor">
-              <select name="curso" id="curso">
-                <option value="">selecione</option>
-                <option value="Sistemas para internet">Sistemas para internet</option>
-                <option value="Redes">Redes</option>
+              <label>Selecione o Status</label>
+              <select name="curso" id="Status">
+                <option value="Obrigatoria">Obrigatória</option>
+                <option value="Opcional">Opcional</option>
               </select>
+              <label>Observações</label>
+              <input type="text" placeholder="Digite as observações da disciplina" id="ObservacoesDisciplina" name="ObservacoesDisciplina">
             </fieldset>
             <div class="modal__form-buttons">
-              <button class="button button--danger" type="reset" id="Cancelar-student" onclick="closeStudentModal()"></button>
-              <button class="button button--success" type="submit" id="save-student"></button>
+              <button class="button button--danger" type="reset" id="Cancelar-Discipline" onclick="closeDisciplinaModal()">Cancelar</button>
+              <button class="button button--success" type="submit" id="save-Discipline" onclick="AddDisciplina()">Adicionar</button>
             </div>
           </form>
         </div>
       </dialog>
-      <div class="subject-list">
-        <div class="subject-card">
-          <h3 class="subject-card__title">Nome da disciplina</h3>
-          <hr />
-          <ul class="subject-card__list">
-            <li>carga horária: 16h</li>
-            <li>Professor: Pessoa da Silva</li>
-            <li>Status <span class="tag tag--danger">Obrigatória</span></li>
-          </ul>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-          <td align="center">
-            <button class="button button--danger" onclick="deleteStudentTable()">Apagar</button>
-            <button class="button button--success" onclick="editdStudentModal()">Editar</button>
-          </td>
-        </div>
-
-        <div class="subject-card">
-          <h3 class="subject-card__title">Nome da disciplina</h3>
-          <hr />
-          <ul class="subject-card__list">
-            <li>carga horária: 16h</li>
-            <li>Professor: Pessoa da Silva</li>
-            <li>Status <span class="tag tag--success">Opcional</span></li>
-          </ul>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. </p>
-          <td align="center">
-            <button class="button button--danger" onclick="deleteStudentTable()">Apagar</button>
-            <button class="button button--success" onclick="editdStudentModal()">Editar</button>
-          </td>
-        </div>
-
-        <div class="subject-card">
-          <h3 class="subject-card__title">Nome da disciplina</h3>
-          <hr />
-          <ul class="subject-card__list">
-            <li>carga horária: 16h</li>
-            <li>Professor: Pessoa da Silva</li>
-            <li>Status <span class="tag tag--success">Opcional</span></li>
-          </ul>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-          <td align="center">
-            <button class="button button--danger" onclick="deleteStudentTable()">Apagar</button>
-            <button class="button button--success" onclick="editdStudentModal()">Editar</button>
-          </td>
-        </div>
-      </div>
     </section>
   </main>
+
   <footer class="footer">
     <span>Lorem, ipsum dolor sit tenetur voluptatem quod!</span>
   </footer>
+
   <script src="./javaScript/scripts.js"></script>
 </body>
-
 </html>
