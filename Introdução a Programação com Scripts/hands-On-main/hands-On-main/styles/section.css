@@ -1,6 +1,11 @@
-.section-wrapper {
+.section-Studant {
     padding: 40px 0 30px 0;
 }
+
+.section-Disciplina {
+  padding: 40px 0 30px 0;
+}
+
 .section-header {
     display: flex;
     justify-content: space-between;
