@@ -1,44 +1,19 @@
 {
   "alunos": [
     {
-      "nome": "Ric",
-      "matricula": "123666",
-      "curso": "Sistemas para internet",
-      "id": 3
+      "nome": "undefinedeeeee",
+      "matricula": "undefined",
+      "id": 4
     }
   ],
   "disciplinas": [
     {
-      "id": 1,
-      "nome": "Introdução a progração com scripts",
-      "cargaHoraria": "36h",
-      "professor": "Tiago Daniel Fernando Baptista",
-      "status": "Obrigatória",
-      "observacos": "Lorem ipsum dolor sit amet consectetur adipisicing elit."
-    },
-    {
-      "id": 2,
-      "nome": "Linguagens de Marcação",
-      "cargaHoraria": "67h",
-      "professor": "Marcela Vera Mendes",
-      "status": "Obrigatória",
-      "observacos": "Lorem ipsum dolor sit amet consectetur adipisicing."
-    },
-    {
-      "nome": "Artes ",
-      "CargaHoraria": "30h",
-      "NomeProfessor": "Popo Freitas",
-      "curso": "Opcional",
-      "ObservacoesDisciplina": "Disciplina do cão ",
-      "id": 3
-    },
-    {
-      "nome": "9",
-      "CargaHoraria": "9",
-      "NomeProfessor": "9",
+      "nome": "Português Instrumental",
+      "cargaHoraria": "70",
+      "NomeProfessor": "Tiago Daniel Fernando Baptista",
       "curso": "Obrigatoria",
-      "ObservacoesDisciplina": "9",
-      "id": 4
+      "ObservacoesDisciplina": "Top!",
+      "id": 1
     }
   ]
 }
