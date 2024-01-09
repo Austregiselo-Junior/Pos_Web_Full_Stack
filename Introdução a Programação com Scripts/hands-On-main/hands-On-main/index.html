@@ -90,13 +90,13 @@
           <form id="Disciplina-form" class="modal__form">
             <fieldset>
               <label for="nome">Nome da disciplina</label>
-              <input type="text" placeholder="Nome o nome da disciplina..." name="nome" id="nome">
+              <input type="text" placeholder="Nome o nome da disciplina..." name="nome" id="nomeDisciplina">
               <label>Carga Horária</label>
-              <input type="text" placeholder="Digite a Carga horária" id="CargaHoraria" name="CargaHoraria">
+              <input type="text" placeholder="Digite a Carga horária" id="CargaHorariaDisciplina" name="cargaHoraria">
               <label>Nome do Professor</label>
-              <input type="text" placeholder="Digite o nome do professor" id="NomeProfessor" name="NomeProfessor">
+              <input type="text" placeholder="Digite o nome do professor" id="NomeProfessordaDisciplina" name="NomeProfessor">
               <label>Selecione o Status</label>
-              <select name="curso" id="Status">
+              <select name="curso" id="StatusDisciplina">
                 <option value="Obrigatoria">Obrigatória</option>
                 <option value="Opcional">Opcional</option>
               </select>
@@ -105,7 +105,7 @@
             </fieldset>
             <div class="modal__form-buttons">
               <button class="button button--danger" type="reset" id="Cancelar-Discipline" onclick="closeDisciplinaModal()">Cancelar</button>
-              <button class="button button--success" type="submit" id="save-Discipline" onclick="AddDisciplina()">Adicionar</button>
+              <button class="button button--success" type="submit" id="save-Discipline" onclick="addDisciplina()">Adicionar</button>
             </div>
           </form>
         </div>
