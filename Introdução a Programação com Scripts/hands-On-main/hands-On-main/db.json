@@ -1,9 +1,16 @@
 {
   "alunos": [
     {
-      "nome": "undefinedeeeee",
-      "matricula": "undefined",
+      "nome": "Xico",
+      "matricula": "123",
+      "curso": "Sistemas para internet",
       "id": 4
+    },
+    {
+      "nome": "Xicó",
+      "matricula": "321",
+      "curso": "Redes",
+      "id": 5
     }
   ],
   "disciplinas": [
@@ -14,6 +21,22 @@
       "curso": "Obrigatoria",
       "ObservacoesDisciplina": "Top!",
       "id": 1
+    },
+    {
+      "nome": "Artes",
+      "cargaHoraria": "20h",
+      "NomeProfessor": "Austregíselo Junior",
+      "curso": "Opcional",
+      "ObservacoesDisciplina": "Disciplina pra aprender a pintar",
+      "id": 2
+    },
+    {
+      "nome": "Programação C#",
+      "cargaHoraria": "30h",
+      "NomeProfessor": "Austregíselo Junior",
+      "curso": "Obrigatoria",
+      "ObservacoesDisciplina": "Programação em C# com POO",
+      "id": 3
     }
   ]
 }
