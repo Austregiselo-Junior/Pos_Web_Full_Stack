@@ -16,22 +16,19 @@ public class AtletaService {
     public Atleta cadastrar(Atleta atleta){
         return repository.save(atleta);
     }
-
     public List<Atleta> listar() {return repository.findAll();}
     public List<Atleta> listarPorNome(String nome) {return repository.findByNomeOrderByNomeAsc(nome);}
-
+    public  void deletar(Integer id){
+        repository.deleteById(id);
+    }
+    public Atleta consultarPorId(Integer id){
+        return repository.findById(id).get();
+    }
     public Atleta alterar(Atleta atleta){
         if (Objects.isNull(atleta.getID())){
             throw new RuntimeException();
         }
-    return repository.save(atleta);
-    }
 
-    public  void deletar(Integer id){
-        repository.deleteById(id);
-    }
-
-    public Atleta consultarPorId(Integer id){
-        return repository.findById(id).get();
+        return repository.save(atleta);
     }
 }

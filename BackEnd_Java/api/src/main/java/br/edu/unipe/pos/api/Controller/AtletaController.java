@@ -2,7 +2,10 @@ package br.edu.unipe.pos.api.Controller;
 
 import br.edu.unipe.pos.api.Service.AtletaService;
 import br.edu.unipe.pos.api.model.Atleta;
+import br.edu.unipe.pos.api.model.Campeonato;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,5 +52,4 @@ public class AtletaController {
     public ResponseEntity<Atleta> consultarPorId(@PathVariable Integer id){
         return ResponseEntity.ok(service.consultarPorId(id));
     }
-
 }
