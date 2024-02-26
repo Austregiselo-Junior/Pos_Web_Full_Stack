@@ -17,7 +17,7 @@ private CampeonatoRepository repository;
 
     public Campeonato cadastrar(Campeonato campeonato){return repository.save(campeonato);}
     public List<Campeonato> listar(){return repository.findAll();}
-    public  List<Campeonato>listarPorNome(String nome){return repository.findByNomeOrderByNomeAsc(nome);}
+    public  List<Campeonato>listarPorNome(String time){return repository.findByNomeOrderByNomeAsc(time);}
     public void deletar(Integer id){repository.deleteById(id);}
     public Campeonato copnsultarPorId(Integer id){return repository.findById(id).get();}
 

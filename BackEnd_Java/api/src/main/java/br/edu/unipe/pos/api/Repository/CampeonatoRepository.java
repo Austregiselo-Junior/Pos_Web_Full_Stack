@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface CampeonatoRepository extends JpaRepository<Campeonato, Integer> {
 
-    public List<Campeonato> findByNomeOrderByNomeAsc(String nome); // Query com minemonico, pega de acordo com a key passada acima.
+    public List<Campeonato> findByNomeOrderByNomeAsc(String time); // Query com minemonico, pega de acordo com a key passada acima.
 
     @Query(value = "select a from Campeonato a where a.time=:time order by a.time asc") //Query feita por JPQL
-    public List<Campeonato> buscvarNomeCampeonato(String nome); // Pesquisar por nome
+    public List<Campeonato> buscvarNomeCampeonato(String time); // Pesquisar por nome
 }
