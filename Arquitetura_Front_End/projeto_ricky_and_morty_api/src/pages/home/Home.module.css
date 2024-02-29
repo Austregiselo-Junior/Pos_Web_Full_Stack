@@ -1,0 +1,7 @@
+.background_image {
+  background-image: url('https://4kwallpapers.com/images/walls/thumbs_3t/9494.png');
+  height: calc(100vh - 56px);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
