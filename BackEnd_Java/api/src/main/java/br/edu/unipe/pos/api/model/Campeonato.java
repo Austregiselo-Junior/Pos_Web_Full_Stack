@@ -1,12 +1,18 @@
 package br.edu.unipe.pos.api.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
 
+@Getter
+@Setter
+@Entity
 @Getter
 @Setter
 @Entity
