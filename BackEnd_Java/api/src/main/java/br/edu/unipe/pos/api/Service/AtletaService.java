@@ -31,4 +31,11 @@ public class AtletaService {
 
         return repository.save(atleta);
     }
+    public Atleta alterar(Atleta atleta){
+        if (Objects.isNull(atleta.getID())){
+            throw new RuntimeException();
+        }
+
+        return repository.save(atleta);
+    }
 }
