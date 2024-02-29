@@ -1,4 +1,3 @@
-
 # RICK AND MORTY API
 
 ![alt imagem de capa](./.github/wallpaper.png)
@@ -9,19 +8,14 @@ Criação de um projeto de conclusão frontend do curso Pós Graduação em Dese
 
 O objetivo desse desafio é medir o conhecimento do aluno em relação ao desenvolvimento de aplicativos Web com foco no front-end.
 
-
 ## Stack utilizada
-### FRONT-END ###
 
+### FRONT-END
 
 - [TypeScript](https://www.typescriptlang.org/)
 - [Vite.js](https://vitejs.dev/)
 - [Axios](https://axios-http.com/)
 - [React Router](https://reactrouter.com/en/main)
-
-
-
-
 
 ## Documentação da API
 
@@ -31,9 +25,6 @@ O objetivo desse desafio é medir o conhecimento do aluno em relação ao desenv
   https://rickandmortyapi.com/
 ```
 
-
-
-
 ## Deploy
 
 Para fazer o deploy desse projeto rode
@@ -41,7 +32,6 @@ Para fazer o deploy desse projeto rode
 ```bash
   npm run dev
 ```
-
 
 ## Requisitos do projeto
 
@@ -131,12 +121,7 @@ O desafio deverá conter um cabeçalho com um menu para a lista de Personagens, 
 **Comportamento esperado:**
 <p>Ao clicar em qualquer item da lista personagens usuário deve ser redirecionado para a página de detalhamento do personagem clicado.</p>
 
-
-
-
-
 ## Autores e colaboradores
 
 - [@neliofrazao](https://github.com/neliofrazao)
-- [@nAustregiselo-Junior](https://github.com/Austregiselo-Junior)
-
+- [@Austregiselo-Junior](https://github.com/Austregiselo-Junior)
