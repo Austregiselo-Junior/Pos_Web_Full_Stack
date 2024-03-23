@@ -18,11 +18,7 @@ public class AtletaController {
     @Autowired
     private AtletaService service;
 
-    @Autowired
-    private ViaCepClient viaCepClient;
 
-    @Autowired
-    private AtletaClient atletaClient;
 
     @PostMapping
     public ResponseEntity<Atleta> cadastrar(@RequestBody Atleta atleta){
@@ -59,13 +55,7 @@ public class AtletaController {
     }
 
 
-    @GetMapping("/cep/{cep}")
-    public ResponseEntity<CepResponseDTO> consultarCepAtleta(@PathVariable String cep){
 
-        var cepResponse = viaCepClient.consultaCep(cep);
-
-        return ResponseEntity.ok(cepResponse);
-    }
 
 
 

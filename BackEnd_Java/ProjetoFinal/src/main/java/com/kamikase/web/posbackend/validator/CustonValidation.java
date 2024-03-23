@@ -1,18 +1,16 @@
 package com.kamikase.web.posbackend.validator;
 
-
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
-
 @Target( { ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = EmailValidator.class)
-public @interface EmailValidation {
-    String message() default "O email é inválido";
+@Constraint(validatedBy = CustonValidator.class)
+public @interface CustonValidation {
+    String message() default "Clube inválido";
     Class<?>[] groups() default {};
-    Class<? extends Payload>[] payload() default {};
+    Class <?extends Payload>[] payload() default {};
 }
