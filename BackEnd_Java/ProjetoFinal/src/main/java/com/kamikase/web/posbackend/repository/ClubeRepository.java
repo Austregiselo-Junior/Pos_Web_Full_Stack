@@ -11,8 +11,4 @@ import java.util.List;
 @Repository
 public interface ClubeRepository extends JpaRepository<Clube, Integer> {
     public List<Clube> findByNomeOrderByNomeAsc(String nome);
-
-    @Query(value = "select a from Clube a where a.nome=:nome order by a.nome asc")
-    public List<Clube> buscarNomeTime(@Param("nome") String nome);
-
 }

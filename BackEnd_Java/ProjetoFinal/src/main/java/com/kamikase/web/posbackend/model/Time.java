@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Esporte {
+public class Time {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
