@@ -215,6 +215,18 @@ def delete_produto(id):
         print(f"Erro: {e}")
         return "Erro ao excluir produto", 400
 
+@app.route("/cliente/<int:id>", methods=["DELETE"])
+def delete_cliente(id):
+    try:
+        cliente = mysql.session.query(Clientes).get(id)
+        mysql.session.delete(cliente)
+        mysql.session.commit()
+
+        print("Sucesso.")
+        return 'Cliente excluído com sucesso.', 204
+    except Exception as e:
+        print(f"Erro: {e}")
+        return "Erro ao excluir cliente", 400
 
 @app.route("/pedido/<pedido_id>", methods=['DELETE'])
 def delete_pedido(pedido_id):
