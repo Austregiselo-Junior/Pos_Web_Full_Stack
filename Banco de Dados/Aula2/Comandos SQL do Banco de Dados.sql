@@ -5,7 +5,7 @@ CREATE TABLE clientes
     nome VARCHAR(255) NOT NULL, 
 	email VARCHAR(255), 
 	cpf VARCHAR(11) NOT NULL, 
-	data_Nascimento DATE
+	data_nascimento DATE
 );
 
 # Comandos DML
@@ -37,7 +37,7 @@ DELETE FROM clientes WHERE id_clientes = 6;
 # Excluindo um registro identificando o campo nome que contenha Daniel + alguma coisa
 DELETE FROM clientes WHERE nome LIKE "Daniel%";
 
-insert into clientes (id_clientes, nome, cpf, date_Nascimento) values (3, "Miqueias", "09678153475", "1950-7-08");
+insert into clientes (id_clientes, nome, cpf, date_nascimento) values (3, "Miqueias", "09678153475", "1950-7-08");
 insert into clientes (nome, cpf)values ("Jhon", "00678103475");
 
 update clientes set cpf = "00078153480" where id_clientes = 3;
@@ -45,7 +45,7 @@ drop table clientes;
 delete from clientes where nome = "Jhon";
 
 
-CREATE TABLE produto 
+CREATE TABLE produtos
 (
 	id_produto INT PRIMARY KEY AUTO_INCREMENT, 
     nome VARCHAR(255) NOT NULL, 
@@ -54,20 +54,20 @@ CREATE TABLE produto
 	categoria VARCHAR(255)
 );
 
-insert into produto (nome, descricao, preco, categoria) values 
+insert into produtos (nome, descricao, preco, categoria) values 
 ("dyssei G6", "Monitor Samsung QWHD...", 3500.0, "Monitor"),
 ("dyssei G5", "Monitor Samsung QWHD curvado...", 25000, "Monitor"),
 ("Galaxy Book 2 Pro", "Notebook 16GB, tela AMOLED", 8900.9, "Notebook"),
 ("Galaxy Book 3 Ultra", "Notebook 32GB, tela AMOLED", 18900.90, "Notebook"),
 ("Samsung s24", "celuar 32GB com IA da samsung", 4000.90, "Celular");
 
-insert into produto (nome, preco, categoria)values ("Jhon", "00678103475", "1290-12-08");
+insert into produtos (nome, preco, categoria)values ("Jhon", "00678103475", "1290-12-08");
 
 update produto set nome = "Galaxy book 3" where id_clientes = 3;
 drop table produto;
 delete from produto where id_clientes = 3;
 
-SELECT * FROM banco_web.produto;
+SELECT * FROM banco_web.produtos;
 
 # Criando uma tabela com chaves estrangeiras
 CREATE TABLE IF NOT EXISTS pedidos (
