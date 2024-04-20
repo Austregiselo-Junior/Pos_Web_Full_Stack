@@ -1,0 +1,20 @@
+Customer
+Apenas um nível de identação por método: O método makePurchase tem mais de um nível de identação, tornando-o mais complexo e difícil de entender.
+Não use a palavra-chave ELSE: O método makePurchase usa a palavra-chave else, o que poderia ser evitado para simplificar o código.
+Envolva tipos primitivos e strings em classes pequenas: Os campos name, age, e totalPurchaseAmount são tipos primitivos, mas poderiam ser encapsulados em classes específicas para melhorar a legibilidade e manutenção.
+Primeiras classes devem ser pequenas: A classe Customer tem muitas responsabilidades, como armazenar informações do cliente, gerenciar compras e enviar e-mails de recibo.
+
+
+
+
+
+ShoopingCart
+Neste exemplo, a classe ShoppingCart não segue algumas das regras do Object Calisthenics:
+
+Apenas um nível de identação por método: Os métodos calculateTotalPrice e printItems têm mais de um nível de identação, o que pode dificultar a legibilidade do código.
+
+Não use a palavra-chave ELSE: Embora não haja else neste exemplo, a classe ainda viola outras regras do Object Calisthenics.
+
+Envolva tipos primitivos e strings em classes pequenas: A classe usa double para representar o preço, o que poderia ser encapsulado em uma classe de Price.
+
+Primeiras classes devem ser pequenas: A classe ShoppingCart tem várias responsabilidades, como gerenciar itens, calcular o preço total, imprimir itens, salvar no banco de dados e enviar e-mails de confirmação.
