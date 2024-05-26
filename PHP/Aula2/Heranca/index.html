@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Cadastro de Funcionário</h1>
+    <form action="ExibirFunc.php" method="POST">
+        <p><input name="Nome" type="text" placeholder="Digite seu nome:"></p>
+        <p><input name="Salario" type="text" placeholder="Digite seu salário:"></p>
+        <p>
+            <select name="Cargo">
+                <option value="0">Programador</option>
+                <option value="1">Gerente</option>
+            </select>
+        </p>
+        <p>OBS:
+            <textarea name="OBS">Digite suas observações></textarea>
+        </p>
+        <p><input type="submit" value="Cadastrar"></input></p>
+    </form>
+</body>
+</html>
