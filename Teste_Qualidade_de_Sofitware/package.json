@@ -1,0 +1,14 @@
+{
+  "name": "teste_qualidade_de_sofitware",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "cypress run"
+  },
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "cypress": "^13.12.0"
+  }
+}
