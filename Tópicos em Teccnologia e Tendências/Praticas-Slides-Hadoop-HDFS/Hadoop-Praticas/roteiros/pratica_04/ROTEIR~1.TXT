@@ -1,0 +1,174 @@
+# Atividade Prática 04
+### Conhecendo o PySpark 
+#   Ricardo Roberto de Lima
+
+Bibliografia: 
+https://spark.apache.org/sql/
+https://hackersandslackers.com/learning-to-use-apache-spark-pyspark
+
+### Pré-requisitos: 
+
+### Download do projeto do Git (https://www-scm.prevnet/coii/treinamento-hadoop-coii) na máquina local e descompacte-o;
+### Download das bases na url: 10.100.4.88:3333/datasets
+
+# 1) Primeiros passos: Spark's interactive shell e operações com RDD
+
+    ## 1.1) Interpretador
+
+    >>> pyspark
+
+    ## 1.2) Visualizando o SparkContext
+
+    >>> sc
+    >>> sc.appName
+    >>> sc.version
+
+    ### 1.3) Load do arquivo sample.txt
+
+    >>> sample = sc.textFile('file:///C:/bigdata/datasets/sample.txt')
+    >>> sample
+    >>> sample = sc.textFile('C:/bigdata/datasets/sample.txt')
+    
+    ### 1.4) Operações básicas com RDD
+
+    >>> sample
+    >>> sample.first()
+    >>> sample.take(3)
+    >>> sample.collect()
+    >>> sample.count()
+    >>> sample_filtered = sample.filter(lambda line: "twinkle" in line)
+    >>> sample_filtered.collect()
+    >>> sample_filtered.count()
+    >>> sample_filtered.saveAsTextFile("file:///C:/bigdata/datasets/out1/")
+    >>> sample_filtered.coalesce(1).saveAsTextFile("file:///C:/bigdata/datasets/out2/")
+
+    ### 1.5) Exercício: Manipulando o arquivo 100M.data 
+
+    // Load do arquivo
+    // Quantidade de registros
+    // Quantidade de linhas com a palavra "twinkle" no arquivo
+    // Quantidade de linhas que não tem a palavra "diamond" no arquivo
+    // Salve o ultimo RDD no formato texto na sua máquina local com 2 partições
+
+# 2) Spark SQL: Manipulando diferentes formatos e operações básicas usando Dataframe
+
+    # 2.1) Load arquivo people.json e wiki-pageviews.txt
+
+    >>> peopleDF = spark.read.json("C:/bigdata/datasets/people.json")
+    >>> pageViewsDF = spark.read.text("C:/bigdata/datasets/wiki-pageviews.txt")
+
+    # 2.2) Contando e limitando DataFrames
+    
+    >>> peopleDF.count()
+    >>> peopleDF.limit(5).show()
+    >>> pageViewsDF.limit(5).show()
+
+    # 2.3) Examinando e declarando Schema
+
+    >>> pageViewsDF.printSchema()
+    >>> peopleDF.printSchema()
+    >>> from pyspark.sql.types import *
+    >>> mySchema = StructType().add("name", StringType()).add("gender", StringType()).add("age", IntegerType())
+    >>> peopleDF = spark.read.schema(mySchema).json("C:/bigdata/datasets/people.json")
+    >>> peopleDF.printSchema()
+
+    # 2.4) Transformações com Dataframes parte 1: Schemas, filtros, agrupamentos, planos de execução e o Pyspark deduzindo schemas de arquivo json
+    
+    >>> peopleDF = spark.read.json("C:/bigdata/datasets/people.json")
+    >>> peopleDF.printSchema()
+
+    >>> peopleDF.filter(peopleDF.age > 25).explain()
+    >>> peopleDF.filter(peopleDF.age > 25).show()
+    >>> peopleDF.filter("age > 25").show()
+
+    >>> peopleDF.filter((peopleDF.age > 25) & (peopleDF.age <= 50)).show()
+    >>> peopleDF.filter(peopleDF.gender == "F").show()
+    >>> peopleDF.groupBy(peopleDF.gender).count().explain()
+    >>> peopleDF.filter(peopleDF.age>25).orderBy(peopleDF.age).explain()
+    >>> peopleDF.groupBy(peopleDF.gender).count().show()
+
+    >>> peopleDF.createOrReplaceTempView("people") 
+    >>> spark.sql("SELECT name, age FROM people WHERE gender = 'F' and age = (select max(age) FROM people WHERE gender='F')").show()
+
+    # 2.5) Trabalhando com Dataframes mais complexos
+
+    >>> githubDF = spark.read.json("C:/bigdata/datasets/github.json")
+    >>> githubDF.limit(5).show()
+
+    >>> githubDF.limit(5).select(githubDF.actor).show(truncate=False)
+    >>> githubDF.select("actor").printSchema()
+
+    >>> actorDF = githubDF.select("actor")
+    >>> actorDF.select("actor.login").limit(5).show()
+
+    // Contando logins únicos
+    >>> actorDF.select("actor.login").dropDuplicates().count()
+
+    // Contando todos os valores únicos da coluna do tipo 'type'.
+    >>> githubDF.dropDuplicates(["type"]).count()
+    >>> githubDF.dropDuplicates(["type"]).show()
+
+    //  Quantidade dos registros do tipo "CreateEvent"
+    >>> githubDF.filter(githubDF.type == "CreateEvent").count()
+
+    // GroupBy por login de ator  e seu respectivo schema
+    >>> githubDF.groupBy("actor.login").count().printSchema()
+    >>> githubDF.groupBy("actor.login").count().limit(5).show()
+
+    // Exiba os 20 logins com o maior número de contribuições
+    >>> githubDF.groupBy("actor.login").count().orderBy("count", ascending=False).limit(20).show()
+
+    // Opcional: Usando SQL para a consulta anterior
+
+    // Criando tabela temporária
+    >>> githubDF.createOrReplaceTempView("githubData")
+
+    // Executando a Query
+    >>> spark.sql("SELECT actor.login, COUNT(*) AS entryCount FROM githubData GROUP BY actor.login ORDER BY entryCount DESC LIMIT 20").show()
+
+# 3) Cache, Joins e Broadcast
+
+    // Cache
+    >>> githubDF.count()
+    >>> githubDF.cache()
+    >>> githubDF.count()
+    >>> githubDF.count()
+    >>> githubDF.count()
+    
+    // Top 20 usuários que mais contribuíram no Github: Sem Join
+
+    >>> scanQuery = githubDF.groupBy("actor.login").count().orderBy("count", ascending=False).limit(20)
+    >>> scanQuery.show()
+
+    // Top 20 usuários que mais contribuíram no Github: Com Join + Broadcast
+
+    >>> githubTop20DF = spark.read.json("C:/bigdata/datasets/github-top20.json")
+    >>> githubTop20DF.show()
+    >>> topContributorsJoinedDF = githubDF.join(githubTop20DF, githubDF.actor.login == githubTop20DF.login).groupBy(githubDF.actor.login).count().orderBy("count", ascending=False)
+    
+    // Shuffle realizado > 7900x
+    >>> topContributorsJoinedDF.show()
+
+    // Plano de Execução
+    >>> topContributorsJoinedDF.explain()
+
+    // Cenário sem broadcast
+    >>> spark.conf.set("spark.sql.autoBroadcastJoinThreshold",-1)
+
+    // Execute novamente o Join e execute o explain sem broadcast  
+    >>> topContributorsJoinedDF = githubDF.join(githubTop20DF, githubDF.actor.login == githubTop20DF.login).groupBy(githubDF.actor.login).count().orderBy("count", ascending=False)
+    >>> topContributorsJoinedDF.explain()
+    >>> topContributorsJoinedDF.show()
+
+    // Ativando novamente o broadcast para o valor default de 10MB
+    >>> spark.conf.set("spark.sql.autoBroadcastJoinThreshold",1024*1024*10)
+
+    
+# 4) Submetendo jobs via Spark-submit (No Prompt de comando do windoows)
+
+    // Saia do interpretador do pyspark e no prompt execute o arquivo hello_world.py:
+    > spark-submit C:\bigdata\projetos\tst\treinamento_coii\etl\hello_world.py
+
+    // Analise o script ProcessFiles.py e após isso, execute-o via spark-submit
+    > spark-submit C:\bigdata\projetos\tst\treinamento_coii\etl\ProcessFiles.py
+

@@ -1,0 +1,52 @@
+Tutorial: Instalação do Spark 2 no Windows
+
+Referências: 
+https://medium.com/big-data-engineering/how-to-install-apache-spark-2-x-in-your-pc-e2047246ffc3
+https://vlibras.gov.br/doc/windows/installation/javaenvironment.html
+
+0. Pré-requisitos
+
+    - Instalar Java JDK 8: http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+    - Setar variáveis de ambiente conforme os links de referência
+
+1. Spark: Download e instalação
+
+    - Download do Apache Spark 2.3.0: 
+        Internet: 
+            https://archive.apache.org/dist/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz
+            https://github.com/steveloughran/winutils/blob/master/hadoop-2.7.1/bin/winutils.exe
+        Rede: 
+            \\NTLD267801\Hadoop\spark-2.3.0-bin-hadoop2.7.zip
+            \\NTLD267801\Hadoop\winutils.exe
+    - Download do Apache Hadoop 2.7.1
+            https://archive.apache.org/dist/hadoop/common/hadoop-2.7.1/hadoop-2.7.1-src.tar.gz
+
+    - Extraia o arquivo spark-2.3.0-bin-hadoop2.7.tgz em C:\Spark
+    - Variáveis de ambiente: 
+        - Crie a variável de ambiente do sistema: 
+            SPARK_HOME = C:\Spark\spark-2.3.0-bin-hadoop2.7
+            HADOOP_HOME = C:\Spark\spark-2.3.0-bin-hadoop2.7
+        - Edite a variável PATH
+            PATH += C:\Spark\spark-2.3.0-bin-hadoop2.7\bin
+    - Observações: 
+        - Caso tenha baixado pela internet, mova o arquivo "winutils.exe" para a pasta C:\Spark\spark-2.3.0-bin-hadoop2.7\bin
+        - Caso tenha baixado pela pasta de rede, a pasta já contém o arquivo "winutils.exe"
+    
+2. Diretório tmp
+    - Criar a pasta temporária do Hive:
+        C:\tmp\hive
+    - Abra o CMD executando como Administrador e execute os seguinte comandos: 
+        cmd> winutils.exe chmod -R 777 C:\tmp\hive
+        cmd> winutils.exe ls -F C:\tmp\hive
+
+3. Testando a instalação pelo CMD (ignore as mensagens de warning)
+
+    3.1) Via interpretador
+
+    cmd> pyspark
+    >>> nums = sc.parallelize([1,2,3,4])
+    >>> nums.map(lambda x: x*x).collect()
+
+    3.2) Via Spark-submit
+
+    cmd> spark-submit hello_world.py

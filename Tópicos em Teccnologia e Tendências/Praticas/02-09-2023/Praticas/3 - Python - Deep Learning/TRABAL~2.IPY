@@ -1,0 +1,370 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Trabalho Prático da disciplina de Visão Computacional com Deep Learning.ipynb",
+      "provenance": [],
+      "collapsed_sections": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "accelerator": "GPU"
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "NzdWoVD1FNsY",
+        "colab_type": "text"
+      },
+      "source": [
+        "Disciplina: Visão Computacional com Deep Learning\n",
+        "Aluno: Ricardo Roberto de LIma"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "PqerVHVZEvA1",
+        "colab_type": "code",
+        "outputId": "4c360d7d-11c0-441e-bfef-9258fc8dabd5",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "source": [
+        "from keras.models import Sequential \n",
+        "from keras.layers.core import Dense, Dropout, Activation, Flatten \n",
+        "from keras.layers.convolutional import Conv2D, MaxPooling2D, ZeroPadding2D \n",
+        "from keras.layers.normalization import BatchNormalization \n",
+        "from keras.regularizers import l2 \n",
+        "from keras.datasets import cifar10, cifar100 \n",
+        "from keras.optimizers import Adam \n",
+        "from keras.utils import to_categorical \n",
+        "import numpy as np \n",
+        " "
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Using TensorFlow backend.\n"
+          ],
+          "name": "stderr"
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "text/html": [
+              "<p style=\"color: red;\">\n",
+              "The default version of TensorFlow in Colab will soon switch to TensorFlow 2.x.<br>\n",
+              "We recommend you <a href=\"https://www.tensorflow.org/guide/migrate\" target=\"_blank\">upgrade</a> now \n",
+              "or ensure your notebook will continue to use TensorFlow 1.x via the <code>%tensorflow_version 1.x</code> magic:\n",
+              "<a href=\"https://colab.research.google.com/notebooks/tensorflow_version.ipynb\" target=\"_blank\">more info</a>.</p>\n"
+            ],
+            "text/plain": [
+              "<IPython.core.display.HTML object>"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          }
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "awvDHDOeFUpi",
+        "colab_type": "code",
+        "outputId": "9b8c3758-c8a8-4db4-8100-d38bd58ab9ce",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 92
+        }
+      },
+      "source": [
+        "np.random.seed(1000) \n",
+        " \n",
+        "(X_train10, Y_train10), (X_test10, Y_test10) = cifar10.load_data() \n",
+        "(X_train100, Y_train100), (X_test100, Y_test100) = cifar100.load_data() "
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Downloading data from https://www.cs.toronto.edu/~kriz/cifar-10-python.tar.gz\n",
+            "170500096/170498071 [==============================] - 6s 0us/step\n",
+            "Downloading data from https://www.cs.toronto.edu/~kriz/cifar-100-python.tar.gz\n",
+            "169009152/169001437 [==============================] - 6s 0us/step\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "Cl_Rl_J8GI8n",
+        "colab_type": "code",
+        "outputId": "b65c2d7c-0eac-4fa8-b7d2-75cd5c64a85c",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 377
+        }
+      },
+      "source": [
+        "# Arquitetura de Rede Neural Artificial - AlexNet\n",
+        "\n",
+        "#alexnet = Sequential() \n",
+        " \n",
+        "# Layer 1 \n",
+        "# alexnet.add(Conv2D(96, (11, 11), input_shape=(32, 32, 3),   \n",
+        "#                   padding='same')) \n",
+        "#alexnet.add(BatchNormalization()) \n",
+        "#alexnet.add(Activation('relu')) \n",
+        "#alexnet.add(MaxPooling2D(pool_size=(2, 2))) \n",
+        "\n",
+        "# Layer 1\n",
+        "#alexnet.add(Conv2D(96, (3, 3), input_shape=(32, 32, 3),\n",
+        "#                    padding='same'))\n",
+        "#alexnet.add(BatchNormalization())\n",
+        "#alexnet.add(Activation('relu'))\n",
+        "#alexnet.add(MaxPooling2D(pool_size=(2, 2)))\n",
+        " \n",
+        "# Layer 2 \n",
+        "#alexnet.add(Conv2D(256, (5, 5), padding='same'))\n",
+        "#alexnet.add(BatchNormalization())\n",
+        "#alexnet.add(Activation('relu'))\n",
+        "#alexnet.add(MaxPooling2D(pool_size=(2, 2))) \n",
+        " \n",
+        "# Layer 3 \n",
+        "#alexnet.add(Conv2D(512, (3, 3), padding='same'))\n",
+        "#alexnet.add(BatchNormalization()) \n",
+        "#alexnet.add(Activation('relu')) \n",
+        "#alexnet.add(MaxPooling2D(pool_size=(2, 2))) \n",
+        " \n",
+        "# Layer 4 \n",
+        "#alexnet.add(Conv2D(1024, (3, 3), padding='same'))\n",
+        "#alexnet.add(BatchNormalization()) \n",
+        "#alexnet.add(Activation('relu')) \n",
+        " \n",
+        "# Layer 5 \n",
+        "#alexnet.add(Conv2D(1024, (3, 3), padding='same'))\n",
+        "#alexnet.add(BatchNormalization()) \n",
+        "#alexnet.add(Activation('relu')) \n",
+        "#alexnet.add(MaxPooling2D(pool_size=(2, 2))) \n",
+        " \n",
+        "# Layer 6 \n",
+        "# alexnet.add(Flatten()) \n",
+        "# alexnet.add(Dense(4096)) \n",
+        "# alexnet.add(BatchNormalization()) \n",
+        "# alexnet.add(Activation('relu')) \n",
+        "# alexnet.add(Dropout(0.5)) \n",
+        "\n",
+        "# Layer 6\n",
+        "#alexnet.add(Flatten())\n",
+        "#alexnet.add(Dense(4096, kernel_initializer='zeros'))\n",
+        "#alexnet.add(BatchNormalization())\n",
+        "#alexnet.add(Activation('relu'))\n",
+        "#alexnet.add(Dropout(0.5))\n",
+        "\n",
+        "\n",
+        "# Layer 7 alexnet.add(Dense(4096)) \n",
+        "#alexnet.add(BatchNormalization()) \n",
+        "#alexnet.add(Activation('relu')) \n",
+        "#alexnet.add(Dropout(0.5)) \n",
+        " \n",
+        "# Layer 7\n",
+        "#alexnet.add(Dense(4096, kernel_initializer='zeros'))\n",
+        "#alexnet.add(BatchNormalization())\n",
+        "#alexnet.add(Activation('relu'))\n",
+        "#alexnet.add(Dropout(0.5))\n",
+        "  \n",
+        "# Layer 8 \n",
+        "#alexnet.add(Dense(10)) \n",
+        "#alexnet.add(BatchNormalization()) \n",
+        "#alexnet.add(Activation('softmax')) \n",
+        "\n",
+        "# Layer 8\n",
+        "#alexnet.add(Dense(10))\n",
+        "#alexnet.add(BatchNormalization())\n",
+        "#alexnet.add(Activation('softmax'))\n",
+        "\n",
+        "\n",
+        "###############################################################################################################\n",
+        "\n",
+        "# Initialize model\n",
+        "alexnet = Sequential()\n",
+        "\n",
+        "# Layer 1\n",
+        "alexnet.add(Conv2D(96, (3, 3), input_shape=(32, 32, 3),\n",
+        "        padding='same'))\n",
+        "alexnet.add(BatchNormalization())\n",
+        "alexnet.add(Activation('relu'))\n",
+        "alexnet.add(MaxPooling2D(pool_size=(2, 2)))\n",
+        "\n",
+        "# Layer 2\n",
+        "alexnet.add(Conv2D(256, (5, 5), padding='same'))\n",
+        "alexnet.add(BatchNormalization())\n",
+        "alexnet.add(Activation('relu'))\n",
+        "alexnet.add(MaxPooling2D(pool_size=(2, 2)))\n",
+        "\n",
+        "# Layer 3\n",
+        "alexnet.add(Conv2D(512, (3, 3), padding='same'))\n",
+        "alexnet.add(BatchNormalization())\n",
+        "alexnet.add(Activation('relu'))\n",
+        "alexnet.add(MaxPooling2D(pool_size=(2, 2)))\n",
+        "\n",
+        "\n",
+        "# Layer 6\n",
+        "alexnet.add(Flatten())\n",
+        "alexnet.add(Dense(4096))\n",
+        "alexnet.add(BatchNormalization())\n",
+        "alexnet.add(Activation('relu'))\n",
+        "alexnet.add(Dropout(0.5))\n",
+        "\n",
+        "\n",
+        "# Layer 8\n",
+        "alexnet.add(Dense(10))\n",
+        "alexnet.add(BatchNormalization())\n",
+        "alexnet.add(Activation('softmax'))"
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "WARNING: Logging before flag parsing goes to stderr.\n",
+            "W0617 11:22:08.558172 140689404024704 deprecation_wrapper.py:119] From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:74: The name tf.get_default_graph is deprecated. Please use tf.compat.v1.get_default_graph instead.\n",
+            "\n",
+            "W0617 11:22:08.601286 140689404024704 deprecation_wrapper.py:119] From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:517: The name tf.placeholder is deprecated. Please use tf.compat.v1.placeholder instead.\n",
+            "\n",
+            "W0617 11:22:08.609114 140689404024704 deprecation_wrapper.py:119] From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:4138: The name tf.random_uniform is deprecated. Please use tf.random.uniform instead.\n",
+            "\n",
+            "W0617 11:22:08.657841 140689404024704 deprecation_wrapper.py:119] From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:174: The name tf.get_default_session is deprecated. Please use tf.compat.v1.get_default_session instead.\n",
+            "\n",
+            "W0617 11:22:08.659045 140689404024704 deprecation_wrapper.py:119] From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:181: The name tf.ConfigProto is deprecated. Please use tf.compat.v1.ConfigProto instead.\n",
+            "\n",
+            "W0617 11:22:11.539438 140689404024704 deprecation_wrapper.py:119] From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:1834: The name tf.nn.fused_batch_norm is deprecated. Please use tf.compat.v1.nn.fused_batch_norm instead.\n",
+            "\n",
+            "W0617 11:22:11.627600 140689404024704 deprecation_wrapper.py:119] From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:3976: The name tf.nn.max_pool is deprecated. Please use tf.nn.max_pool2d instead.\n",
+            "\n",
+            "W0617 11:22:11.961370 140689404024704 deprecation.py:506] From /usr/local/lib/python3.6/dist-packages/keras/backend/tensorflow_backend.py:3445: calling dropout (from tensorflow.python.ops.nn_ops) with keep_prob is deprecated and will be removed in a future version.\n",
+            "Instructions for updating:\n",
+            "Please use `rate` instead of `keep_prob`. Rate should be set to `rate = 1 - keep_prob`.\n"
+          ],
+          "name": "stderr"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "zvkFiMkyH3Yn",
+        "colab_type": "code",
+        "outputId": "dc9e43c8-5c85-4628-9701-80e2e12017f8",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 584
+        }
+      },
+      "source": [
+        "# Preparando para Executar o Modelo da Rede Neural Convolucional\n",
+        "\n",
+        "#alexnet.compile(loss='categorical_crossentropy',\n",
+        "#        optimizer=Adam(lr=0.0001),\n",
+        "#        metrics=['accuracy']) \n",
+        " \n",
+        "#alexnet.fit(X_train10 / 255.0, to_categorical(Y_train10),\n",
+        "#        batch_size=64,\n",
+        "#        shuffle=True,\n",
+        "#        epochs=10,\n",
+        "#        validation_data=(X_test10 / 255.0, to_categorical(Y_test10)))\n",
+        "\n",
+        "#scores = alexnet.evaluate(X_test10 / 255.0, to_categorical(Y_test10)) \n",
+        " \n",
+        "#print('Loss: %.3f' % scores[0]) \n",
+        "#print('Accuracy: %.3f' % scores[1]) \n",
+        "\n",
+        "alexnet.compile(loss='categorical_crossentropy',\n",
+        "        optimizer=Adam(lr=0.0001),\n",
+        "        metrics=['accuracy'])\n",
+        "\n",
+        "alexnet.fit(X_train10 / 255.0, to_categorical(Y_train10),\n",
+        "        batch_size=128,\n",
+        "        shuffle=True,\n",
+        "        epochs=10,\n",
+        "        validation_data=(X_test10 / 255.0, to_categorical(Y_test10)))\n",
+        "\n",
+        "scores = alexnet.evaluate(X_test10 / 255.0, to_categorical(Y_test10))\n",
+        "\n",
+        "print('Loss: %.3f' % scores[0])\n",
+        "print('Accuracy: %.3f' % scores[1])\n",
+        " "
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "W0617 11:22:20.232518 140689404024704 deprecation_wrapper.py:119] From /usr/local/lib/python3.6/dist-packages/keras/optimizers.py:790: The name tf.train.Optimizer is deprecated. Please use tf.compat.v1.train.Optimizer instead.\n",
+            "\n",
+            "W0617 11:22:21.535449 140689404024704 deprecation.py:323] From /usr/local/lib/python3.6/dist-packages/tensorflow/python/ops/math_grad.py:1250: add_dispatch_support.<locals>.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.\n",
+            "Instructions for updating:\n",
+            "Use tf.where in 2.0, which has the same broadcast rule as np.where\n"
+          ],
+          "name": "stderr"
+        },
+        {
+          "output_type": "stream",
+          "text": [
+            "Train on 50000 samples, validate on 10000 samples\n",
+            "Epoch 1/10\n",
+            "50000/50000 [==============================] - 54s 1ms/step - loss: 1.3309 - acc: 0.5779 - val_loss: 1.2363 - val_acc: 0.6110\n",
+            "Epoch 2/10\n",
+            "50000/50000 [==============================] - 48s 962us/step - loss: 1.0165 - acc: 0.7262 - val_loss: 1.0338 - val_acc: 0.7089\n",
+            "Epoch 3/10\n",
+            "50000/50000 [==============================] - 48s 967us/step - loss: 0.8638 - acc: 0.7925 - val_loss: 1.0467 - val_acc: 0.6832\n",
+            "Epoch 4/10\n",
+            "50000/50000 [==============================] - 48s 968us/step - loss: 0.7384 - acc: 0.8488 - val_loss: 1.0511 - val_acc: 0.6825\n",
+            "Epoch 5/10\n",
+            "50000/50000 [==============================] - 48s 970us/step - loss: 0.6265 - acc: 0.8994 - val_loss: 0.9759 - val_acc: 0.7347\n",
+            "Epoch 6/10\n",
+            "50000/50000 [==============================] - 49s 971us/step - loss: 0.5268 - acc: 0.9385 - val_loss: 0.9328 - val_acc: 0.7428\n",
+            "Epoch 7/10\n",
+            "50000/50000 [==============================] - 48s 965us/step - loss: 0.4342 - acc: 0.9685 - val_loss: 0.9120 - val_acc: 0.7541\n",
+            "Epoch 8/10\n",
+            "50000/50000 [==============================] - 48s 967us/step - loss: 0.3662 - acc: 0.9832 - val_loss: 0.8787 - val_acc: 0.7620\n",
+            "Epoch 9/10\n",
+            "50000/50000 [==============================] - 48s 968us/step - loss: 0.3115 - acc: 0.9913 - val_loss: 0.8950 - val_acc: 0.7553\n",
+            "Epoch 10/10\n",
+            "50000/50000 [==============================] - 48s 964us/step - loss: 0.2670 - acc: 0.9957 - val_loss: 0.8908 - val_acc: 0.7408\n",
+            "10000/10000 [==============================] - 4s 392us/step\n",
+            "Loss: 0.891\n",
+            "Accuracy: 0.741\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "TvGvWkPfJJ2B",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        ""
+      ],
+      "execution_count": 0,
+      "outputs": []
+    }
+  ]
+}

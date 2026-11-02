@@ -1,0 +1,14 @@
+{
+  "name": "projeto-de-teste-e-qualidade-se-software",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cypress run"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cypress": "^13.12.0"
+  }
+}

@@ -1,0 +1,33 @@
+{
+    "error": {
+        "message": "Unsupported get request. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
+        "type": "GraphMethodException",
+        "code": 100,
+        "error_subcode": 33,
+        "fbtrace_id": "FbOUHQXFUPj"
+    }
+}{
+    "error": {
+        "message": "Unsupported get request. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
+        "type": "GraphMethodException",
+        "code": 100,
+        "error_subcode": 33,
+        "fbtrace_id": "D+y1+ACGmgY"
+    }
+}{
+    "error": {
+        "message": "Unsupported get request. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
+        "type": "GraphMethodException",
+        "code": 100,
+        "error_subcode": 33,
+        "fbtrace_id": "Eme/BLaFGlU"
+    }
+}{
+    "error": {
+        "message": "Unsupported get request. Please read the Graph API documentation at https://developers.facebook.com/docs/graph-api",
+        "type": "GraphMethodException",
+        "code": 100,
+        "error_subcode": 33,
+        "fbtrace_id": "ATFFbAuDj_d3uaYF7X8IjjA"
+    }
+}

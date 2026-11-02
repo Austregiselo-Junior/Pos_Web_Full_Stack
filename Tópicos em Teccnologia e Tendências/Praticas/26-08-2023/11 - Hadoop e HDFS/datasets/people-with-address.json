@@ -1,0 +1,4 @@
+{"name": "John", "gender": "M", "age": 35, "address":{"street":"123 Aspen St.","city":"Buffalo","state":"NY","zip":"14205"} }
+{"name": "Jane", "gender": "F", "age": 40, "address":{"street":"456 Wanut St.","city":"San Francisco","state":"CA","zip":"94105"} }
+{"name": "Mike", "gender": "M", "age": 20, "address":{"street":"789 Maple St.","city":"Augusta","state":"ME","zip":"04332"} }
+{"name": "Sue",  "gender": "F", "age": 52, "address":{"street":"123 Hickory St.","city":"Austin","state":"TX","zip":"78652"} }

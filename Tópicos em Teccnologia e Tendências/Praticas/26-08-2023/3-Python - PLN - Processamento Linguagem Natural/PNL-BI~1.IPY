@@ -1,0 +1,222 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Processamento de Linguagem Natural com Python e NLTK\n",
+    "# Autor: Ricardo Roberto de Lima - Identificação de Dados para Manipulação de Objetos."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "showing info https://raw.githubusercontent.com/nltk/nltk_data/gh-pages/index.xml\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "True"
+      ]
+     },
+     "execution_count": 1,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import nltk\n",
+    "import numpy as np\n",
+    "nltk.download()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Exemplo do Texto para Validação.\n",
+    "Texto =  'Mr. Green is portrayed as a plump, pompous looking business man with grey hair. On the box, he is wearing a grayish suit with a green tie, while on his card, his suit is brown.'"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['Mr', ' Green is portrayed as a plump, pompous looking business man with grey hair', ' On the box, he is wearing a grayish suit with a green tie, while on his card, his suit is brown', '']\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Texto = 'estou contente com o resultado do teste que fiz no dia de ontem - Comando Slit para separa as palavras'\n",
+    "print(Texto.split('.'))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['Mr. Green is portrayed as a plump, pompous looking business man with grey hair.', 'On the box, he is wearing a grayish suit with a green tie, while on his card, his suit is brown.']\n"
+     ]
+    }
+   ],
+   "source": [
+    "# O tokenize tem como função..Separar os blocos de parágrafos de acordo com a semântica\n",
+    "Frases = nltk.tokenize.sent_tokenize(Texto)\n",
+    "print(Frases)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['Mr.', 'Green', 'is', 'portrayed', 'as', 'a', 'plump', ',', 'pompous', 'looking', 'business', 'man', 'with', 'grey', 'hair', '.', 'On', 'the', 'box', ',', 'he', 'is', 'wearing', 'a', 'grayish', 'suit', 'with', 'a', 'green', 'tie', ',', 'while', 'on', 'his', 'card', ',', 'his', 'suit', 'is', 'brown', '.']\n"
+     ]
+    }
+   ],
+   "source": [
+    "# O comando word_tokenize faz a quebra dos blocos em palavras e separa cada uma delas de acordo com seu tipo.\n",
+    "tokens = nltk.word_tokenize(Texto)\n",
+    "print(tokens)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[('Mr.', 'NNP'), ('Green', 'NNP'), ('is', 'VBZ'), ('portrayed', 'VBN'), ('as', 'IN'), ('a', 'DT'), ('plump', 'NN'), (',', ','), ('pompous', 'JJ'), ('looking', 'VBG'), ('business', 'NN'), ('man', 'NN'), ('with', 'IN'), ('grey', 'JJ'), ('hair', 'NN'), ('.', '.'), ('On', 'IN'), ('the', 'DT'), ('box', 'NN'), (',', ','), ('he', 'PRP'), ('is', 'VBZ'), ('wearing', 'VBG'), ('a', 'DT'), ('grayish', 'JJ'), ('suit', 'NN'), ('with', 'IN'), ('a', 'DT'), ('green', 'JJ'), ('tie', 'NN'), (',', ','), ('while', 'IN'), ('on', 'IN'), ('his', 'PRP$'), ('card', 'NN'), (',', ','), ('his', 'PRP$'), ('suit', 'NN'), ('is', 'VBZ'), ('brown', 'VBN'), ('.', '.')]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# O método pos_tag identifica cada palavra e seleciona o seu tipo de acordo com a gramática exemplo, adjetivo, verbo, substantitivo, etc.\n",
+    "classes = nltk.pos_tag(tokens)\n",
+    "print(classes)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "(S\n",
+      "  (PERSON Mr./NNP)\n",
+      "  (ORGANIZATION Green/NNP)\n",
+      "  is/VBZ\n",
+      "  portrayed/VBN\n",
+      "  as/IN\n",
+      "  a/DT\n",
+      "  plump/NN\n",
+      "  ,/,\n",
+      "  pompous/JJ\n",
+      "  looking/VBG\n",
+      "  business/NN\n",
+      "  man/NN\n",
+      "  with/IN\n",
+      "  grey/JJ\n",
+      "  hair/NN\n",
+      "  ./.\n",
+      "  On/IN\n",
+      "  the/DT\n",
+      "  box/NN\n",
+      "  ,/,\n",
+      "  he/PRP\n",
+      "  is/VBZ\n",
+      "  wearing/VBG\n",
+      "  a/DT\n",
+      "  grayish/JJ\n",
+      "  suit/NN\n",
+      "  with/IN\n",
+      "  a/DT\n",
+      "  green/JJ\n",
+      "  tie/NN\n",
+      "  ,/,\n",
+      "  while/IN\n",
+      "  on/IN\n",
+      "  his/PRP$\n",
+      "  card/NN\n",
+      "  ,/,\n",
+      "  his/PRP$\n",
+      "  suit/NN\n",
+      "  is/VBZ\n",
+      "  brown/VBN\n",
+      "  ./.)\n"
+     ]
+    }
+   ],
+   "source": [
+    "# O método chunk.ne_chunk tem como base identificar as palavras classificando-as como Entidades.\n",
+    "entidades = nltk.chunk.ne_chunk(classes)\n",
+    "print(entidades)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.1"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

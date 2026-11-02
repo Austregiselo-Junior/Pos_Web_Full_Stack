@@ -1,0 +1,342 @@
+{
+    "data": [
+        {
+            "name": "Cafe Cancun",
+            "id": "245107198922818"
+        },
+        {
+            "name": "Marietta Caf\u00e9-Lago Sul",
+            "id": "611620082378051"
+        },
+        {
+            "name": "Fran's Caf\u00e9 - Asa Norte",
+            "id": "130215997415577"
+        },
+        {
+            "name": "Cafeteria e Lanches Degust",
+            "id": "467145656805574"
+        },
+        {
+            "name": "Caf\u00e9 Fontenelle",
+            "id": "229676577146217"
+        },
+        {
+            "name": "Caf\u00e9 Sete Alimentos",
+            "id": "601795553312618"
+        },
+        {
+            "name": "Cafe Bico de Ouro",
+            "id": "783707861735672"
+        },
+        {
+            "name": "Cafe Havana",
+            "id": "729555393917727"
+        },
+        {
+            "name": "Neper Caf\u00e9",
+            "id": "1265615643466296"
+        },
+        {
+            "name": "Frans Caf\u00e9 Sudoeste",
+            "id": "1886457641624442"
+        },
+        {
+            "name": "Nazareth Caf\u00e9",
+            "id": "814079528730920"
+        },
+        {
+            "name": "Cafe Arabia",
+            "id": "177851109296762"
+        },
+        {
+            "name": "Macchiato Cafe e Complementos",
+            "id": "238240593182699"
+        },
+        {
+            "name": "Esta\u00e7\u00e3o do Caf\u00e9",
+            "id": "160244587693570"
+        },
+        {
+            "name": "Grao Forte Cafe",
+            "id": "682549735181621"
+        },
+        {
+            "name": "Caf\u00e9 Nacional",
+            "id": "1504397526531425"
+        },
+        {
+            "name": "Cafe Export",
+            "id": "424058264450988"
+        },
+        {
+            "name": "Cafe do Fernando Restaurante",
+            "id": "1689753861294044"
+        },
+        {
+            "name": "CaFer",
+            "id": "850912111714151"
+        },
+        {
+            "name": "Caf\u00e9 Sarah Kubitschek",
+            "id": "1809095775983624"
+        },
+        {
+            "name": "Cafe Ponto 3",
+            "id": "524679541046308"
+        },
+        {
+            "name": "Caf\u00e9 Com Leite",
+            "id": "349270195282563"
+        },
+        {
+            "name": "Marietta Cafe, Marvin-American Burger",
+            "id": "1758449671039586"
+        },
+        {
+            "name": "Friends Caf\u00e9",
+            "id": "563486277136825"
+        },
+        {
+            "name": "Brasileirinho Caf\u00e9",
+            "id": "589017661261366"
+        }
+    ],
+    "paging": {
+        "cursors": {
+            "after": "MjQZD"
+        },
+        "next": "https://graph.facebook.com/v2.10/search?access_token=329484294160599%7CRICnpAHDI6MEYxmx19Vb9aqKSDg&q=cafe&type=place&center=-15.77972%2C-47.92972&distance=50000&limit=25&after=MjQZD"
+    }
+}{
+    "data": [
+        {
+            "name": "Caf\u00e9 Savana",
+            "id": "183870564971905"
+        },
+        {
+            "name": "Fran's Caf\u00e9 - Asa Norte",
+            "id": "130215997415577"
+        },
+        {
+            "name": "Cafe Cancun",
+            "id": "245107198922818"
+        },
+        {
+            "name": "Caf\u00e9 Sarah Kubitschek",
+            "id": "1809095775983624"
+        },
+        {
+            "name": "Cafezinho",
+            "id": "216958745071765"
+        },
+        {
+            "name": "Caf\u00e9 com Feira",
+            "id": "834942836681760"
+        },
+        {
+            "name": "Caf\u00e9 Tricot",
+            "id": "279002765451766"
+        },
+        {
+            "name": "Caf\u00e9 dos Estados",
+            "id": "304155440017292"
+        },
+        {
+            "name": "Pezzo di Pane Padaria e Cafeteria",
+            "id": "304446080006131"
+        },
+        {
+            "name": "Los Baristas . Casa de Caf\u00e9s",
+            "id": "1577836542433359"
+        },
+        {
+            "name": "Grao Forte Cafe",
+            "id": "682549735181621"
+        },
+        {
+            "name": "Civit\u00e1 Caf\u00e9s Especiais",
+            "id": "1607290026216537"
+        },
+        {
+            "name": "CaFer",
+            "id": "850912111714151"
+        },
+        {
+            "name": "Martinica Caf\u00e9",
+            "id": "928817437198211"
+        },
+        {
+            "name": "Caf\u00e9 Sarah Kubitschek",
+            "id": "711778945663648"
+        },
+        {
+            "name": "Academia Caf\u00e9",
+            "id": "1002701583088554"
+        },
+        {
+            "name": "Caf\u00e9 Ducatto",
+            "id": "1884117688535549"
+        },
+        {
+            "name": "Belini Caf\u00e9 - The Coffee Experience",
+            "id": "378391172311997"
+        },
+        {
+            "name": "Caf\u00e9 e um Ch\u00earo",
+            "id": "636474159887019"
+        },
+        {
+            "name": "Caf\u00e9 Contempor\u00e2neo",
+            "id": "372104722847129"
+        },
+        {
+            "name": "Caf\u00e9 Com Leite",
+            "id": "349270195282563"
+        },
+        {
+            "name": "Espa\u00e7o 13 caf\u00e9-bar & conveni\u00eancia",
+            "id": "1167860629958070"
+        },
+        {
+            "name": "Fran's Caf\u00e9 Guar\u00e1",
+            "id": "190711221455121"
+        },
+        {
+            "name": "Fran's Caf\u00e9",
+            "id": "213257578687456"
+        },
+        {
+            "name": "Caf\u00e9 Civit\u00e1",
+            "id": "258760724599144"
+        }
+    ],
+    "paging": {
+        "cursors": {
+            "after": "MjQZD"
+        },
+        "next": "https://graph.facebook.com/v2.10/search?access_token=329484294160599%7CRICnpAHDI6MEYxmx19Vb9aqKSDg&q=cafe&type=place&center=-15.77972%2C-47.92972&distance=50000&limit=25&after=MjQZD"
+    }
+}{
+    "data": [
+        {
+            "name": "Caf\u00e9 Savana",
+            "id": "183870564971905"
+        },
+        {
+            "name": "Fran's Caf\u00e9 - Asa Norte",
+            "id": "130215997415577"
+        },
+        {
+            "name": "Cafe Cancun",
+            "id": "245107198922818"
+        },
+        {
+            "name": "Caf\u00e9 Sarah Kubitschek",
+            "id": "1809095775983624"
+        },
+        {
+            "name": "Cafezinho",
+            "id": "216958745071765"
+        },
+        {
+            "name": "Caf\u00e9 com Feira",
+            "id": "834942836681760"
+        },
+        {
+            "name": "Caf\u00e9 Tricot",
+            "id": "279002765451766"
+        },
+        {
+            "name": "Caf\u00e9 dos Estados",
+            "id": "304155440017292"
+        },
+        {
+            "name": "Pezzo di Pane Padaria e Cafeteria",
+            "id": "304446080006131"
+        },
+        {
+            "name": "Los Baristas . Casa de Caf\u00e9s",
+            "id": "1577836542433359"
+        },
+        {
+            "name": "Grao Forte Cafe",
+            "id": "682549735181621"
+        },
+        {
+            "name": "Civit\u00e1 Caf\u00e9s Especiais",
+            "id": "1607290026216537"
+        },
+        {
+            "name": "CaFer",
+            "id": "850912111714151"
+        },
+        {
+            "name": "Martinica Caf\u00e9",
+            "id": "928817437198211"
+        },
+        {
+            "name": "Caf\u00e9 Sarah Kubitschek",
+            "id": "711778945663648"
+        },
+        {
+            "name": "Academia Caf\u00e9",
+            "id": "1002701583088554"
+        },
+        {
+            "name": "Caf\u00e9 Ducatto",
+            "id": "1884117688535549"
+        },
+        {
+            "name": "Belini Caf\u00e9 - The Coffee Experience",
+            "id": "378391172311997"
+        },
+        {
+            "name": "Caf\u00e9 e um Ch\u00earo",
+            "id": "636474159887019"
+        },
+        {
+            "name": "Caf\u00e9 Contempor\u00e2neo",
+            "id": "372104722847129"
+        },
+        {
+            "name": "Caf\u00e9 Com Leite",
+            "id": "349270195282563"
+        },
+        {
+            "name": "Espa\u00e7o 13 caf\u00e9-bar & conveni\u00eancia",
+            "id": "1167860629958070"
+        },
+        {
+            "name": "Fran's Caf\u00e9 Guar\u00e1",
+            "id": "190711221455121"
+        },
+        {
+            "name": "Fran's Caf\u00e9",
+            "id": "213257578687456"
+        },
+        {
+            "name": "Caf\u00e9 Civit\u00e1",
+            "id": "258760724599144"
+        }
+    ],
+    "paging": {
+        "cursors": {
+            "after": "MjQZD"
+        },
+        "next": "https://graph.facebook.com/v2.10/search?access_token=329484294160599%7CRICnpAHDI6MEYxmx19Vb9aqKSDg&q=cafe&type=place&center=-15.77972%2C-47.92972&distance=50000&limit=25&after=MjQZD"
+    }
+}{
+    "error": {
+        "message": "API access deactivated. To reactivate, go to the app dashboard.",
+        "type": "OAuthException",
+        "code": 200,
+        "fbtrace_id": "AVFLWNTVVyN8RRt-mV1LY3n"
+    }
+}{
+    "error": {
+        "message": "(#12) Place Search API is deprecated for third parties effective v8.0 is deprecated",
+        "type": "OAuthException",
+        "code": 12,
+        "fbtrace_id": "Apz6CjxylgWp5naLJabIXE9"
+    }
+}

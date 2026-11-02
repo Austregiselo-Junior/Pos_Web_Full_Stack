@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Autor: Ricardo Roberto de Lima - Machine Learning - Classificacao de Mamiferos</title>
+<!-- Referência ao Bootstrap CDN -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- Definição de estilo para fonte -->
+<style>
+        .lb-sm{
+            font-size: 9pt;
+            font-family: "Helvetica";
+        }
+</style>
+</head>
+<body>
+   <!-- div container -->
+   <div class="container">
+       <!-- Criação de uma div painel -->
+       <div class="panel panel-info">
+           <!-- Título da div painel -->
+           <div class="panel-heading"><b> DTP - Publicação de Modelos de Machine Learning - Classificação de Mamíferos com Naive Bayes</b></div>
+           <!-- Corpo da div painel -->
+           <div class="panel-body">
+               <div id="form-container">
+                   <!-- Definição -->
+                   <form action="/form/" method="post">
+                       <div class="form-group input-group-sm">
+                           <!-- Nome do animal. Este campo não afetará a tarefa de classificação -->
+                           <label class="lb-sm">Nome do Animal:</label>
+                           <input name="animal" type="text" class="form-control" placeholder="Nome do Animal" required />
+                       </div>
+                       <div class="form-group input-group-sm">
+
+                           <!-- Campo para a temperatura do sangue -->
+                           <label class="lb-sm">Sangue Quente ou Frio?</label>
+                           <select name="sangue" class="form-control">
+                               <option value="0">--Selecione--</option>
+                               <option value="1">Quente</option>
+                               <option value="2">Frio</option>
+                           </select>
+                       </div>
+                       <div class="form-group input-group-sm">
+
+                           <!-- Campo para saber se o animal bota ovos -->
+                           <label class="lb-sm">Bota Ovos?</label>
+                           <select name="bota_ovo" class="form-control">
+                               <option value="0">--Selecione--</option>
+                               <option value="1">Sim</option>
+                               <option value="2">Não</option>
+                           </select>
+                       </div>
+                       <div class="form-group input-group-sm">
+
+                           <!-- Campo para saber se o animal voa -->
+                           <label class="lb-sm">Voa?</label>
+                           <select name="voa" class="form-control">
+                               <option value="0">--Selecione--</option>
+                               <option value="1">Sim</option>
+                               <option value="2">Não</option>
+                           </select>
+                       </div>
+                       <div class="form-group input-group-sm">
+
+                           <!-- Campo para saber se o animal mora na água -->
+                           <label class="lb-sm">Mora na Água?</label>
+                           <select name="mora_agua" class="form-control">
+                               <option value="0">--Selecione--</option>
+                               <option value="1">Sim</option>
+                               <option value="2">Não</option>
+                               <option value="3">Às Vezes</option>
+                           </select>
+                       </div>
+
+                       <hr />
+
+                       <div class="form-group input-group-sm">
+                           <button type="submit" class="btn btn-sm btn-primary pull-right">Classificar</button>
+                       </div>
+
+                       <!-- Apresentação dos Resultados -->
+                       <div class="form-group">
+                           <label>Resultado:</label>
+                       </div>
+
+                       <!-- Apresentação do nome do animal -->
+                       <div class="form-group">
+                           <span class="lb-sm"><strong>Animal:</strong> {{animal}}</span>
+                       </div>
+
+                       <!-- Apresentação da classificação do animal -->
+                       <div class="form-group">
+                           <span class="lb-sm"><strong>Classificacao:</strong> {{classificacao}}</span>
+
+                       <!-- Apresentação do valor da probabilidade-->
+                       <div class="form-group">
+                           <span class="lb-sm"><strong>Probabilidade:</strong> {{probabilidade}}</span>
+
+                       </div>
+                    </form>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </body>
+</html>

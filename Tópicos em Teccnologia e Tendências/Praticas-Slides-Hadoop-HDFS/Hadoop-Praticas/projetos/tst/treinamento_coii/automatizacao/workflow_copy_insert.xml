@@ -1,0 +1,23 @@
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="ingestao_tst_treinamento_coii_${tabela}">
+	<global>
+		<job-tracker>${jobTracker}</job-tracker>
+		<name-node>${nameNode}</name-node>
+	</global>
+	
+	<start to="Insert_Into_Table"/>
+	
+	<action name="Insert_Into_Table">
+		<hive2
+			xmlns="uri:oozie:hive2-action:0.1">
+			<jdbc-url>${jdbcUrl}</jdbc-url>
+			<script>${diretorioScripts}/${tabela}_insert.sql</script>
+		</hive2>
+		<ok to="end"/>
+		<error to="Kill_Job"/>
+	</action>
+
+	<kill name="Kill_Job">
+		<message>Job failed</message>
+	</kill>
+	<end name="end"/>
+</workflow-app>

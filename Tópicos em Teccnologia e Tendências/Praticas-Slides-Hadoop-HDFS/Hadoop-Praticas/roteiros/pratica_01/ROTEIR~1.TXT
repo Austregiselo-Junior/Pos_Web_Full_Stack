@@ -1,0 +1,95 @@
+# Atividade Prática 01
+# Centro Universitário de João Pessoa
+# Autor: Profº MSc. Ricardo Roberto de Lima
+
+# Atividade Prática 01
+### Principais comandos HDFS
+* Obs: trocar 'scripts_ricardo' por scripts_<nome>
+
+Bibliografia: 
+https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html
+https://data-flair.training/blogs/hadoop-hdfs-commands-cli-perform-operations/
+https://www.cloudera.com/tutorials/learning-the-ropes-of-the-hdp-sandbox.html
+https://www.kaggle.com/
+
+
+### Pré-requisitos: 
+
+### Acessar Ambari: http://n221d020512.fast.prevnet:8080/ (login: cloudera/cloudera)
+    - Acessar Ícone do Container > "Files View"
+    - Acessar diretório "/user/cloudera"
+
+### Acessar Shell Web Client do Hadoop: http://n221d020512.fast.prevnet:8080/console/
+
+sandbox-hdp login: cloudera (senha: cloudera)
+[cloudera@sandbox-hdp ~]$ pwd
+
+1) Executar comandos 'ls', 'mkdir','cp', 'mv', 'rm' e 'rm -r'
+
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls /
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls /user/
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls /user/cloudera
+
+[cloudera@sandbox-hdp ~]$ hdfs dfs -mkdir /user/cloudera/scripts_ricardo
+[cloudera@sandbox-hdp ~]$ hdfs dfs -mkdir /user/cloudera/scripts_ricardo/datasets
+[cloudera@sandbox-hdp ~]$ hdfs dfs -mkdir /user/cloudera/scripts_ricardo/datasets/
+[cloudera@sandbox-hdp ~]$ hdfs dfs -mkdir -p /user/cloudera/scripts_ricardo/datasets/forest-fires-in-brazil
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls -R /user/cloudera/scripts_ricardo
+
+[cloudera@sandbox-hdp ~]$ hdfs dfs -copyFromLocal /demo/datasets/brazilian-cities/BRAZIL_CITIES.csv /user/cloudera/scripts_ricardo/datasets/brazilian-cities/
+[cloudera@sandbox-hdp ~]$ hdfs dfs -copyFromLocal /demo/datasets/brazilian-cities/Data_Dictionary.csv /user/cloudera/scripts_ricardo/datasets/brazilian-cities/
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls /user/cloudera/scripts_ricardo/datasets/brazilian-cities/
+
+[cloudera@sandbox-hdp ~]$ hdfs dfs -copyFromLocal /demo/datasets/forest-fires-in-brazil/* /user/cloudera/scripts_ricardo/datasets/forest-fires-in-brazil/
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls /user/cloudera/scripts_ricardo/datasets/forest-fires-in-brazil/
+
+[cloudera@sandbox-hdp ~]$ hdfs dfs -copyFromLocal /demo/datasets/gas-prices-in-brazil /user/cloudera/scripts_ricardo/datasets/
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls -R /user/cloudera/scripts_ricardo/datasets/
+
+[cloudera@sandbox-hdp ~]$ hdfs dfs -mv /user/cloudera/scripts_ricardo/datasets/brazilian-cities/BRAZIL_CITIES.csv /user/cloudera/scripts_ricardo/datasets/brazilian-cities/cities.csv
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls /user/cloudera/scripts_ricardo/datasets/brazilian-cities
+
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls /demo/datasets/random/
+[cloudera@sandbox-hdp ~]$ hdfs dfs -mkdir -p /user/cloudera/scripts_ricardo/datasets/random/sub_random
+[cloudera@sandbox-hdp ~]$ hdfs dfs -mv /demo/datasets/random/[escolha um arquivo] /user/cloudera/scripts_ricardo/datasets/random/
+[cloudera@sandbox-hdp ~]$ hdfs dfs -mv /demo/datasets/random/sub_random/[escolha um arquivo] /user/cloudera/scripts_ricardo/datasets/random/sub_random/
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls -R /user/cloudera/scripts_ricardo/datasets/random/
+
+[cloudera@sandbox-hdp ~]$ hdfs dfs -rm /user/cloudera/scripts_ricardo/datasets/random/[escolha um arquivo]
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls -R /user/cloudera/scripts_ricardo/datasets/random/
+
+[cloudera@sandbox-hdp ~]$ hdfs dfs -rm -r /user/cloudera/scripts_ricardo/datasets/random/
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls -R /user/cloudera/scripts_ricardo/datasets/
+
+2) Executar comandos 'cat', 'count', 'rstat' e 'checksum' 
+
+[cloudera@sandbox-hdp ~]$ hdfs dfs -count /user/cloudera/scripts_ricardo
+[cloudera@sandbox-hdp ~]$ hdfs dfs -stat /user/cloudera/scripts_ricardo
+[cloudera@sandbox-hdp ~]$ hdfs dfs -checksum /user/cloudera/scripts_ricardo/datasets/brazilian-cities/cities.csv
+[cloudera@sandbox-hdp ~]$ hdfs dfs -cat /user/cloudera/scripts_ricardo/datasets/brazilian-cities/Data_Dictionary.csv
+
+3) Executar comandos 'put' e 'get'
+
+[cloudera@sandbox-hdp ~]$ cd /home/cloudera
+[cloudera@sandbox-hdp ~]$ date >> date.txt
+[cloudera@sandbox-hdp ~]$ cat date.txt
+[cloudera@sandbox-hdp ~]$ ls -la
+[cloudera@sandbox-hdp ~]$ hdfs dfs -put /home/cloudera/date.txt /user/cloudera/scripts_ricardo/
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls /user/cloudera/scripts_ricardo/
+[cloudera@sandbox-hdp ~]$ date >> date.txt
+[cloudera@sandbox-hdp ~]$ hdfs dfs -put -f /home/cloudera/date.txt /user/cloudera/scripts_ricardo/
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls /user/cloudera/scripts_ricardo/
+[cloudera@sandbox-hdp ~]$ hdfs dfs -cat /user/cloudera/scripts_ricardo/date.txt
+
+[cloudera@sandbox-hdp ~]$ hdfs dfs -get /user/cloudera/scripts_ricardo /home/cloudera/ 
+[cloudera@sandbox-hdp ~]$ ls -R /home/cloudera/scripts_ricardo
+
+4) Executar comando 'chmod'
+
+[cloudera@sandbox-hdp ~]$ hdfs dfs -chmod 770 /user/cloudera/scripts_ricardo/date.txt
+[cloudera@sandbox-hdp ~]$ hdfs dfs -chmod 770 /user/cloudera/scripts_ricardo/datasets
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls /user/cloudera/scripts_ricardo/
+
+5) Executar comando 'usage'
+
+[cloudera@sandbox-hdp ~]$ hdfs dfs -usage mkdir

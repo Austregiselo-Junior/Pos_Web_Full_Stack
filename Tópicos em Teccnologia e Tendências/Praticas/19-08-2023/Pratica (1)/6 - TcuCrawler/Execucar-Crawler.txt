@@ -1,0 +1,5 @@
+scrapy crawl comprasgov-extracao -a endpoints=endpoints.csv
+
+scrapy crawl tcuspider -a endpoints-endpoints.csv
+
+scrapy crawl tcucrawler-extracao -a endpoints=endpoints.csv

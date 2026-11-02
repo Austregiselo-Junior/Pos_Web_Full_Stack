@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Projeto Classificação de Mamíferos</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <b>Classificação de Mamíferos com Naive Bayes</b>
+            </div>
+            <div class="panel-body">
+                <div id="form-container">
+                    <form action="/projeto_mamiferos" method="post">
+                        <div class="form-group input-group-sm">
+                            <label class="lb-sm">Nome do Animal:</label>
+                            <input name="animal" type="text" class="form-control" placeholder="Nome do Animal"
+                                required />
+                        </div>
+                        <div class="form-group input-group-sm">
+                            <label class="lb-sm">Sangue Quente ou Frio?</label>
+                            <select name="sangue" class="form-control">
+                                <option value="0">[selecione uma opção]</option>
+                                <option value="1">Quente</option>
+                                <option value="2">Frio</option>
+                            </select>
+                        </div>
+                        <div class="form-group input-group-sm">
+                            <label class="lb-sm">Bota Ovos?</label>
+                            <select name="bota_ovo" class="form-control">
+                                <option value="0">[selecione uma opção]</option>
+                                <option value="1">Sim</option>
+                                <option value="2">Não</option>
+                            </select>
+                        </div>
+                        <div class="form-group input-group-sm">
+                            <label class="lb-sm">Voa?</label>
+                            <select name="voa" class="form-control">
+                                <option value="0">[selecione uma opção]</option>
+                                <option value="1">Sim</option>
+                                <option value="2">Não</option>
+                            </select>
+                        </div>
+                        <div class="form-group input-group-sm">
+                            <label class="lb-sm">Mora na Água?</label>
+                            <select name="mora_agua" class="form-control">
+                                <option value="0">[selecione uma opção]</option>
+                                <option value="1">Sim</option>
+                                <option value="2">Não</option>
+                                <option value="3">Às Vezes</option>
+                            </select>
+                        </div>
+
+                        <hr />
+
+                        <div class="form-group input-group-sm">
+                            <button type="submit" class="btn btn-sm btn-primary pull-right">Classificar</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Resultado:</label>
+                        </div>
+
+                        <div class="form-group">
+                            <span class="lb-sm"><strong>Animal:</strong> {{animal}}</span>
+                        </div>
+
+                        <div class="form-group">
+                            <span class="lb-sm">
+                                <strong>Classificacao:</strong>
+                                {{classificacao}}
+                            </span>
+                            <div class="form-group">
+                                <span class="lb-sm">
+                                    <strong>Probabilidade:</strong>
+                                    {{probabilidade}}
+                                </span>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

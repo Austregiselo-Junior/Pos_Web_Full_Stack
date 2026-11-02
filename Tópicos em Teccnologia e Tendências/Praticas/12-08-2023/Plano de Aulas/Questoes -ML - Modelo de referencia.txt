@@ -1,0 +1,149 @@
+Todas as questões e opções de resposta de múltipla escolha são organizadas aleatoriamente para os alunos
+Questão 1
+0,5
+pontos
+
+Qual das seguintes afirmações sobre métricas de regressão no Aprendizado de Máquina está incorreta?
+
+Resposta 1
+O erro médio absoluto (MAE) é uma métrica que calcula a média da diferença absoluta entre as previsões e os valores reais.
+
+Resposta 2
+O erro médio quadrático (MSE) é uma métrica que calcula a média do quadrado da diferença entre as previsões e os valores reais.
+
+Resposta 3
+O coeficiente de determinação (R²) é uma métrica que mede a proporção da variância nos valores dependentes que é explicada pelas variáveis independentes no modelo de regressão.
+
+Resposta 4
+O erro percentual absoluto médio (MAPE) é uma métrica que calcula a média da diferença percentual absoluta entre as previsões e os valores reais.
+
+Resposta 5
+Todas as afirmações acima estão corretas.
+
+Resposta correta
+Questão 2
+1
+pontos
+Aqui está um exemplo de código Python que usa o conjunto de dados de flores iris para avaliar as métricas de classificação:
+
+
+
+from sklearn.datasets import load_iris
+
+from sklearn.model_selection import train_test_split
+
+from sklearn.linear_model import LogisticRegression
+
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+
+
+# Carrega o conjunto de dados iris
+
+iris = load_iris()
+
+
+
+# Divide o conjunto de dados em conjuntos de treinamento e teste
+
+X_train, X_test, y_train, y_test = train_test_split(iris.data, iris.target, test_size=0.2, random_state=42)
+
+
+
+# Cria um modelo de regressão logística
+
+model = LogisticRegression()
+
+
+
+# Treina o modelo com os dados de treinamento
+
+model.fit(X_train, y_train)
+
+
+
+# Faz previsões no conjunto de teste
+
+y_pred = model.predict(X_test)
+
+
+
+# Calcula e exibe as métricas de avaliação
+
+print("Acurácia: ", accuracy_score(y_test, y_pred))
+
+print("Precisão: ", precision_score(y_test, y_pred, average='weighted'))
+
+print("Recall: ", recall_score(y_test, y_pred, average='weighted'))
+
+print("F1-Score: ", f1_score(y_test, y_pred, average='weighted'))
+
+
+
+
+
+Esta é uma abordagem comum para avaliar a precisão de um modelo de classificação. O código usa o conjunto de dados de flores iris, divide-o em conjuntos de treinamento e teste, treina um modelo de regressão logística e, em seguida, faz previsões no conjunto de teste. Ele calcula várias métricas de avaliação, incluindo acurácia, precisão, recall e F1-score, e as exibe na tela.
+
+
+
+Questão:
+
+Explique o que é o F1-score e como ele é útil na avaliação de um modelo de classificação. Além disso, explique como as métricas de precisão e recall são usadas em conjunto com o F1-score para fornecer uma visão mais completa da precisão do modelo.
+
+Os alunos podem usar o editor para responder
+Questão 3
+0,5
+pontos
+Explique como funciona a técnica de Bagging em métodos ensemble e quais são os tipos de estimadores mais comumente usados em conjunto com essa técnica. Dê um exemplo de um problema de aprendizado de máquina que pode ser resolvido usando Bagging e seus respectivos estimadores.
+
+Os alunos podem usar o editor para responder
+Questão 4
+1
+pontos
+AutoML é uma técnica que busca automatizar o processo de construção de modelos de aprendizado de máquina, permitindo que pessoas sem conhecimento especializado em ML possam treinar modelos de forma mais eficiente e eficaz. Com base nessa definição, elaborei uma questão abaixo:
+
+
+
+O que é AutoML e como ele pode ajudar a democratizar o uso de aprendizado de máquina?
+Cite pelo menos três arquiteturas de AutoML e explique como elas funcionam.
+Quais são as principais aplicações de AutoML na indústria? Dê exemplos de problemas de aprendizado de máquina que podem ser resolvidos com AutoML.
+Quais são os modelos mais comuns usados em AutoML? Explique brevemente como cada modelo funciona e em que tipos de problemas ele é mais adequado.
+Os alunos podem usar o editor para responder
+Questão 5
+1
+pontos
+Suponha que você está trabalhando em um projeto de classificação de spam de emails. Você treinou seu modelo e agora deseja avaliar seu desempenho usando uma matriz de confusão. Os resultados do seu modelo são apresentados na matriz de confusão abaixo:
+
+
+
+
+
+
+Com base nessa matriz de confusão, responda as seguintes questões:
+
+Calcule a acurácia do modelo.
+Calcule a precisão e o recall do modelo para a classe de spam.
+Calcule o F1-score para a classe de spam.
+Calcule o número de falsos positivos e falsos negativos para a classe de spam.
+Calcule o número de verdadeiros positivos e verdadeiros negativos para a classe de não spam.
+Os alunos podem usar o editor para responder
+Questão 6
+1
+pontos
+Suponha que você está trabalhando em um projeto de classificação de imagens médicas para detecção de câncer de mama. Você deseja aplicar uma técnica de ensemble para aumentar o desempenho do seu modelo. Para isso, você decidiu utilizar a técnica de bagging com diferentes tipos de estimadores. As características das amostras são: 1000 imagens médicas com 500 amostras positivas e 500 amostras negativas.
+
+
+
+Com base nesse cenário, responda as seguintes questões:
+
+
+
+Explique o que é a técnica de bagging e como ela funciona.
+Cite pelo menos 3 tipos de estimadores que podem ser utilizados em conjunto com a técnica de bagging para classificação.
+Explique o que é o Random Forest e como ele se diferencia de outros tipos de estimadores.
+Cite pelo menos uma vantagem e uma desvantagem de cada um dos tipos de estimadores que você citou na questão 2.
+Considerando a sua base de dados, explique qual tipo de estimador você utilizaria para resolver esse problema e por que.
+Os alunos podem usar o editor para responder
+Permitir aos alunos adicionar conteúdo no fim da avaliação
+Conteúdo adicional
+Os alunos podem adicionar texto, imagens e arquivos aqui.

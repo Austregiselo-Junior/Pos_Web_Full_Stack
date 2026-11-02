@@ -1,0 +1,24 @@
+CREATE EXTERNAL TABLE impressions (
+    requestbegintime string,
+    adid string,
+    impressionid string,
+    referrer string,
+    useragent string,
+    usercookie string,
+    ip string,
+    number string,
+    processid string,
+    browsercookie string,
+    requestendtime string,
+    timers struct
+                <
+                 modellookup:string, 
+                 requesttime:string
+                >,
+    threadid string, 
+    hostname string,
+    sessionid string
+)   
+PARTITIONED BY (dt string)
+ROW FORMAT SERDE 'org.apache.hive.hcatalog.data.JsonSerDe'
+LOCATION 's3://myregion.elasticmapreduce/samples/hive-ads/tables/impressions';

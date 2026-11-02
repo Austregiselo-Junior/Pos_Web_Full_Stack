@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Projeto Classificação de Texto com NLTK</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <b>Classificação de Texto com NLTK</b>
+            </div>
+            <div class="panel-body">
+                <div id="form-container">
+                    <form action="/projeto_nltk" method="post">
+                        <div class="form-group input-group-sm">
+                            <label class="lb-sm">Texto de Entrada:</label>
+                            <textarea name="texto" class="form-control" rows="3"
+                                placeholder="Digite aqui o texto para classificar"
+                                style="width: 100%; height: 200px;"></textarea>
+                        </div>
+
+                        <hr />
+
+                        <div class="form-group input-group-sm">
+                            <button type="submit" class="btn btn-sm btn-primary pull-right">Classificar</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Resultado:</label>
+                            {{classificacao}}
+                        </div>
+
+                        <div class="form-group">
+                            {{classes}}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

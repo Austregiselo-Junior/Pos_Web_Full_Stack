@@ -1,0 +1,89 @@
+# Atividade Prática 03
+### Extração e Ingestão de dados via Sqoop/Oozie
+* Obs: trocar 'scripts_ricardo' por scripts_<nome>
+
+Bibliografia: 
+https://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/HDFSCommands.html
+https://sqoop.apache.org/docs/1.4.6/SqoopUserGuide.html
+https://community.cloudera.com/t5/Community-Articles/Sqooping-Oracle-Data-simple-steps/ta-p/246455
+
+### Pré-requisitos: 
+
+### Download do projeto do Git (https://www-scm.prevnet/coii/treinamento-hadoop-coii) na máquina local e descompacte-o;
+
+# 1) Acessar Shell Web Client do Hadoop: http://n221d020512.fast.prevnet:8080/console/
+
+sandbox-hdp login: cloudera (senha: cloudera)
+[cloudera@sandbox-hdp ~]$ pwd
+[cloudera@sandbox-hdp ~]$ cd scripts_ricardo
+[cloudera@sandbox-hdp ~]$ sqoop version
+
+# 2) Executar importação de dados do Oracle (tabela SDC.MUNICIPIOS) via Sqoop:
+
+[cloudera@sandbox-hdp ~]$ vi treinamento_coii/automatizacao/options-file.txt
+[cloudera@sandbox-hdp ~]$ sqoop --options-file /home/cloudera/scripts_ricardo/treinamento_coii/automatizacao/options-file.txt
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls /dados/staging_area/tst/treinamento_coii/ex_municipios
+
+# 3) Criar a tabela Externa e a tabela Orc para a tabela importada: 
+
+    # 3.1) Analise as DDLs e DMLs dos arquivos abaixo e customize o nome das tabelas com o seu nome:
+
+        Altere os nomes das tabelas externas e orc:
+            projetos/tst/treinamento_coii/deploy/municipios_external.sql
+            projetos/tst/treinamento_coii/deploy/municipios_orc.sql
+        Altere os nomes das tabelas no script de ingestão:
+            projetos/tst/treinamento_coii/ingestao/municipios_insert.sql
+
+    # 3.2) Execute os scripts via beeline (semelhante a prática 02) ou via Hive View 2.0 
+
+            projetos/tst/treinamento_coii/deploy/municipios_external.sql
+            projetos/tst/treinamento_coii/deploy/municipios_orc.sql
+    
+    # 3.3) Verifique se sua tabela possui registros: 
+
+            select * from stg_treinamento_coii.ex_municipios_<usuario>
+            
+
+    Obs.: Para sair do beeline, digite !exit
+    
+# 4) Executar importação/ingestão de dados via Oozie e action Sqoop:
+
+    # 4.1) Analise os arquivos de configuração do Oozie e edite customize 
+        
+            - Customize os diretórios do HDFS com seu nome: 
+                projetos/tst/treinamento_coii/automatizacao/treinamento_coii.fast.properties
+                
+            - Customize o nome do job do Oozie com seu nome: 
+                projetos/tst/treinamento_coii/automatizacao/workflow_municipios.xml
+
+            - Envie os diretórios automatizacao, ingestao e deploy, via SFTP, para o edge node
+
+    # 4.2) Put dos scripts do projeto no HDFS: 
+
+[cloudera@sandbox-hdp ~]$ hdfs dfs -put -f /home/cloudera/scripts_ricardo /user/cloudera/
+[cloudera@sandbox-hdp ~]$ hdfs dfs -ls /user/cloudera/
+
+    # 4.3) Executar job Oozie
+
+[cloudera@sandbox-hdp ~]$ oozie job --oozie http://sandbox-hdp.hortonworks.com:11000/oozie -D oozie.wf.application.path=hdfs://sandbox-hdp.hortonworks.com:8020/user/cloudera/scripts_ricardo/treinamento_coii/automatizacao/workflow_municipios.xml -config /home/cloudera/scripts_ricardo/treinamento_coii/automatizacao/treinamento_coii.fast.properties -run
+
+    # 4.4) Acompanhar a execução do job com o comando abaixo ou via Ambari
+
+[cloudera@sandbox-hdp ~]$ oozie job --oozie http://sandbox-hdp.hortonworks.com:11000/oozie -info <job_id> 0000001-200213183103688-oozie-oozi-W
+[cloudera@sandbox-hdp ~]$ yarn logs -applicationId application_<id> &> log.txt
+
+    # 4.5) Execute um select com 5 registros na tabela orc na Hive View 2.0: 
+
+            select * from treinamento_coii.municipios
+
+    # 4.6) Opcional: Consulta via beeline
+
+[cloudera@sandbox-hdp ~]$ beeline
+beeline> !connect jdbc:hive2://sandbox-hdp.hortonworks.com:2181/;serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2
+beeline> use stg_treinamento_coii;
+beeline> show tables;
+beeline> select * from ex_municipios_<usuario> limit 5;
+beeline> use treinamento_coii;
+beeline> show tables;
+beeline> select * from municipios_<usuario> limit 5;
+beeline> !exit;

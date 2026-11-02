@@ -1,0 +1,21 @@
+Parte III. Lendo os arquivos Pesquisa.txt e Salvando no hdfs..
+Tratamento de Dados com Cloudera e Sistema de Arquivos..
+
+// Lendo e criando o objeto pesquisa 
+pesquisa = sc.textFile("file:///demo/datasets/samples.txt")
+
+pesquisa.take(5)
+
+contagem = pesquisa.flatMap(lambda palavra: palavra.split(" "))
+contagem = contagem.map(lambda pal: (pal,1))
+contagem = contagem.reduceByKey(lambda a, b: a + b)
+contagem.take(5)
+contagem.saveAsTextFile("file:///demo/datasets/conta.txt")
+quit()
+
+hdfs dfs -mkdir /user/cloudera/conta
+hdfs dfs -copyFromLocal /demo/datasets/conta.txt /user/cloudera/conta
+
+hdfs dfs -ls /user/cloudera/conta/
+hdfs dfs -cat /user/cloudera/conta/part-00000
+

@@ -1,0 +1,520 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Conexões com Bancos de Dados NoSQL e SQL em Python com Pandas e Jupyter Notebook"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# MongoDB"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Collecting pymongo\n",
+      "  Downloading https://files.pythonhosted.org/packages/89/52/829cb3b58047af08f4cf7905be3545b7718b96e9c83142072edb48ee5d05/pymongo-3.9.0-cp36-cp36m-win_amd64.whl (351kB)\n",
+      "Installing collected packages: pymongo\n",
+      "Successfully installed pymongo-3.9.0\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "You are using pip version 18.1, however version 19.3.1 is available.\n",
+      "You should consider upgrading via the 'python -m pip install --upgrade pip' command.\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Instalador PyMongo\n",
+    "!pip install pymongo"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "\n",
+    "# Importando o Módulo PyMongo\n",
+    "import pymongo"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Criando a Conexão com o PyMongo\n",
+    "\n",
+    "myclient = pymongo.MongoClient(\"mongodb://localhost:27017/\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Ler e Armazenando o Banco/Documento e a Collection em Variáveis\n",
+    "\n",
+    "mydb = myclient[\"local\"]\n",
+    "mycol = mydb[\"startup_log\"]\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "{'_id': 'JPAD278145-1572610091103', 'hostname': 'JPAD278145', 'startTime': datetime.datetime(2019, 11, 1, 12, 8, 11), 'startTimeLocal': 'Fri Nov  1 09:08:11.103', 'cmdLine': {'config': 'C:\\\\Program Files\\\\MongoDB\\\\Server\\\\4.2\\\\bin\\\\mongod.cfg', 'net': {'bindIp': '127.0.0.1', 'port': 27017}, 'service': True, 'storage': {'dbPath': 'C:\\\\Program Files\\\\MongoDB\\\\Server\\\\4.2\\\\data', 'journal': {'enabled': True}}, 'systemLog': {'destination': 'file', 'logAppend': True, 'path': 'C:\\\\Program Files\\\\MongoDB\\\\Server\\\\4.2\\\\log\\\\mongod.log'}}, 'pid': 15264, 'buildinfo': {'version': '4.2.1', 'gitVersion': 'edf6d45851c0b9ee15548f0f847df141764a317e', 'targetMinOS': 'Windows 7/Windows Server 2008 R2', 'modules': [], 'allocator': 'tcmalloc', 'javascriptEngine': 'mozjs', 'sysInfo': 'deprecated', 'versionArray': [4, 2, 1, 0], 'openssl': {'running': 'Windows SChannel'}, 'buildEnvironment': {'distmod': '2012plus', 'distarch': 'x86_64', 'cc': 'cl: Microsoft (R) C/C++ Optimizing Compiler Version 19.16.27034 for x64', 'ccflags': '/nologo /EHsc /W3 /wd4068 /wd4244 /wd4267 /wd4290 /wd4351 /wd4355 /wd4373 /wd4800 /wd5041 /wd4291 /we4013 /we4099 /we4930 /WX /errorReport:none /MD /O2 /Oy- /bigobj /utf-8 /permissive- /Zc:__cplusplus /Zc:sizedDealloc /volatile:iso /diagnostics:caret /std:c++17 /Gw /Gy /Zc:inline', 'cxx': 'cl: Microsoft (R) C/C++ Optimizing Compiler Version 19.16.27034 for x64', 'cxxflags': '/TP', 'linkflags': '/nologo /DEBUG /INCREMENTAL:NO /LARGEADDRESSAWARE /OPT:REF', 'target_arch': 'x86_64', 'target_os': 'windows'}, 'bits': 64, 'debug': False, 'maxBsonObjectSize': 16777216, 'storageEngines': ['biggie', 'devnull', 'ephemeralForTest', 'wiredTiger']}}\n"
+     ]
+    }
+   ],
+   "source": [
+    "# retorna todos os registros da collection\n",
+    "\n",
+    "for x in mycol.find():\n",
+    "    print(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "{'_id': 'JPAD278145-1572610091103', 'hostname': 'JPAD278145', 'pid': 15264}\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Retorna apenas as informações de Item e Quantidade\n",
+    "\n",
+    "for x in mycol.find({}, {\"_id\":\"JPAD278145-1572610091103\", \"hostname\":\"JPAD278145\", \"pid\":15264}):\n",
+    "    print(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "{'_id': 'JPAD278145-1572610091103', 'hostname': 'JPAD278145', 'startTime': datetime.datetime(2019, 11, 1, 12, 8, 11), 'startTimeLocal': 'Fri Nov  1 09:08:11.103', 'cmdLine': {'config': 'C:\\\\Program Files\\\\MongoDB\\\\Server\\\\4.2\\\\bin\\\\mongod.cfg', 'net': {'bindIp': '127.0.0.1', 'port': 27017}, 'service': True, 'storage': {'dbPath': 'C:\\\\Program Files\\\\MongoDB\\\\Server\\\\4.2\\\\data', 'journal': {'enabled': True}}, 'systemLog': {'destination': 'file', 'logAppend': True, 'path': 'C:\\\\Program Files\\\\MongoDB\\\\Server\\\\4.2\\\\log\\\\mongod.log'}}, 'pid': 15264, 'buildinfo': {'version': '4.2.1', 'gitVersion': 'edf6d45851c0b9ee15548f0f847df141764a317e', 'targetMinOS': 'Windows 7/Windows Server 2008 R2', 'modules': [], 'allocator': 'tcmalloc', 'javascriptEngine': 'mozjs', 'sysInfo': 'deprecated', 'versionArray': [4, 2, 1, 0], 'openssl': {'running': 'Windows SChannel'}, 'buildEnvironment': {'distmod': '2012plus', 'distarch': 'x86_64', 'cc': 'cl: Microsoft (R) C/C++ Optimizing Compiler Version 19.16.27034 for x64', 'ccflags': '/nologo /EHsc /W3 /wd4068 /wd4244 /wd4267 /wd4290 /wd4351 /wd4355 /wd4373 /wd4800 /wd5041 /wd4291 /we4013 /we4099 /we4930 /WX /errorReport:none /MD /O2 /Oy- /bigobj /utf-8 /permissive- /Zc:__cplusplus /Zc:sizedDealloc /volatile:iso /diagnostics:caret /std:c++17 /Gw /Gy /Zc:inline', 'cxx': 'cl: Microsoft (R) C/C++ Optimizing Compiler Version 19.16.27034 for x64', 'cxxflags': '/TP', 'linkflags': '/nologo /DEBUG /INCREMENTAL:NO /LARGEADDRESSAWARE /OPT:REF', 'target_arch': 'x86_64', 'target_os': 'windows'}, 'bits': 64, 'debug': False, 'maxBsonObjectSize': 16777216, 'storageEngines': ['biggie', 'devnull', 'ephemeralForTest', 'wiredTiger']}}\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Retorna apenas o Item com pid 15264\n",
+    "\n",
+    "myquery = {\"pid\":15264}\n",
+    "\n",
+    "mydoc = mycol.find(myquery)\n",
+    "\n",
+    "for x in mydoc:\n",
+    "    print(x)\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df_mongo = pd.DataFrame(list(mycol.find()))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>_id</th>\n",
+       "      <th>buildinfo</th>\n",
+       "      <th>cmdLine</th>\n",
+       "      <th>hostname</th>\n",
+       "      <th>pid</th>\n",
+       "      <th>startTime</th>\n",
+       "      <th>startTimeLocal</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>JPAD278145-1572610091103</td>\n",
+       "      <td>{'version': '4.2.1', 'gitVersion': 'edf6d45851...</td>\n",
+       "      <td>{'config': 'C:\\Program Files\\MongoDB\\Server\\4....</td>\n",
+       "      <td>JPAD278145</td>\n",
+       "      <td>15264</td>\n",
+       "      <td>2019-11-01 12:08:11</td>\n",
+       "      <td>Fri Nov  1 09:08:11.103</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                        _id  \\\n",
+       "0  JPAD278145-1572610091103   \n",
+       "\n",
+       "                                           buildinfo  \\\n",
+       "0  {'version': '4.2.1', 'gitVersion': 'edf6d45851...   \n",
+       "\n",
+       "                                             cmdLine    hostname    pid  \\\n",
+       "0  {'config': 'C:\\Program Files\\MongoDB\\Server\\4....  JPAD278145  15264   \n",
+       "\n",
+       "            startTime           startTimeLocal  \n",
+       "0 2019-11-01 12:08:11  Fri Nov  1 09:08:11.103  "
+      ]
+     },
+     "execution_count": 24,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df_mongo.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Mysql"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Collecting pymysql\n",
+      "  Downloading https://files.pythonhosted.org/packages/ed/39/15045ae46f2a123019aa968dfcba0396c161c20f855f11dea6796bcaae95/PyMySQL-0.9.3-py2.py3-none-any.whl (47kB)\n",
+      "Installing collected packages: pymysql\n",
+      "Successfully installed pymysql-0.9.3\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "You are using pip version 18.1, however version 19.3.1 is available.\n",
+      "You should consider upgrading via the 'python -m pip install --upgrade pip' command.\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Instalando os Pacotes - Mysql\n",
+    "!pip install pymysql"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Importar Módulo pandas\n",
+    "import pandas as pd\n",
+    "\n",
+    "# importar o módulo pymysql\n",
+    "import pymysql\n",
+    "\n",
+    "# converter do pymysql para o Mysql\n",
+    "pymysql.install_as_MySQLdb()\n",
+    "\n",
+    "#import mysql.connector\n",
+    "import MySQLdb"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Configurações paa MYSQL connection"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "OperationalError",
+     "evalue": "(2003, \"Can't connect to MySQL server on 'localhost' ([WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente)\")",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mConnectionRefusedError\u001b[0m                    Traceback (most recent call last)",
+      "\u001b[1;32mC:\\ProgramData\\Anaconda3\\lib\\site-packages\\pymysql\\connections.py\u001b[0m in \u001b[0;36mconnect\u001b[1;34m(self, sock)\u001b[0m\n\u001b[0;32m    582\u001b[0m                                 \u001b[1;33m(\u001b[0m\u001b[0mself\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mhost\u001b[0m\u001b[1;33m,\u001b[0m \u001b[0mself\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mport\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m,\u001b[0m \u001b[0mself\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mconnect_timeout\u001b[0m\u001b[1;33m,\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[1;32m--> 583\u001b[1;33m                                 **kwargs)\n\u001b[0m\u001b[0;32m    584\u001b[0m                             \u001b[1;32mbreak\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n",
+      "\u001b[1;32mC:\\ProgramData\\Anaconda3\\lib\\socket.py\u001b[0m in \u001b[0;36mcreate_connection\u001b[1;34m(address, timeout, source_address)\u001b[0m\n\u001b[0;32m    723\u001b[0m     \u001b[1;32mif\u001b[0m \u001b[0merr\u001b[0m \u001b[1;32mis\u001b[0m \u001b[1;32mnot\u001b[0m \u001b[1;32mNone\u001b[0m\u001b[1;33m:\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[1;32m--> 724\u001b[1;33m         \u001b[1;32mraise\u001b[0m \u001b[0merr\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0m\u001b[0;32m    725\u001b[0m     \u001b[1;32melse\u001b[0m\u001b[1;33m:\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n",
+      "\u001b[1;32mC:\\ProgramData\\Anaconda3\\lib\\socket.py\u001b[0m in \u001b[0;36mcreate_connection\u001b[1;34m(address, timeout, source_address)\u001b[0m\n\u001b[0;32m    712\u001b[0m                 \u001b[0msock\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mbind\u001b[0m\u001b[1;33m(\u001b[0m\u001b[0msource_address\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[1;32m--> 713\u001b[1;33m             \u001b[0msock\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mconnect\u001b[0m\u001b[1;33m(\u001b[0m\u001b[0msa\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0m\u001b[0;32m    714\u001b[0m             \u001b[1;31m# Break explicitly a reference cycle\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n",
+      "\u001b[1;31mConnectionRefusedError\u001b[0m: [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente",
+      "\nDuring handling of the above exception, another exception occurred:\n",
+      "\u001b[1;31mOperationalError\u001b[0m                          Traceback (most recent call last)",
+      "\u001b[1;32m<ipython-input-29-fb10fe176336>\u001b[0m in \u001b[0;36m<module>\u001b[1;34m\u001b[0m\n\u001b[0;32m      3\u001b[0m     \u001b[0muser\u001b[0m\u001b[1;33m=\u001b[0m\u001b[1;34m\"root\"\u001b[0m\u001b[1;33m,\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0;32m      4\u001b[0m     \u001b[0mpassword\u001b[0m\u001b[1;33m=\u001b[0m\u001b[1;34m\"72255560\"\u001b[0m\u001b[1;33m,\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[1;32m----> 5\u001b[1;33m     \u001b[0mdatabase\u001b[0m\u001b[1;33m=\u001b[0m\u001b[1;34m\"dbclassificados\"\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0m\u001b[0;32m      6\u001b[0m )\n\u001b[0;32m      7\u001b[0m \u001b[1;33m\u001b[0m\u001b[0m\n",
+      "\u001b[1;32mC:\\ProgramData\\Anaconda3\\lib\\site-packages\\pymysql\\__init__.py\u001b[0m in \u001b[0;36mConnect\u001b[1;34m(*args, **kwargs)\u001b[0m\n\u001b[0;32m     92\u001b[0m     \"\"\"\n\u001b[0;32m     93\u001b[0m     \u001b[1;32mfrom\u001b[0m \u001b[1;33m.\u001b[0m\u001b[0mconnections\u001b[0m \u001b[1;32mimport\u001b[0m \u001b[0mConnection\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[1;32m---> 94\u001b[1;33m     \u001b[1;32mreturn\u001b[0m \u001b[0mConnection\u001b[0m\u001b[1;33m(\u001b[0m\u001b[1;33m*\u001b[0m\u001b[0margs\u001b[0m\u001b[1;33m,\u001b[0m \u001b[1;33m**\u001b[0m\u001b[0mkwargs\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0m\u001b[0;32m     95\u001b[0m \u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0;32m     96\u001b[0m \u001b[1;32mfrom\u001b[0m \u001b[1;33m.\u001b[0m \u001b[1;32mimport\u001b[0m \u001b[0mconnections\u001b[0m \u001b[1;32mas\u001b[0m \u001b[0m_orig_conn\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n",
+      "\u001b[1;32mC:\\ProgramData\\Anaconda3\\lib\\site-packages\\pymysql\\connections.py\u001b[0m in \u001b[0;36m__init__\u001b[1;34m(self, host, user, password, database, port, unix_socket, charset, sql_mode, read_default_file, conv, use_unicode, client_flag, cursorclass, init_command, connect_timeout, ssl, read_default_group, compress, named_pipe, autocommit, db, passwd, local_infile, max_allowed_packet, defer_connect, auth_plugin_map, read_timeout, write_timeout, bind_address, binary_prefix, program_name, server_public_key)\u001b[0m\n\u001b[0;32m    323\u001b[0m             \u001b[0mself\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0m_sock\u001b[0m \u001b[1;33m=\u001b[0m \u001b[1;32mNone\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0;32m    324\u001b[0m         \u001b[1;32melse\u001b[0m\u001b[1;33m:\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[1;32m--> 325\u001b[1;33m             \u001b[0mself\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mconnect\u001b[0m\u001b[1;33m(\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0m\u001b[0;32m    326\u001b[0m \u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0;32m    327\u001b[0m     \u001b[1;32mdef\u001b[0m \u001b[0m_create_ssl_ctx\u001b[0m\u001b[1;33m(\u001b[0m\u001b[0mself\u001b[0m\u001b[1;33m,\u001b[0m \u001b[0msslp\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m:\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n",
+      "\u001b[1;32mC:\\ProgramData\\Anaconda3\\lib\\site-packages\\pymysql\\connections.py\u001b[0m in \u001b[0;36mconnect\u001b[1;34m(self, sock)\u001b[0m\n\u001b[0;32m    628\u001b[0m                 \u001b[0mexc\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mtraceback\u001b[0m \u001b[1;33m=\u001b[0m \u001b[0mtraceback\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mformat_exc\u001b[0m\u001b[1;33m(\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0;32m    629\u001b[0m                 \u001b[1;32mif\u001b[0m \u001b[0mDEBUG\u001b[0m\u001b[1;33m:\u001b[0m \u001b[0mprint\u001b[0m\u001b[1;33m(\u001b[0m\u001b[0mexc\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mtraceback\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[1;32m--> 630\u001b[1;33m                 \u001b[1;32mraise\u001b[0m \u001b[0mexc\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0m\u001b[0;32m    631\u001b[0m \u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0;32m    632\u001b[0m             \u001b[1;31m# If e is neither DatabaseError or IOError, It's a bug.\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n",
+      "\u001b[1;31mOperationalError\u001b[0m: (2003, \"Can't connect to MySQL server on 'localhost' ([WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente)\")"
+     ]
+    }
+   ],
+   "source": [
+    "db = MySQLdb.connect(\n",
+    "    host=\"localhost\",\n",
+    "    user=\"root\",\n",
+    "    password=\"72255560\",\n",
+    "    database=\"dbclassificados\"\n",
+    ")\n",
+    "\n",
+    "# Cricar um objeto cursor. Isso permitirá que você execute todas as consultas necessárias\n",
+    "cur = db.cursor()\n",
+    "\n",
+    "# Selecionar o que retornar todos os dados da tabela.\n",
+    "cur.execute(\"SELECT * FROM dbclassificados.tipoanuncio\")\n",
+    "\n",
+    "\n",
+    "#Fechar a conexão.\n",
+    "db.close()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'cur' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "\u001b[1;32m<ipython-input-30-d2d680859be5>\u001b[0m in \u001b[0;36m<module>\u001b[1;34m\u001b[0m\n\u001b[0;32m      1\u001b[0m \u001b[1;31m# Converter os dados para DATAFRAME\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[1;32m----> 2\u001b[1;33m \u001b[0mtb_cliente_mysql\u001b[0m \u001b[1;33m=\u001b[0m \u001b[0mpd\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mDataFrame\u001b[0m\u001b[1;33m(\u001b[0m\u001b[0mcur\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mfetchall\u001b[0m\u001b[1;33m(\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0m\u001b[0;32m      3\u001b[0m \u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0;32m      4\u001b[0m \u001b[1;31m# Visualizar os dados do DATAFRAME\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n",
+      "\u001b[1;31mNameError\u001b[0m: name 'cur' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "# Converter os dados para DATAFRAME\n",
+    "tb_cliente_mysql = pd.DataFrame(cur.fetchall())\n",
+    "\n",
+    "# Visualizar os dados do DATAFRAME\n",
+    "tb_cliente_mysql.head()\n",
+    "\n",
+    "#Adicionar o nome para as colunas\n",
+    "\n",
+    "tb_cliente_mysql = tb_cliente_mysql.rename(columns={\n",
+    "                                                    0: 'codigo_tipoanuncio',\n",
+    "                                                    1: 'Descricao_Tipo'\n",
+    "                                                })\n",
+    "\n",
+    "\n",
+    "# Visualizar os dados com as colunas renomeadas\n",
+    "\n",
+    "tb_cliente_mysql.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# PostgresSQL\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 35,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Collecting psycopg2\n",
+      "  Downloading https://files.pythonhosted.org/packages/4a/d9/467aba4b587f97e4047b9ae8609f22dc01eea56eda92358089db89b729ef/psycopg2-2.8.4-cp36-cp36m-win_amd64.whl (1.1MB)\n",
+      "Installing collected packages: psycopg2\n",
+      "Successfully installed psycopg2-2.8.4\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "You are using pip version 18.1, however version 19.3.1 is available.\n",
+      "You should consider upgrading via the 'python -m pip install --upgrade pip' command.\n"
+     ]
+    }
+   ],
+   "source": [
+    "!pip install psycopg2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import pandas as pd\n",
+    "import psycopg2"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "OperationalError",
+     "evalue": "could not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n\tTCP/IP connections on port 5432?\ncould not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (::1) and accepting\n\tTCP/IP connections on port 5432?\n",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mOperationalError\u001b[0m                          Traceback (most recent call last)",
+      "\u001b[1;32m<ipython-input-37-1a0b2d79e1cd>\u001b[0m in \u001b[0;36m<module>\u001b[1;34m\u001b[0m\n\u001b[0;32m     13\u001b[0m             \u001b[1;33m+\u001b[0m\u001b[1;34m\" password=\"\u001b[0m\u001b[1;33m+\u001b[0m \u001b[0mPGPASSWORD\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0;32m     14\u001b[0m \u001b[1;33m\u001b[0m\u001b[0m\n\u001b[1;32m---> 15\u001b[1;33m \u001b[0mconn\u001b[0m \u001b[1;33m=\u001b[0m \u001b[0mpsycopg2\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mconnect\u001b[0m\u001b[1;33m(\u001b[0m\u001b[0mconn_string\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0m\u001b[0;32m     16\u001b[0m \u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0;32m     17\u001b[0m \u001b[1;31m# Selecionar os dados que estão retornando da tabela do banco..\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n",
+      "\u001b[1;32mC:\\ProgramData\\Anaconda3\\lib\\site-packages\\psycopg2\\__init__.py\u001b[0m in \u001b[0;36mconnect\u001b[1;34m(dsn, connection_factory, cursor_factory, **kwargs)\u001b[0m\n\u001b[0;32m    124\u001b[0m \u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0;32m    125\u001b[0m     \u001b[0mdsn\u001b[0m \u001b[1;33m=\u001b[0m \u001b[0m_ext\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mmake_dsn\u001b[0m\u001b[1;33m(\u001b[0m\u001b[0mdsn\u001b[0m\u001b[1;33m,\u001b[0m \u001b[1;33m**\u001b[0m\u001b[0mkwargs\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[1;32m--> 126\u001b[1;33m     \u001b[0mconn\u001b[0m \u001b[1;33m=\u001b[0m \u001b[0m_connect\u001b[0m\u001b[1;33m(\u001b[0m\u001b[0mdsn\u001b[0m\u001b[1;33m,\u001b[0m \u001b[0mconnection_factory\u001b[0m\u001b[1;33m=\u001b[0m\u001b[0mconnection_factory\u001b[0m\u001b[1;33m,\u001b[0m \u001b[1;33m**\u001b[0m\u001b[0mkwasync\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0m\u001b[0;32m    127\u001b[0m     \u001b[1;32mif\u001b[0m \u001b[0mcursor_factory\u001b[0m \u001b[1;32mis\u001b[0m \u001b[1;32mnot\u001b[0m \u001b[1;32mNone\u001b[0m\u001b[1;33m:\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0;32m    128\u001b[0m         \u001b[0mconn\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mcursor_factory\u001b[0m \u001b[1;33m=\u001b[0m \u001b[0mcursor_factory\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n",
+      "\u001b[1;31mOperationalError\u001b[0m: could not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (127.0.0.1) and accepting\n\tTCP/IP connections on port 5432?\ncould not connect to server: Connection refused (0x0000274D/10061)\n\tIs the server running on host \"localhost\" (::1) and accepting\n\tTCP/IP connections on port 5432?\n"
+     ]
+    }
+   ],
+   "source": [
+    "PGHOST = 'localhost'\n",
+    "PGDATABASE = 'postgres'\n",
+    "PGUSER = 'postgres'\n",
+    "PGPASSWORD = 'Ths122'\n",
+    "port = '5432'\n",
+    "\n",
+    "# Configuração para conexão com o SGBD Postgresql\n",
+    "\n",
+    "conn_string = \"host=\"+ PGHOST \\\n",
+    "            +\" port=\"+ port \\\n",
+    "            +\" dbname=\"+ PGDATABASE \\\n",
+    "            +\" user=\"+ PGUSER \\\n",
+    "            +\" password=\"+ PGPASSWORD\n",
+    "\n",
+    "conn = psycopg2.connect(conn_string)\n",
+    "\n",
+    "# Selecionar os dados que estão retornando da tabela do banco..\n",
+    "tb_cliente_postgres = pd.read_sql_query(''' SELECT * FROM CLIENTE''', conn)\n",
+    "\n",
+    "# Fecha a Conexão com o Banco..\n",
+    "conn.close()\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'tb_cliente_postgres' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "\u001b[1;32m<ipython-input-38-bd1ea8258e63>\u001b[0m in \u001b[0;36m<module>\u001b[1;34m\u001b[0m\n\u001b[1;32m----> 1\u001b[1;33m \u001b[0mtb_cliente_postgres\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mhead\u001b[0m\u001b[1;33m(\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0m",
+      "\u001b[1;31mNameError\u001b[0m: name 'tb_cliente_postgres' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "tb_cliente_postgres.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Fim.."
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.8"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

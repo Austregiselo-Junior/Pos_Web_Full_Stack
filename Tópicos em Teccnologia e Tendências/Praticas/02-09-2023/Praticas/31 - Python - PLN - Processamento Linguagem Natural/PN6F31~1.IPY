@@ -1,0 +1,1065 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Processamento de Linguagem Natural com Python e NLTK\n",
+    "# Autor: Ricardo Roberto de Lima - Aplicando Stemmer com Busca de Palavras - Parte VI.\n",
+    "# Busca por Palavars Únicas."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# coding: utf-8\n",
+    "import nltk\n",
+    "import numpy as np"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Iniciando o Processamento de Linguagem Natural com Python e NLTK."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Bases de Treinamento e de Testes \n",
+    "basetreinamento = [\n",
+    "\n",
+    "('você e abominável','desgosto'),\n",
+    "('abomino a maneira como você age','desgosto'),\n",
+    "('estou adoentado','desgosto'),\n",
+    "('meu pai esta adoentado','desgosto'),\n",
+    "('estamos todos doentes','desgosto'),\n",
+    "('essa situação e muito amarga','desgosto'),\n",
+    "('disse adeus amargamente','desgosto'),\n",
+    "('tenho antipatia por aquela pessoa','desgosto'),\n",
+    "('como pode ser tão antipática!','desgosto'),\n",
+    "('que horrível seu asqueroso','desgosto'),\n",
+    "('tenho aversão agente como você','desgosto'),\n",
+    "('isso tudo e só chateação','desgosto'),\n",
+    "('estou muito chateada com suas mentiras','desgosto'),\n",
+    "('tão desagradável','desgosto'),\n",
+    "('isso me desagrada completamente','desgosto'),\n",
+    "('te desagrada isso','desgosto'),\n",
+    "('estou com enjôos terríveis','desgosto'),\n",
+    "('todos estão enfermos','desgosto'),\n",
+    "('foi uma enfermidade terrível','desgosto'),\n",
+    "('isso e muito grave','desgosto'),\n",
+    "('não seja tão grosseiro','desgosto'),\n",
+    "('você fez uma manobra ilegal','desgosto'),\n",
+    "('sua indecente, não tem vergonha?','desgosto'),\n",
+    "('você e malvado com as crianças','desgosto'),\n",
+    "('que comentário maldoso','desgosto'),\n",
+    "('sem escrúpulos você manipula a tudo','desgosto'),\n",
+    "('sinto repulsa por você','desgosto'),\n",
+    "('e repulsivo a maneira como olha para as pessoas','desgosto'),\n",
+    "('estou indisposta','desgosto'),\n",
+    "('a indisposição me atacou hoje','desgosto'),\n",
+    "('acho que vou vomitar','desgosto'),\n",
+    "('tem muito vomito lá','desgosto'),\n",
+    "('que incomodo essa dor','desgosto'),\n",
+    "('não me incomode nunca mais','desgosto'),\n",
+    "('suas bobagens estão nos incomodando','desgosto'),\n",
+    "('que nojo olha toda essa sujeira','desgosto'),\n",
+    "('como isso está sujo','desgosto'),\n",
+    "('tenho náuseas só de lembrar','desgosto'),\n",
+    "('me sinto nauseada com o cheiro desta comida','desgosto'),\n",
+    "('você esta obstruindo a passagem de ar','desgosto'),\n",
+    "('você esta terrivelmente doente','desgosto'),\n",
+    "('olhe que feia esta roupa','desgosto'),\n",
+    "('que atitude deplorável','desgosto'),\n",
+    "('nossa como você e feio','desgosto'),\n",
+    "('muito mau tudo isso','desgosto'),\n",
+    "('estou desgostoso com você','desgosto'),\n",
+    "('você cortou o meu assunto','desgosto'),\n",
+    "('para que tanta chateação?','desgosto'),\n",
+    "('esse perfume e enjoativo','desgosto'),\n",
+    "('ser perigoso não nada bom','desgosto'),\n",
+    "('você e perigoso demais para minha filhas','desgosto'),\n",
+    "('que fetido este esgoto','desgosto'),\n",
+    "('que fedido você esta','desgosto'),\n",
+    "('que cachorro malcheiroso','desgosto'),\n",
+    "('hora que ultraje','desgosto'),\n",
+    "('e ultrajante da sua parte','desgosto'),\n",
+    "('situação desagradável essa','desgosto'),\n",
+    "('você só me da desgosto','desgosto'),\n",
+    "('tenho aversão a pessoas assim','desgosto'),\n",
+    "('antipatia e um mal da sociedade','desgosto'),\n",
+    "('que criatura abominável','desgosto'),\n",
+    "('e depressiva a maneira como você vê o mundo','desgosto'),\n",
+    "('me desagrada sua presença na festa','desgosto'),\n",
+    "('sinto asco dessa coisa','desgosto'),\n",
+    "('que hediondo!','desgosto'),\n",
+    "('vou golfar o cafe fora','desgosto'),\n",
+    "('hora que garota detestável!','desgosto'),\n",
+    "('estou nauseada','desgosto'),\n",
+    "('isso que você disse foi muito grave','desgosto'),\n",
+    "('não seja obsceno na frente das crianças','desgosto'),\n",
+    "('não seja rude com as visitas','desgosto'),\n",
+    "('esse assunto me da repulsa','desgosto'),\n",
+    "('que criança terrivelmente travessa','desgosto'),\n",
+    "('que criança mal educada','desgosto'),\n",
+    "('estou indisposta te dar o divorcio','desgosto'),\n",
+    "('tão patetico, não tem nada mais rude para dizer?','desgosto'),\n",
+    "('por motivo torpe, com emprego de meio cruel e com impossibilidade de defesa para a vítima','desgosto'),\n",
+    "('a inveja e tão vil e vergonhosa que ninguem se atreve a confessá-la','desgosto'),\n",
+    "('o miserável receio de ser sentimental e o mais vil de todos os receios modernos','desgosto'),\n",
+    "('travesso gato quando fica com saudades do dono mija no sapato','desgosto'),\n",
+    "('isso e um ato detestável e covarde','desgosto'),\n",
+    "('revelam apenas o que e destrutivo e detestável para o povo','desgosto'),\n",
+    "('não sei como e a vida de um patife, mais a de um homem honesto e abominável','desgosto'),\n",
+    "('há coisas que temos que suportar para não acharmos a vida insuportável','desgosto'),\n",
+    "('as injurias do tempo e as injustiças do homem','desgosto'),\n",
+    "('odioso e desumano','desgosto'),\n",
+    "('você não publicará conteúdo odiento, pornográfico ou ameaçador','desgosto'),\n",
+    "('rancoroso e reprimido','desgosto'),\n",
+    "('não há animal mais degradante, estúpido, covarde, lamentável, egoísta, rancoroso e invejoso do que o homem','desgosto'),\n",
+    "('o virulento debate ente políticos','desgosto'),\n",
+    "\n",
+    "('por favor não me abandone','tristeza'),\n",
+    "('não quero ficar sozinha','tristeza'),\n",
+    "('não me deixe sozinha','tristeza'),\n",
+    "('estou abatida','tristeza'),\n",
+    "('ele esta todo abatido','tristeza'),\n",
+    "('tão triste suas palavras','tristeza'),\n",
+    "('seu amor não e mais meu','tristeza'),\n",
+    "('estou aborrecida','tristeza'),\n",
+    "('isso vai me aborrecer','tristeza'),\n",
+    "('estou com muita aflição','tristeza'),\n",
+    "('me aflige o modo como fala','tristeza'),\n",
+    "('estou em agonia com meu intimo','tristeza'),\n",
+    "('não quero fazer nada','tristeza'),\n",
+    "('me sinto ansiosa e tensa','tristeza'),\n",
+    "('não consigo parar de chorar','tristeza'),\n",
+    "('não consigo segurar as lagrimas','tristeza'),\n",
+    "('e muita dor perder um ente querido','tristeza'),\n",
+    "('estou realmente arrependida','tristeza'),\n",
+    "('acho que o carma volta, pois agora sou eu quem sofro','tristeza'),\n",
+    "('você não cumpriu suas promessas','tristeza'),\n",
+    "('me sinto amargurada','tristeza'),\n",
+    "('coitado esta tão triste','tristeza'),\n",
+    "('já e tarde de mais','tristeza'),\n",
+    "('nosso amor acabou','tristeza'),\n",
+    "('essa noite machuca só para mim','tristeza'),\n",
+    "('eu não estou mais no seu coração','tristeza'),\n",
+    "('você mudou comigo','tristeza'),\n",
+    "('quando eu penso em você realmente dói','tristeza'),\n",
+    "('como se fosse nada você vê minhas lagrimas','tristeza'),\n",
+    "('você disse cruelmente que não se arrependeu','tristeza'),\n",
+    "('eu nunca mais vou te ver','tristeza'),\n",
+    "('ela esta com depressão','tristeza'),\n",
+    "('a depressão aflige as pessoas','tristeza'),\n",
+    "('estar depressivo e muito ruim','tristeza'),\n",
+    "('estou derrotada e deprimida depois deste dia','tristeza'),\n",
+    "('e comovente te ver dessa maneira','tristeza'),\n",
+    "('e comovente ver o que os filhos do brasil passam','tristeza'),\n",
+    "('como me sinto culpada','tristeza'),\n",
+    "('estou abatida','tristeza'),\n",
+    "('a ansiedade tomou conta de mim','tristeza'),\n",
+    "('as pessoas não gostam do meu jeito','tristeza'),\n",
+    "('adeus passamos bons momentos juntos','tristeza'),\n",
+    "('sinto sua falta','tristeza'),\n",
+    "('ele não gostou da minha comida','tristeza'),\n",
+    "('estou sem dinheiro para a comida','tristeza'),\n",
+    "('queria que fosse o ultimo dia da minha vida','tristeza'),\n",
+    "('você está com vergonha de mim','tristeza'),\n",
+    "('ela não aceitou a minha proposta','tristeza'),\n",
+    "('era o meu ultimo centavo','tristeza'),\n",
+    "('reprovei de ano na faculdade','tristeza'),\n",
+    "('afinal você só sabe me desfazer','tristeza'),\n",
+    "('eu falhei em tudo nessa vida','tristeza'),\n",
+    "('eu fui muito humilhado','tristeza'),\n",
+    "('e uma história muito triste','tristeza'),\n",
+    "('ninguem acredita em mim','tristeza'),\n",
+    "('eu não sirvo para nada mesmo','tristeza'),\n",
+    "('droga, não faço nada direito','tristeza'),\n",
+    "('sofrimento em dobro na minha vida','tristeza'),\n",
+    "('fui demitida essa semana','tristeza'),\n",
+    "('as crianças sofrem ainda mais que os adultos','tristeza'),\n",
+    "('pra mim um dia e ruim, o outro e pior','tristeza'),\n",
+    "('de repente perdi o apetite','tristeza'),\n",
+    "('oh que dia infeliz','tristeza'),\n",
+    "('estamos afundados em contas','tristeza'),\n",
+    "('nem um milagre pode nos salvar','tristeza'),\n",
+    "('só me resta a esperança','tristeza'),\n",
+    "('pior que isso não pode ficar','tristeza'),\n",
+    "('meu salário e baixo','tristeza'),\n",
+    "('não passei no vestibular','tristeza'),\n",
+    "('ninguem se importa comigo','tristeza'),\n",
+    "('ninguem lembrou do meu aniversário','tristeza'),\n",
+    "('tenho tanto azar','tristeza'),\n",
+    "('o gosto da vingança e amargo','tristeza'),\n",
+    "('sou uma mulher amargurada depois de que você me deixou','tristeza'),\n",
+    "('estou desanimada com a vida','tristeza'),\n",
+    "('e um desanimo só coitadinha','tristeza'),\n",
+    "('a derrota e depressiva','tristeza'),\n",
+    "('discriminar e desumano','tristeza'),\n",
+    "('que desanimo','tristeza'),\n",
+    "('e uma desonra para o pais','tristeza'),\n",
+    "('a preocupação deveria nos levar a ação não a depressão','tristeza'),\n",
+    "('passamos ao desalento e a loucura','tristeza'),\n",
+    "('aquele que nunca viu a tristeza nunca reconhecerá a alegria','tristeza'),\n",
+    "('cuidado com a tristeza ela e um vicio','tristeza'),\n",
+    "\n",
+    "('eu imploro, não me matem!','medo'),\n",
+    "('tem certeza que não e perigoso?','medo'),\n",
+    "('não tenho certeza se e seguro','medo'),\n",
+    "('tenho que correr pra não me pegarem','medo'),\n",
+    "('socorro! ele queria roubar os meus doces!','medo'),\n",
+    "('esse cara está me perseguindo','medo'),\n",
+    "('não entro lá, e um lugar muito perigoso','medo'),\n",
+    "('este lugar continua assustador','medo'),\n",
+    "('na selva tem muitos animais perigosos','medo'),\n",
+    "('avancem com cautela','medo'),\n",
+    "('este lugar está silencioso de mais, cuidado!','medo'),\n",
+    "('por favor, deixe-me viver!','medo'),\n",
+    "('vou ficar sem mesada se tirar nota baixa','medo'),\n",
+    "('parece que tem olhos nos vigiando','medo'),\n",
+    "('eu temo que a sentença do juiz possa ser negativa','medo'),\n",
+    "('mas essa missão e arriscada','medo'),\n",
+    "('salvem-se quem puder!','medo'),\n",
+    "('meu plano pode ser descoberto','medo'),\n",
+    "('não tive culpa, juro não fui eu','medo'),\n",
+    "('tenho que tomar cuidado com o lobisomem','medo'),\n",
+    "('se eu não achar, ele vai descobrir a verdade','medo'),\n",
+    "('meu deus, ele desapareceu!','medo'),\n",
+    "('tomara que eles não me vejam daqui!','medo'),\n",
+    "('mantenha isso em segredo, se descobrirem estaremos ferrados','medo'),\n",
+    "('por favor, me soltem, eu sou inocente','medo'),\n",
+    "('estou ouvindo passos atrás de mim','medo'),\n",
+    "('eu vou pedir socorro!','medo'),\n",
+    "('cuidado com as curvas na estrada','medo'),\n",
+    "('não sei não, parece perigoso','medo'),\n",
+    "('estou tremendo de medo!','medo'),\n",
+    "('socorro, eu vou cair!','medo'),\n",
+    "('eu não vou ate a floresta negra, e muito perigoso','medo'),\n",
+    "('ouço passos na minha direção','medo'),\n",
+    "('acho que está arriscado de mais','medo'),\n",
+    "('vamos voltar, e muito perigoso','medo'),\n",
+    "('fuja, se não acabaremos mortos','medo'),\n",
+    "('receio por não me livrar desta situação','medo'),\n",
+    "('socorro! ele está armado!','medo'),\n",
+    "('ei cuidado, você vai bater no poste!','medo'),\n",
+    "('socorro, nós estamos afundando','medo'),\n",
+    "('e serio, cuidado com essa arma!','medo'),\n",
+    "('os tubarões estão atacando!','medo'),\n",
+    "('sinto arrepios quando fico sozinho no escuro','medo'),\n",
+    "('calma, eu não estou com o dinheiro','medo'),\n",
+    "('eu acho que estou sendo enganado','medo'),\n",
+    "('ligeiro, temos que fugir depressa','medo'),\n",
+    "('tem um crocodilo selvagem vindo para cá','medo'),\n",
+    "('se ficarmos quietos eles não vão nos achar','medo'),\n",
+    "('fuja! o tigre parece faminto','medo'),\n",
+    "('estou sem saída, preciso de um milagre','medo'),\n",
+    "('tire isso de mim! socorro!','medo'),\n",
+    "('não sei nadar, vou me afogar!','medo'),\n",
+    "('não tenho certeza se e seguro','medo'),\n",
+    "('vou apanhar se meus pais verem meu boletim','medo'),\n",
+    "('não consigo sair daqui!','medo'),\n",
+    "('se sair tão tarde, poderei ser assaltada','medo'),\n",
+    "('não me deixe por favor!','medo'),\n",
+    "('espere, não pode me largar aqui sozinho','medo'),\n",
+    "('temo pela sua segurança','medo'),\n",
+    "('eu te entrego o dinheiro, por favor não me mate!','medo'),\n",
+    "('ele vai levar todo o meu dinheiro','medo'),\n",
+    "('não dirija tão rápido assim','medo'),\n",
+    "('me descobriram, irão me prender!','medo'),\n",
+    "('só espero que não me façam nenhum mal','medo'),\n",
+    "('vou me afogar, me ajudem a sair da água','medo'),\n",
+    "('não estaremos a salvo aqui','medo'),\n",
+    "('não quero nem pensar no que pode acontecer','medo'),\n",
+    "('nessa cidade e uma desgraça atrás da outra','medo'),\n",
+    "('alguem esta me ligando, estou assustado','medo'),\n",
+    "('isso não e remedio, não me matem','medo'),\n",
+    "('eu não confio nele, tenho que ter cautela','medo'),\n",
+    "('muita cautela','medo'),\n",
+    "('vou ser descoberto, meu deus','medo'),\n",
+    "('receio que terei de ir','medo'),\n",
+    "('a noite e muito perigosa','medo'),\n",
+    "('estou estremecendo com essa casa','medo'),\n",
+    "('olha aquela criatura se movendo monstruosamente','medo'),\n",
+    "('não agüento este suspense','medo'),\n",
+    "('afugente os cães','medo'),\n",
+    "('estou chocado e amedrontado com este assassinato brutal','medo'),\n",
+    "('e preciso afugenta com ímpeto este medo do inferno','medo'),\n",
+    "('seu políticos usam suas forças para afugentar e amedrontar o povo','medo'),\n",
+    "('o objetivo disso e apenas me amedrontar mais','medo'),\n",
+    "('isso me apavora','medo')]\n",
+    "\n",
+    "baseteste =[\n",
+    "('o mundo e feio como o pecado','desgosto'),\n",
+    "('a coisa mais difícil de esconder e aquilo que não existe','desgosto'),\n",
+    "('você errou feio aquele gol','desgosto'),\n",
+    "('nunca vou me casar sou muito feia','desgosto'),\n",
+    "('os golpes da adversidade são terrivelmente amargos','desgosto'),\n",
+    "('os homem ficam terrivelmente chatos','desgosto'),\n",
+    "('abominavelmente convencido','desgosto'),\n",
+    "('terrivelmente irritado','desgosto'),\n",
+    "('as instituições publicas estão terrivelmente decadentes','desgosto'),\n",
+    "('a população viveu em isolamento por muito tempo','desgosto'),\n",
+    "('estou terrivelmente preocupada','desgosto'),\n",
+    "('o nacionalismo e uma doença infantil','desgosto'),\n",
+    "('se me es antipático a minha negação esta pronta','desgosto'),\n",
+    "('muitos documentários sobre esse casal antipático','desgosto'),\n",
+    "('sua beleza não desfaça sua antipatia','desgosto'),\n",
+    "('esta e uma experiência desagradável','desgosto'),\n",
+    "('desagradável estrago nos banheiros','desgosto'),\n",
+    "('o mais irritante no amor e que se trata de um crime que precisa de um cúmplice','desgosto'),\n",
+    "('a situação nos causa grande incomodo','desgosto'),\n",
+    "('estou preocupado com o incomodo na garganta','desgosto'),\n",
+    "('simplesmente não quero amolação da policia','desgosto'),\n",
+    "('você e uma criaturinha muito impertinente','desgosto'),\n",
+    "('o peso e a dor da vida','desgosto'),\n",
+    "('me arrependo amargamente de minhas ações','desgosto'),\n",
+    "('o destino e cruel e os homens não são dignos de compaixão','desgosto'),\n",
+    "('o ódio conduz ao isolamento cruel e ao desespero','desgosto'),\n",
+    "('encerrou com o massacre mais repudiável e asqueroso que se conhece','desgosto'),\n",
+    "('de mal gosto e asqueroso','desgosto'),\n",
+    "('tudo e inserto neste mundo hediondo','desgosto'),\n",
+    "('o crime de corrupção e um crime hediondo','desgosto'),\n",
+    "('o rio esta fetido e de cor escura','desgosto'),\n",
+    "('muito lixo no rio o deixa malcheiroso','desgosto'),\n",
+    "('existe uma laranja podre no grupo e já desconfiamos quem e','desgosto'),\n",
+    "('foi de repente estou machucado e me sentindo enjoado','desgosto'),\n",
+    "('eu fiquei enojado','desgosto'),\n",
+    "('daqui alguns meses vou embora deste pais que já estou nauseado','desgosto'),\n",
+    "\n",
+    "('isso tudo e um erro','tristeza'),\n",
+    "('eu sou errada eu sou errante','tristeza'),\n",
+    "('tenho muito dó do cachorro','tristeza'),\n",
+    "('e dolorida a perda de um filho','tristeza'),\n",
+    "('essa tragedia vai nos abalar para sempre','tristeza'),\n",
+    "('perdi meus filhos','tristeza'),\n",
+    "('perdi meu curso','tristeza'),\n",
+    "('sou só uma chorona','tristeza'),\n",
+    "('você e um chorão','tristeza'),\n",
+    "('se arrependimento matasse','tristeza'),\n",
+    "('me sinto deslocado em sala de aula','tristeza'),\n",
+    "('foi uma passagem fúnebre','tristeza'),\n",
+    "('nossa condolências e tristeza a sua perda','tristeza'),\n",
+    "('desanimo, raiva, solidão ou vazies, depressão','tristeza'),\n",
+    "('vivo te desanimando','tristeza'),\n",
+    "('estou desanimado','tristeza'),\n",
+    "('imperador sanguinário, depravado e temeroso','tristeza'),\n",
+    "('meu ser esta em agonia','tristeza'),\n",
+    "('este atrito entre nos tem que acabar','tristeza'),\n",
+    "('a escuridão desola meu ser','tristeza'),\n",
+    "('sua falsa preocupação','tristeza'),\n",
+    "('sua falsidade me entristece','tristeza'),\n",
+    "('quem esta descontente com os outros esta descontente consigo próprio','tristeza'),\n",
+    "('a torcida esta descontente com a demissão do tecnico','tristeza'),\n",
+    "('estou bastante aborrecido com o jornal','tristeza'),\n",
+    "('me sinto solitário e entediado','tristeza'),\n",
+    "('a vida e solitária para aqueles que não são falsos','tristeza'),\n",
+    "('como com compulsão depois da depressão','tristeza'),\n",
+    "('estou me desencorajando a viver','tristeza'),\n",
+    "('ele desencoraja minhas vontades','tristeza'),\n",
+    "('isso vai deprimindo por dentro','tristeza'),\n",
+    "('acho que isso e defeituoso','tristeza'),\n",
+    "('os remedios me derrubam na cama','tristeza'),\n",
+    "('a depressão vai me derrubar','tristeza'),\n",
+    "('suas desculpas são falsas','tristeza'),\n",
+    "('não magoe as pessoas','tristeza'),\n",
+    "\n",
+    "('que abominável esse montro!','medo'),\n",
+    "('vamos alarmar a todos sobre a situação','medo'),\n",
+    "('estou amedrontada','medo'),\n",
+    "('estou com muito medo da noite','medo'),\n",
+    "('ele esta me ameaçando a dias','medo'),\n",
+    "('quanta angustia','medo'),\n",
+    "('estou angustiada','medo'),\n",
+    "('angustiadamente vou sair e casa','medo'),\n",
+    "('isso me deixa apavorada','medo'),\n",
+    "('você esta me apavorando','medo'),\n",
+    "('estou desconfiada de você','medo'),\n",
+    "('não confio em você','medo'),\n",
+    "('ate o cachorro está apavorado','medo'),\n",
+    "('estou assustado com as ações do meu colega','medo'),\n",
+    "('agora se sente humilhado, apavorado','medo'),\n",
+    "('assustou a população e provocou mortes','medo'),\n",
+    "('estou com dificuldades para respirar e muito assustado','medo'),\n",
+    "('os policiais se assustaram quando o carro capotou','medo'),\n",
+    "('o trabalhador e assombrado pelo temor do desemprego','medo'),\n",
+    "('este lugar e mal assombrado','medo'),\n",
+    "('estou assombrado pela crise financeira','medo'),\n",
+    "('mesmo aterrorizado lembro de você','medo'),\n",
+    "('aterrorizado e suando frio','medo'),\n",
+    "('um grupo de elefantes selvagens tem aterrorizado vilas','medo'),\n",
+    "('me sinto intimidada pela sua presença','medo'),\n",
+    "('tenho medo de ser advertida novamente','medo'),\n",
+    "('estou correndo o risco de ser advertido','medo'),\n",
+    "('estou correndo riscos de saúde','medo'),\n",
+    "('os riscos são reais','medo'),\n",
+    "('podemos perder muito dinheiro com essa investida','medo'),\n",
+    "('socorro, fui intimado a depor','medo'),\n",
+    "('fui notificado e estou com medo de perde a guarda da minha filha','medo'),\n",
+    "('estou angustiada com meus filhos na rua','medo'),\n",
+    "('e abominável o que fazem com os animais','medo'),\n",
+    "('foi terrível o tigre quase o matou','medo'),\n",
+    "('me advertiram sobre isso','medo')]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Base de Dados para Exemplificar o Modelo de Não Estruturado de Dados\n",
+    "base = [('eu sou admirada por muitos','alegria'),\n",
+    "        ('me sinto completamente amado','alegria'),\n",
+    "        ('amar e maravilhoso','alegria'),\n",
+    "        ('estou me sentindo muito animado novamente','alegria'),\n",
+    "        ('eu estou muito bem hoje','alegria'),\n",
+    "        ('que belo dia para dirigir um carro novo','alegria'),\n",
+    "        ('o dia está muito bonito','alegria'),\n",
+    "        ('estou contente com o resultado do teste que fiz no dia de ontem','alegria'),\n",
+    "        ('o amor e lindo','alegria'),\n",
+    "        ('nossa amizade e amor vai durar para sempre', 'alegria'),\n",
+    "        ('estou amedrontado', 'medo'),\n",
+    "        ('ele esta me ameacando a dias', 'medo'),\n",
+    "        ('isso me deixa apavorada', 'medo'),\n",
+    "        ('este lugar e apavorante', 'medo'),\n",
+    "        ('se perdermos outro jogo seremos eliminados e isso me deixa com pavor', 'medo'),\n",
+    "        ('tome cuidado com o lobisomem', 'medo'),\n",
+    "        ('se eles descobrirem estamos encrencados', 'medo'),\n",
+    "        ('estou tremendo de medo', 'medo'),\n",
+    "        ('eu tenho muito medo dele', 'medo'),\n",
+    "        ('estou com medo do resultado dos meus testes', 'medo')]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Criação de Variável que armazenará as StopWords."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "stopwords = ['a', 'agora', 'algum', 'alguma', 'aquele', 'aqueles', 'de', 'deu', 'do', 'e', 'estou', 'esta', 'esta',\n",
+    "             'ir', 'meu', 'muito', 'mesmo', 'no', 'nossa', 'o', 'outro', 'para', 'que', 'sem', 'talvez', 'tem', 'tendo',\n",
+    "             'tenha', 'teve', 'tive', 'todo', 'um', 'uma', 'umas', 'uns', 'vou']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Chamando os métodos nltk.corpus na linguagem portuguesa.\n",
+    "stopwordsnltk = nltk.corpus.stopwords.words('portuguese')\n",
+    "stopwordsnltk.append('vou')\n",
+    "stopwordsnltk.append('tão')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Lista de Palavras do Stop Words NLTK ['de', 'a', 'o', 'que', 'e', 'do', 'da', 'em', 'um', 'para', 'com', 'não', 'uma', 'os', 'no', 'se', 'na', 'por', 'mais', 'as', 'dos', 'como', 'mas', 'ao', 'ele', 'das', 'à', 'seu', 'sua', 'ou', 'quando', 'muito', 'nos', 'já', 'eu', 'também', 'só', 'pelo', 'pela', 'até', 'isso', 'ela', 'entre', 'depois', 'sem', 'mesmo', 'aos', 'seus', 'quem', 'nas', 'me', 'esse', 'eles', 'você', 'essa', 'num', 'nem', 'suas', 'meu', 'às', 'minha', 'numa', 'pelos', 'elas', 'qual', 'nós', 'lhe', 'deles', 'essas', 'esses', 'pelas', 'este', 'dele', 'tu', 'te', 'vocês', 'vos', 'lhes', 'meus', 'minhas', 'teu', 'tua', 'teus', 'tuas', 'nosso', 'nossa', 'nossos', 'nossas', 'dela', 'delas', 'esta', 'estes', 'estas', 'aquele', 'aquela', 'aqueles', 'aquelas', 'isto', 'aquilo', 'estou', 'está', 'estamos', 'estão', 'estive', 'esteve', 'estivemos', 'estiveram', 'estava', 'estávamos', 'estavam', 'estivera', 'estivéramos', 'esteja', 'estejamos', 'estejam', 'estivesse', 'estivéssemos', 'estivessem', 'estiver', 'estivermos', 'estiverem', 'hei', 'há', 'havemos', 'hão', 'houve', 'houvemos', 'houveram', 'houvera', 'houvéramos', 'haja', 'hajamos', 'hajam', 'houvesse', 'houvéssemos', 'houvessem', 'houver', 'houvermos', 'houverem', 'houverei', 'houverá', 'houveremos', 'houverão', 'houveria', 'houveríamos', 'houveriam', 'sou', 'somos', 'são', 'era', 'éramos', 'eram', 'fui', 'foi', 'fomos', 'foram', 'fora', 'fôramos', 'seja', 'sejamos', 'sejam', 'fosse', 'fôssemos', 'fossem', 'for', 'formos', 'forem', 'serei', 'será', 'seremos', 'serão', 'seria', 'seríamos', 'seriam', 'tenho', 'tem', 'temos', 'tém', 'tinha', 'tínhamos', 'tinham', 'tive', 'teve', 'tivemos', 'tiveram', 'tivera', 'tivéramos', 'tenha', 'tenhamos', 'tenham', 'tivesse', 'tivéssemos', 'tivessem', 'tiver', 'tivermos', 'tiverem', 'terei', 'terá', 'teremos', 'terão', 'teria', 'teríamos', 'teriam', 'vou', 'tão']\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Chamada de método para exibir os dados stopwordsnltk\n",
+    "print('Lista de Palavras do Stop Words NLTK' , stopwordsnltk)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 33,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Método Aplicando Stemmer nas Palavras Identificadas (Radical das Palavras)\n",
+    "def aplicastemmer(texto):\n",
+    "    stemmer = nltk.stem.RSLPStemmer()\n",
+    "    frasessstemming = []\n",
+    "    for (palavras, emocao) in texto:\n",
+    "        comstemming = [str(stemmer.stem(p)) for p in palavras.split() if p not in stopwordsnltk]\n",
+    "        frasessstemming.append((comstemming, emocao))\n",
+    "    return frasessstemming"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[(['admir', 'muit'], 'alegria'), (['sint', 'complet', 'am'], 'alegria'), (['am', 'maravilh'], 'alegria'), (['sent', 'anim', 'nov'], 'alegria'), (['bem', 'hoj'], 'alegria'), (['bel', 'dia', 'dirig', 'carr', 'nov'], 'alegria'), (['dia', 'bonit'], 'alegria'), (['cont', 'result', 'test', 'fiz', 'dia', 'ont'], 'alegria'), (['am', 'lind'], 'alegria'), (['amizad', 'am', 'vai', 'dur', 'sempr'], 'alegria'), (['amedront'], 'medo'), (['ameac', 'dia'], 'medo'), (['deix', 'apavor'], 'medo'), (['lug', 'apavor'], 'medo'), (['perd', 'outr', 'jog', 'elimin', 'deix', 'pav'], 'medo'), (['tom', 'cuid', 'lobisom'], 'medo'), (['descobr', 'encrenc'], 'medo'), (['trem', 'med'], 'medo'), (['med'], 'medo'), (['med', 'result', 'test'], 'medo')]\n"
+     ]
+    }
+   ],
+   "source": [
+    "frasescomstemmingtreinamento = aplicastemmer(basetreinamento)\n",
+    "frasescomstemmingteste = aplicastemmer(baseteste)\n",
+    "#print(frasescomstemming)\n",
+    "print(frasescomstemming)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[(['admir', 'muit'], 'alegria'), (['sint', 'complet', 'am'], 'alegria'), (['am', 'maravilh'], 'alegria'), (['sent', 'anim', 'nov'], 'alegria'), (['bem', 'hoj'], 'alegria'), (['bel', 'dia', 'dirig', 'carr', 'nov'], 'alegria'), (['dia', 'bonit'], 'alegria'), (['cont', 'result', 'test', 'fiz', 'dia', 'ont'], 'alegria'), (['am', 'lind'], 'alegria'), (['amizad', 'am', 'vai', 'dur', 'sempr'], 'alegria'), (['amedront'], 'medo'), (['ameac', 'dia'], 'medo'), (['deix', 'apavor'], 'medo'), (['lug', 'apavor'], 'medo'), (['perd', 'outr', 'jog', 'elimin', 'deix', 'pav'], 'medo'), (['tom', 'cuid', 'lobisom'], 'medo'), (['descobr', 'encrenc'], 'medo'), (['trem', 'med'], 'medo'), (['med'], 'medo'), (['med', 'result', 'test'], 'medo')]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Chamada do método que aplica Stemmer no Texto Base\n",
+    "frasescomstemming = aplicastemmer(base)\n",
+    "frasescomstemmingteste = aplicastemmer(base)\n",
+    "print(frasescomstemming)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Método para buscar Palavras em Texto ou Bloco de Textos.\n",
+    "def buscapalavras(frases):\n",
+    "    todaspalavras = []\n",
+    "    for (palavras, emocao) in frases:\n",
+    "        todaspalavras.extend(palavras)\n",
+    "    return todaspalavras"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 39,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['admir', 'muit', 'sint', 'complet', 'am', 'am', 'maravilh', 'sent', 'anim', 'nov', 'bem', 'hoj', 'bel', 'dia', 'dirig', 'carr', 'nov', 'dia', 'bonit', 'cont', 'result', 'test', 'fiz', 'dia', 'ont', 'am', 'lind', 'amizad', 'am', 'vai', 'dur', 'sempr', 'amedront', 'ameac', 'dia', 'deix', 'apavor', 'lug', 'apavor', 'perd', 'outr', 'jog', 'elimin', 'deix', 'pav', 'tom', 'cuid', 'lobisom', 'descobr', 'encrenc', 'trem', 'med', 'med', 'med', 'result', 'test']\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Busca de Palavras executando o método buscapalavras.\n",
+    "#palavrastreinamento = buscapalavras(frasescomstemmingtreinamento)\n",
+    "#palavrasteste = buscapalavras(frasescomstemmingteste)\n",
+    "palavras = buscapalavras(frasescomstemming)\n",
+    "print(palavras)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Método para verificar a distribuição de frequencia das palavras no texto."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "def buscafrequencia(palavras):\n",
+    "    palavras = nltk.FreqDist(palavras)\n",
+    "    return palavras"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Mostrar a Frequência de Palavras no Texto\n",
+      "[('am', 4), ('dia', 4), ('med', 3), ('nov', 2), ('result', 2), ('test', 2), ('deix', 2), ('apavor', 2), ('admir', 1), ('muit', 1), ('sint', 1), ('complet', 1), ('maravilh', 1), ('sent', 1), ('anim', 1), ('bem', 1), ('hoj', 1), ('bel', 1), ('dirig', 1), ('carr', 1), ('bonit', 1), ('cont', 1), ('fiz', 1), ('ont', 1), ('lind', 1), ('amizad', 1), ('vai', 1), ('dur', 1), ('sempr', 1), ('amedront', 1), ('ameac', 1), ('lug', 1), ('perd', 1), ('outr', 1), ('jog', 1), ('elimin', 1), ('pav', 1), ('tom', 1), ('cuid', 1), ('lobisom', 1), ('descobr', 1), ('encrenc', 1), ('trem', 1)]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Exibição dos dados com a busca de palavras com distribuição de frequência.\n",
+    "frequencia = buscafrequencia(palavras)\n",
+    "print('Mostrar a Frequência de Palavras no Texto')\n",
+    "print(frequencia.most_common(50))\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 43,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Método para verificar as palavras únicas \n",
+    "def buscapalavrasunicas(frequencia):\n",
+    "    freq = frequencia.keys()\n",
+    "    return freq"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "dict_keys(['admir', 'muit', 'sint', 'complet', 'am', 'maravilh', 'sent', 'anim', 'nov', 'bem', 'hoj', 'bel', 'dia', 'dirig', 'carr', 'bonit', 'cont', 'result', 'test', 'fiz', 'ont', 'lind', 'amizad', 'vai', 'dur', 'sempr', 'amedront', 'ameac', 'deix', 'apavor', 'lug', 'perd', 'outr', 'jog', 'elimin', 'pav', 'tom', 'cuid', 'lobisom', 'descobr', 'encrenc', 'trem', 'med'])\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Chamada do método buscapalavasunicas\n",
+    "palavrasunicas = buscapalavrasunicas(frequencia)\n",
+    "#palavrasunicasteste = buscapalavrasunicas(frequenciateste)\n",
+    "#print(palavrasunicastreinamento)\n",
+    "\n",
+    "print(palavrasunicas)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Extrator de Palavras.\n",
+    "def extratorpalavras(documento):\n",
+    "    doc = set(documento)\n",
+    "    caracteristicas = {}\n",
+    "    for palavras in palavrasunicas:\n",
+    "        caracteristicas['%s' % palavras] = (palavras in doc)\n",
+    "    return caracteristicas"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Chamar o ExtratorPalavras\n",
+    "caracteristicasfrase = extratorpalavras(['am', 'nov', 'dia'])\n",
+    "#print(caracteristicasfrase)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 47,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': True, 'maravilh': False, 'sent': False, 'anim': False, 'nov': True, 'bem': False, 'hoj': False, 'bel': False, 'dia': True, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(caracteristicasfrase)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 48,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "[({'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}, 'desgosto'), ({'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}, 'desgosto'), ...]\n",
+      "\n",
+      "[({'admir': True, 'muit': True, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}, 'alegria'), ({'admir': False, 'muit': False, 'sint': True, 'complet': True, 'am': True, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}, 'alegria'), ...]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Extração das particularidades com o nltk.classify.apply_features\n",
+    "basecompletatreinamento = nltk.classify.apply_features(extratorpalavras, frasescomstemmingtreinamento)\n",
+    "basecompletateste = nltk.classify.apply_features(extratorpalavras, frasescomstemmingteste)\n",
+    "print()\n",
+    "print(basecompletatreinamento)\n",
+    "print()\n",
+    "print(basecompletateste)\n",
+    "#print(basecompleta[15])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 49,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['desgosto', 'tristeza', 'medo']\n",
+      "Most Informative Features\n",
+      "                    sint = True           triste : medo   =      3.0 : 1.0\n",
+      "                    cuid = True             medo : triste =      2.3 : 1.0\n",
+      "                     vai = True             medo : triste =      2.3 : 1.0\n",
+      "                     tom = True             medo : triste =      1.7 : 1.0\n",
+      "                    deix = True           triste : medo   =      1.7 : 1.0\n",
+      "                     dia = False          desgos : triste =      1.1 : 1.0\n",
+      "                    sint = False            medo : triste =      1.0 : 1.0\n",
+      "                     lug = False          desgos : medo   =      1.0 : 1.0\n",
+      "                     vai = False          desgos : medo   =      1.0 : 1.0\n",
+      "                amedront = False          desgos : medo   =      1.0 : 1.0\n",
+      "                    cuid = False          desgos : medo   =      1.0 : 1.0\n",
+      "                    deix = False          desgos : triste =      1.0 : 1.0\n",
+      "                    perd = False          desgos : triste =      1.0 : 1.0\n",
+      "                 descobr = False          desgos : medo   =      1.0 : 1.0\n",
+      "                    cont = False          desgos : triste =      1.0 : 1.0\n",
+      "                    muit = False          desgos : triste =      1.0 : 1.0\n",
+      "                      am = False          desgos : triste =      1.0 : 1.0\n",
+      "                     tom = False          desgos : medo   =      1.0 : 1.0\n",
+      "                 lobisom = False          desgos : medo   =      1.0 : 1.0\n",
+      "                    trem = False          desgos : medo   =      1.0 : 1.0\n",
+      "None\n"
+     ]
+    }
+   ],
+   "source": [
+    "# constroi a tabela de probabilidade - Modelo de Machine Learning para o Algortimo Naive Bayes\n",
+    "classificador = nltk.NaiveBayesClassifier.train(basecompletatreinamento)\n",
+    "print(classificador.labels())\n",
+    "print(classificador.show_most_informative_features(20))\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 50,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "0.35\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Exibe a Accuracy do Modelo de Machine learning.\n",
+    "print(nltk.classify.accuracy(classificador, basecompletateste))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 51,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "0.46511627906976744\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(nltk.classify.accuracy(classificador, basecompletatreinamento))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 52,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "{'admir': True, 'muit': True, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria\n",
+      "{'admir': False, 'muit': False, 'sint': True, 'complet': True, 'am': True, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': True, 'maravilh': True, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': True, 'anim': True, 'nov': True, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': True, 'hoj': True, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': True, 'bem': False, 'hoj': False, 'bel': True, 'dia': True, 'dirig': True, 'carr': True, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': True, 'dirig': False, 'carr': False, 'bonit': True, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': True, 'dirig': False, 'carr': False, 'bonit': False, 'cont': True, 'result': True, 'test': True, 'fiz': True, 'ont': True, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': True, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': True, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': True, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': True, 'vai': True, 'dur': True, 'sempr': True, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': True, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "medo\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': True, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': True, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "medo\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': True, 'apavor': True, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "medo\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': True, 'lug': True, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "medo\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': True, 'apavor': False, 'lug': False, 'perd': True, 'outr': True, 'jog': True, 'elimin': True, 'pav': True, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "medo\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': True, 'cuid': True, 'lobisom': True, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "medo\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': True, 'encrenc': True, 'trem': False, 'med': False}\n",
+      "medo\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': True, 'med': True}\n",
+      "medo\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': True}\n",
+      "medo\n",
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': True, 'test': True, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': True}\n",
+      "medo\n",
+      "alegria tristeza {'admir': True, 'muit': True, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria tristeza {'admir': False, 'muit': False, 'sint': True, 'complet': True, 'am': True, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria tristeza {'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': True, 'maravilh': True, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria desgosto {'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': True, 'anim': True, 'nov': True, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria desgosto {'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': True, 'hoj': True, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria tristeza {'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': True, 'bem': False, 'hoj': False, 'bel': True, 'dia': True, 'dirig': True, 'carr': True, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria tristeza {'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': True, 'dirig': False, 'carr': False, 'bonit': True, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria tristeza {'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': True, 'dirig': False, 'carr': False, 'bonit': False, 'cont': True, 'result': True, 'test': True, 'fiz': True, 'ont': True, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria tristeza {'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': True, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': True, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "alegria tristeza {'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': True, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': True, 'vai': True, 'dur': True, 'sempr': True, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "medo tristeza {'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': True, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': True, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "medo tristeza {'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': True, 'apavor': True, 'lug': False, 'perd': False, 'outr': False, 'jog': False, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n",
+      "medo tristeza {'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': True, 'apavor': False, 'lug': False, 'perd': True, 'outr': True, 'jog': True, 'elimin': True, 'pav': True, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n"
+     ]
+    }
+   ],
+   "source": [
+    "erros = []\n",
+    "for (frase, classe) in basecompletateste:\n",
+    "    print(frase)\n",
+    "    print(classe)\n",
+    "    resultado = classificador.classify(frase)\n",
+    "    if resultado != classe:\n",
+    "        erros.append((classe, resultado, frase))\n",
+    "for (classe, resultado, frase) in erros:\n",
+    "    print(classe, resultado, frase)\n",
+    "\n",
+    "from nltk.metrics import ConfusionMatrix\n",
+    "esperado = []\n",
+    "previsto = []\n",
+    "for (frase, classe) in basecompletateste:\n",
+    "    resultado = classificador.classify(frase)\n",
+    "    previsto.append(resultado)\n",
+    "    esperado.append(classe)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 53,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "         |   d   t |\n",
+      "         | a e   r |\n",
+      "         | l s   i |\n",
+      "         | e g   s |\n",
+      "         | g o m t |\n",
+      "         | r s e e |\n",
+      "         | i t d z |\n",
+      "         | a o o a |\n",
+      "---------+---------+\n",
+      " alegria |<.>2 . 8 |\n",
+      "desgosto | .<.>. . |\n",
+      "    medo | . .<7>3 |\n",
+      "tristeza | . . .<.>|\n",
+      "---------+---------+\n",
+      "(row = reference; col = test)\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "#esperado = 'alegria alegria alegria alegria medo medo surpresa surpresa'.split()\n",
+    "#previsto = 'alegria alegria medo surpresa medo medo medo surpresa'.split()\n",
+    "matriz = ConfusionMatrix(esperado, previsto)\n",
+    "print(matriz)\n",
+    "\n",
+    "# 1. Cenário\n",
+    "# 2. Número de classes - 16%\n",
+    "# 3. ZeroRules - 21,05%"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 58,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['eu', 'não', 'gost', 'de', 'jog', 'bola,', 'prefir', 'assist', 'tv']\n"
+     ]
+    }
+   ],
+   "source": [
+    "teste = 'eu não gosto de jogar bola, prefiro assistir TV'\n",
+    "testestemming = []\n",
+    "stemmer = nltk.stem.RSLPStemmer()\n",
+    "for (palavrastreinamento) in teste.split():\n",
+    "    comstem = [p for p in palavrastreinamento.split()]\n",
+    "    testestemming.append(str(stemmer.stem(comstem[0])))\n",
+    "print(testestemming)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 59,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "{'admir': False, 'muit': False, 'sint': False, 'complet': False, 'am': False, 'maravilh': False, 'sent': False, 'anim': False, 'nov': False, 'bem': False, 'hoj': False, 'bel': False, 'dia': False, 'dirig': False, 'carr': False, 'bonit': False, 'cont': False, 'result': False, 'test': False, 'fiz': False, 'ont': False, 'lind': False, 'amizad': False, 'vai': False, 'dur': False, 'sempr': False, 'amedront': False, 'ameac': False, 'deix': False, 'apavor': False, 'lug': False, 'perd': False, 'outr': False, 'jog': True, 'elimin': False, 'pav': False, 'tom': False, 'cuid': False, 'lobisom': False, 'descobr': False, 'encrenc': False, 'trem': False, 'med': False}\n"
+     ]
+    }
+   ],
+   "source": [
+    "novo = extratorpalavras(testestemming)\n",
+    "print(novo)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 60,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "desgosto\n",
+      "desgosto: 0.385656\n",
+      "tristeza: 0.310782\n",
+      "medo: 0.303562\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(classificador.classify(novo))\n",
+    "distribuicao = classificador.prob_classify(novo)\n",
+    "for classe in distribuicao.samples():\n",
+    "    print(\"%s: %f\" % (classe, distribuicao.prob(classe)))\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.1"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

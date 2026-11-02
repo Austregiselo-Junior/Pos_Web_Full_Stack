@@ -1,0 +1,25 @@
+module,method,url,count
+pregoes,pregoes,http://compras.dados.gov.br/pregoes/v1/pregoes.json,682986
+pregoes,itens_do_fornecedor,http://compras.dados.gov.br/pregoes/v1/itens_do_fornecedor.json,15519418
+pregoes,declaracao_pregao,http://compras.dados.gov.br/pregoes/v1/declaracao_pregao.json,9998285
+pregoes,resultados_pregao,http://compras.dados.gov.br/pregoes/v1/resultados_pregao.json,2266351
+licitacoes,licitacoes,http://compras.dados.gov.br/licitacoes/v1/licitacoes.json,1024068
+compraSemLicitacao,itens_compras_slicitacao,http://compras.dados.gov.br/compraSemLicitacao/v1/itens_compras_slicitacao.json,13327173
+contratos,cronogramas,http://compras.dados.gov.br/contratos/v1/cronogramas.json,146925
+contratos,contratos,http://compras.dados.gov.br/contratos/v1/contratos.json,589023
+
+
+Realizadas em: 27-06-2018.
+
+pregoes,tipos_pregao,http://compras.dados.gov.br/pregoes/v1/tipos_pregao.json,0
+pregoes,situacoes_pregao,http://compras.dados.gov.br/pregoes/v1/situacoes_pregao.json,0
+pregoes,orgaos_pregao,http://compras.dados.gov.br/pregoes/v1/orgaos_pregao.json,0
+pregoes,objetos_pregao,http://compras.dados.gov.br/pregoes/v1/objetos_pregao.json,0
+licitacoes,rdcs,http://compras.dados.gov.br/licitacoes/v1/rdcs.json,2462
+contratos,tipos_contrato,http://compras.dados.gov.br/contratos/v1/tipos_contrato.json,9
+licitacoes,irps,http://compras.dados.gov.br/licitacoes/v1/irps.json,3344
+licitacoes,precos_praticados,http://compras.dados.gov.br/licitacoes/v1/precos_praticados.json,805050
+
+Realizadas em: 28-06-2018.
+
+compraSemLicitacao,compras_slicitacao,http://compras.dados.gov.br/compraSemLicitacao/v1/compras_slicitacao.json,4371510

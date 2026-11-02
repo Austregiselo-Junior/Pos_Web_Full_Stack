@@ -1,0 +1,55 @@
+codigo	descricao	id	offset	item_filename
+10	ARMAMENTO                                                                                                               	10	0	materiais.grupos
+11	MATERIAIS BÉLICOS NUCLEARES                                                                                             	11	0	materiais.grupos
+12	EQUIPAMENTOS DE TIRO                                                                                                    	12	0	materiais.grupos
+13	MUNIÇÕES E EXPLOSIVOS                                                                                                   	13	0	materiais.grupos
+14	MÍSSEIS GUIADOS                                                                                                         	14	0	materiais.grupos
+15	AERONAVES E SEUS COMPONENTES ESTRUTURAIS                                                                                	15	0	materiais.grupos
+16	COMPONENTES E ACESSORIOS DE AERONAVES                                                                                   	16	0	materiais.grupos
+17	EQUIPAMENTOS PARA LANCAMENTOS, POUSO E MANOBRA DE AERONAVES                                                             	17	0	materiais.grupos
+18	VEICULOS ESPACIAIS (ASTRONAVES)                                                                                         	18	0	materiais.grupos
+19	NAVIOS, PEQUENAS EMBARCACOES, PONTOES E DIQUES FLUTUANTES                                                               	19	0	materiais.grupos
+20	EQUIPAMENTOS PARA NAVIOS E EMBARCACOES                                                                                  	20	0	materiais.grupos
+22	EQUIPAMENTOS FERROVIÁRIOS                                                                                               	22	0	materiais.grupos
+23	VEíCULOS                                                                                                                	23	0	materiais.grupos
+24	TRATORES                                                                                                                	24	0	materiais.grupos
+25	COMPONENTES DE VEÍCULOS                                                                                                 	25	0	materiais.grupos
+26	PNEUS E CÂMARAS DE AR                                                                                                   	26	0	materiais.grupos
+28	MOTORES, TURBINAS E SEUS COMPONENTES                                                                                    	28	0	materiais.grupos
+29	ACESSÓRIOS DE MOTORES                                                                                                   	29	0	materiais.grupos
+30	EQUIPAMENTOS DE TRANSMISSÃO DE FORÇA MECÂNICA                                                                           	30	0	materiais.grupos
+31	ROLAMENTOS E MANCAIS                                                                                                    	31	0	materiais.grupos
+32	MÁQUINAS E EQUIPAMENTOS PARA TRABALHOS EM MADEIRA                                                                       	32	0	materiais.grupos
+34	MAQUINAS PARA TRABALHO EM METAIS                                                                                        	34	0	materiais.grupos
+35	EQUIPAMENTOS COMERCIAIS E DE SERVIÇOS                                                                                   	35	0	materiais.grupos
+36	MÁQUINAS PARA INDÚSTRIAS ESPECIALIZADAS                                                                                 	36	0	materiais.grupos
+37	MÁQUINAS E EQUIPAMENTOS AGRÍCOLAS                                                                                       	37	0	materiais.grupos
+38	EQUIPAMENTOS PARA CONSTRUÇÃO, MINERAÇÃO, TERRAPLENAGEM E MA-NUTENÇÃO DE ESTRADAS                                        	38	0	materiais.grupos
+39	EQUIPAMENTOS PARA MANUSEIO DE MATERIAL                                                                                  	39	0	materiais.grupos
+40	CORDAS, CABOS, CORRENTES E SEUS ACESSÓRIOS                                                                              	40	0	materiais.grupos
+41	EQUIPAMENTOS PARA REFRIGERAÇÃO, AR CONDICIONADO E CIRCULAÇÃODE AR                                                       	41	0	materiais.grupos
+42	EQUIPAMENTO PARA COMBATE A INCÊNDIO, RESGATE E SEGURANÇA                                                                	42	0	materiais.grupos
+43	BOMBAS E COMPRESSORES                                                                                                   	43	0	materiais.grupos
+44	FORNOS, CENTRAIS DE VAPOR E EQUIPAMENTOS DE SECAGEM,  REATO-RES NUCLEARES                                               	44	0	materiais.grupos
+45	EQUIPAMENTO DE INSTALAÇÕES HIDRÁULICAS E DE AQUECIMENTO                                                                 	45	0	materiais.grupos
+46	EQUIPAMENTOS PARA PURIFICAÇÃO DE ÁGUAS E TRATAMENTO DE ESGO-TOS                                                         	46	0	materiais.grupos
+47	CANOS, TUBOS, MANGUEIRAS E ACESSÓRIOS                                                                                   	47	0	materiais.grupos
+48	VÁLVULAS                                                                                                                	48	0	materiais.grupos
+49	EQUIPAMENTOS PARA OFICINAS DE MANUTENÇÃO E REPAROS                                                                      	49	0	materiais.grupos
+51	FERRAMENTAS MANUAIS                                                                                                     	51	0	materiais.grupos
+52	INSTRUMENTOS DE MEDIÇÃO                                                                                                 	52	0	materiais.grupos
+53	FERRAGENS E ABRASIVOS                                                                                                   	53	0	materiais.grupos
+54	ESTRUTURAS E ANDAIMES PRÉ-FABRICADOS                                                                                    	54	0	materiais.grupos
+55	TÁBUAS, ESQUADRIAS, COMPENSADOS E FOLHEADOS DE MADEIRA                                                                  	55	0	materiais.grupos
+56	MATERIAIS PARA CONSTRUÇÃO                                                                                               	56	0	materiais.grupos
+58	EQUIPAMENTOS DE COMUNICAÇÕES, DETEÇÃO E RADIAÇÃO COERENTE                                                               	58	0	materiais.grupos
+59	COMPONENTES DE EQUIPAMENTOS ELÉTRICOS E ELETRÔNICOS                                                                     	59	0	materiais.grupos
+60	MATERIAIS, COMPONENTES, CONJUNTOS E ACESSÓRIOS DE FIBRAS  Ó-TICAS                                                       	60	0	materiais.grupos
+61	CONDUTORES ELÉTRICOS E EQUIPAMENTOS PARA GERAÇÃO  E  DISTRI-BUIÇÃO DE ENERGIA                                           	61	0	materiais.grupos
+62	EQUIPAMENTOS DE ILUMINAÇÃO E LÂMPADAS                                                                                   	62	0	materiais.grupos
+63	SISTEMAS DE ALARME, SINALIZAÇÃO E DETECÇÃO PARA SEGURANÇA                                                               	63	0	materiais.grupos
+64	MEDICAMENTOS, DROGAS E PRODUTOS BIOLOGICOS                                                                              	64	0	materiais.grupos
+65	EQUIPAMENTOS E ARTIGOS PARA USO MÉDICO, DENTÁRIO E VETERINÁ-RIO                                                         	65	0	materiais.grupos
+66	INSTRUMENTOS E EQUIPAMENTOS DE LABORATÓRIO                                                                              	66	0	materiais.grupos
+67	EQUIPAMENTOS FOTOGRÁFICOS                                                                                               	67	0	materiais.grupos
+68	SUBSTÂNCIAS E PRODUTOS QUÍMICOS                                                                                         	68	0	materiais.grupos

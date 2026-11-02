@@ -1,0 +1,2699 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<strong><b><font size=\"5\">Data Science Academy</font></b></strong>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<strong><b><font size=\"5\">Web Scraping e Análise de Dados</font></b></strong>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<strong><b><font size=\"5\">Lab 2</font></b></strong>\n",
+    "\n",
+    "<strong><b><font size=\"4\">Web Scraping e Análise Estatística - Avaliando o Desempenho dos Participantes em Corridas de 10 KM com Dados de Sensores RFID</font></b></strong>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "![title](imagens/lab2.png)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Definição do Problema\n",
+    "\n",
+    "Você gosta de correr? Corrida é um dos esportes mais praticados em todo mundo, além de uma atividade saudável e prazerosa.\n",
+    "\n",
+    "Neste Lab vamos coletar dados reais de participantes de uma corrida de 10 KM realizada em Hillsboro no Oregon, EUA, em junho de 2017. \n",
+    "\n",
+    "Resumo da corrida:\n",
+    "\n",
+    "- Pessoas que completaram a corrida: 577\n",
+    "- Homens: 414\n",
+    "- Mulheres: 163\n",
+    "\n",
+    "O objetivo desta análise é encontrar:\n",
+    "    \n",
+    "- O tempo médio de conclusão da corrida.\n",
+    "- Se os tempos de chegada dos corredores seguem uma distribuição normal.\n",
+    "- Analisar se há diferença de desempenho entre homens e mulheres de várias faixas etárias.\n",
+    "\n",
+    "Os tempos registrados na corrida (bem como outros dados) são bem precisos pois os participantes usaram sensores RFID de onde os dados foram extraídos e disponibilizados na web. Mais detalhes sobre o uso dos sensores RFID aqui:\n",
+    "\n",
+    "https://www.hubertiming.com/runners/faq"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Fonte de Dados\n",
+    "\n",
+    "Como fonte de dados usaremos o web site <a href=\"https://www.hubertiming.com/\">Huber Timing</a> que contém o resultado das corridas que acontecem nos EUA, bem como a agenda de novos eventos.\n",
+    "\n",
+    "Aqui a página com o resultado da corrida que faremos a análise:\n",
+    "\n",
+    "https://www.hubertiming.com/results/2017GPTR10K"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Carregando os Pacotes Usados Neste Jupyter Notebook"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Versão da Linguagem Python\n",
+    "from platform import python_version\n",
+    "print('Versão da Linguagem Python Usada Neste Jupyter Notebook:', python_version())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Para atualizar um pacote, execute o comando abaixo no terminal ou prompt de comando:\n",
+    "# pip install -U nome_pacote\n",
+    "\n",
+    "# Para instalar a versão exata de um pacote, execute o comando abaixo no terminal ou prompt de comando:\n",
+    "# pip install nome_pacote==versão_desejada\n",
+    "\n",
+    "# Depois de instalar ou atualizar o pacote, reinicie o jupyter notebook, se necessário."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Instala o pacote watermark. \n",
+    "# Esse pacote é usado para gravar as versões de outros pacotes usados neste jupyter notebook.\n",
+    "!pip install -q -U watermark"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Usaremos o pacote Pingouin para algumas das análises estatísticas\n",
+    "# https://pingouin-stats.org/index.html\n",
+    "!pip install -q pingouin"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# Imports\n",
+    "import re\n",
+    "import requests\n",
+    "import matplotlib as m\n",
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "import pingouin as pg\n",
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns\n",
+    "from bs4 import BeautifulSoup as bs\n",
+    "from urllib.request import urlopen\n",
+    "from scipy import stats\n",
+    "\n",
+    "# Imports para formatação dos gráficos\n",
+    "sns.set_style('whitegrid')\n",
+    "%matplotlib inline"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "requests   2.22.0\n",
+      "pingouin   0.3.4\n",
+      "re         2.2.1\n",
+      "numpy      1.18.5\n",
+      "seaborn    0.10.1\n",
+      "matplotlib 3.2.1\n",
+      "pandas     1.0.4\n",
+      "Data Science Academy\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Versões dos pacotes usados neste jupyter notebook\n",
+    "%reload_ext watermark\n",
+    "%watermark -a \"Data Science Academy\" --iversions"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Web Scraping"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Definindo a URL com o resultado da corrida\n",
+    "url = 'https://www.hubertiming.com/results/2017GPTR10K'"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Abre a conexão com a url\n",
+    "html = urlopen(url)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Extrai o código HTML\n",
+    "soup = bs(html,'lxml')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Extrai o texto do código html\n",
+    "texto = soup.get_text()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[<tr colspan=\"2\">\n",
+      "<b>10K:</b>\n",
+      "</tr>, <tr>\n",
+      "<td>Finishers:</td>\n",
+      "<td>577</td>\n",
+      "</tr>, <tr>\n",
+      "<td>Male:</td>\n",
+      "<td>414</td>\n",
+      "</tr>, <tr>\n",
+      "<td>Female:</td>\n",
+      "<td>163</td>\n",
+      "</tr>, <tr class=\"header\">\n",
+      "<th>Place</th>\n",
+      "<th>Bib</th>\n",
+      "<th>Name</th>\n",
+      "<th>Gender</th>\n",
+      "<th>City</th>\n",
+      "<th>State</th>\n",
+      "<th>Chip Time</th>\n",
+      "<th>Chip Pace</th>\n",
+      "<th>Gun Time</th>\n",
+      "<th>Team</th>\n",
+      "</tr>, <tr>\n",
+      "<td>1</td>\n",
+      "<td>814</td>\n",
+      "<td>\r\n",
+      "\r\n",
+      "                    JARED WILSON\r\n",
+      "\r\n",
+      "                </td>\n",
+      "<td>M</td>\n",
+      "<td>TIGARD</td>\n",
+      "<td>OR</td>\n",
+      "<td>36:21</td>\n",
+      "<td>5:51</td>\n",
+      "<td>36:24</td>\n",
+      "<td></td>\n",
+      "</tr>, <tr>\n",
+      "<td>2</td>\n",
+      "<td>573</td>\n",
+      "<td>\r\n",
+      "\r\n",
+      "                    NATHAN A SUSTERSIC\r\n",
+      "\r\n",
+      "                </td>\n",
+      "<td>M</td>\n",
+      "<td>PORTLAND</td>\n",
+      "<td>OR</td>\n",
+      "<td>36:42</td>\n",
+      "<td>5:55</td>\n",
+      "<td>36:45</td>\n",
+      "<td>\n",
+      "<img class=\"teamThumbs\" src=\"/teamLogoThumbnail/logo?teamName=INTEL%20TEAM%20F&amp;raceId=1251&amp;state=OR\"/>\r\n",
+      "                            INTEL TEAM F\r\n",
+      "                        </td>\n",
+      "</tr>, <tr>\n",
+      "<td>3</td>\n",
+      "<td>687</td>\n",
+      "<td>\r\n",
+      "\r\n",
+      "                    FRANCISCO MAYA\r\n",
+      "\r\n",
+      "                </td>\n",
+      "<td>M</td>\n",
+      "<td>PORTLAND</td>\n",
+      "<td>OR</td>\n",
+      "<td>37:44</td>\n",
+      "<td>6:05</td>\n",
+      "<td>37:48</td>\n",
+      "<td></td>\n",
+      "</tr>, <tr>\n",
+      "<td>4</td>\n",
+      "<td>623</td>\n",
+      "<td>\r\n",
+      "\r\n",
+      "                    PAUL MORROW\r\n",
+      "\r\n",
+      "                </td>\n",
+      "<td>M</td>\n",
+      "<td>BEAVERTON</td>\n",
+      "<td>OR</td>\n",
+      "<td>38:34</td>\n",
+      "<td>6:13</td>\n",
+      "<td>38:37</td>\n",
+      "<td></td>\n",
+      "</tr>, <tr>\n",
+      "<td>5</td>\n",
+      "<td>569</td>\n",
+      "<td>\r\n",
+      "\r\n",
+      "                    DEREK G OSBORNE\r\n",
+      "\r\n",
+      "                </td>\n",
+      "<td>M</td>\n",
+      "<td>HILLSBORO</td>\n",
+      "<td>OR</td>\n",
+      "<td>39:21</td>\n",
+      "<td>6:20</td>\n",
+      "<td>39:24</td>\n",
+      "<td>\n",
+      "<img class=\"teamThumbs\" src=\"/teamLogoThumbnail/logo?teamName=INTEL%20TEAM%20F&amp;raceId=1251&amp;state=OR\"/>\r\n",
+      "                            INTEL TEAM F\r\n",
+      "                        </td>\n",
+      "</tr>]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Vamos visualizar as 10 primeiras linhas\n",
+    "linhas = soup.find_all('tr')\n",
+    "print(linhas[:10])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Limpeza e Transformação\n",
+    "\n",
+    "Agora começa o trabalho pesado. Não fique apenas executando código e compreenda o que está sendo feito. Se tiver dificuldades, pergunte! Temos vários canais de suporte a sua disposição."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Começaremos obtendo todas as linhas da tabela em forma de lista e depois converteremos essa lista em um dataframe para facilitar a manipulação."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Loop\n",
+    "for linha in linhas:\n",
+    "    linha_td = linha.find_all('td')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[<td>577</td>, <td>443</td>, <td>\r\n",
+      "\r\n",
+      "                    LIBBY B MITCHELL\r\n",
+      "\r\n",
+      "                </td>, <td>F</td>, <td>HILLSBORO</td>, <td>OR</td>, <td>1:41:18</td>, <td>16:20</td>, <td>1:42:10</td>, <td></td>]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(linha_td)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Com expressões regulares em Python, vamos extrair os dados das tags HTML."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Lista vazia para receber as linhas\n",
+    "lista_linhas = []"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Loop\n",
+    "for linha in linhas:\n",
+    "    cells = linha.find_all('td')\n",
+    "    str_cells = str(cells)\n",
+    "    clean = re.compile('<.*?>')\n",
+    "    clean2 = (re.sub(clean, '', str_cells))\n",
+    "    lista_linhas.append(clean2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[577, 443, \r\n",
+      "\r\n",
+      "                    LIBBY B MITCHELL\r\n",
+      "\r\n",
+      "                , F, HILLSBORO, OR, 1:41:18, 16:20, 1:42:10, ]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(clean2)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Convertemos a lista em um dataframe e obtemos uma visão rápida das 10 primeiras linhas usando o Pandas."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Convertemos a lista em dataframe\n",
+    "df = pd.DataFrame(lista_linhas)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>0</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>[]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>[Finishers:, 577]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>[Male:, 414]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>[Female:, 163]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>[]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>[1, 814, \\r\\n\\r\\n                    JARED WIL...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>[2, 573, \\r\\n\\r\\n                    NATHAN A ...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>[3, 687, \\r\\n\\r\\n                    FRANCISCO...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>8</th>\n",
+       "      <td>[4, 623, \\r\\n\\r\\n                    PAUL MORR...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>9</th>\n",
+       "      <td>[5, 569, \\r\\n\\r\\n                    DEREK G O...</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                                                   0\n",
+       "0                                                 []\n",
+       "1                                  [Finishers:, 577]\n",
+       "2                                       [Male:, 414]\n",
+       "3                                     [Female:, 163]\n",
+       "4                                                 []\n",
+       "5  [1, 814, \\r\\n\\r\\n                    JARED WIL...\n",
+       "6  [2, 573, \\r\\n\\r\\n                    NATHAN A ...\n",
+       "7  [3, 687, \\r\\n\\r\\n                    FRANCISCO...\n",
+       "8  [4, 623, \\r\\n\\r\\n                    PAUL MORR...\n",
+       "9  [5, 569, \\r\\n\\r\\n                    DEREK G O..."
+      ]
+     },
+     "execution_count": 18,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df.head(10)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Claramente precisamos limpar os dados. Vamos ao trabalho."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Dividindo cada linha e separando os dados a cada vírgula\n",
+    "df1 = df[0].str.split(',', expand = True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>0</th>\n",
+       "      <th>1</th>\n",
+       "      <th>2</th>\n",
+       "      <th>3</th>\n",
+       "      <th>4</th>\n",
+       "      <th>5</th>\n",
+       "      <th>6</th>\n",
+       "      <th>7</th>\n",
+       "      <th>8</th>\n",
+       "      <th>9</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>[]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>[Finishers:</td>\n",
+       "      <td>577]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>[Male:</td>\n",
+       "      <td>414]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>[Female:</td>\n",
+       "      <td>163]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>[]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>[1</td>\n",
+       "      <td>814</td>\n",
+       "      <td>\\r\\n\\r\\n                    JARED WILSON\\r\\n\\...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>TIGARD</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>36:21</td>\n",
+       "      <td>5:51</td>\n",
+       "      <td>36:24</td>\n",
+       "      <td>]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>[2</td>\n",
+       "      <td>573</td>\n",
+       "      <td>\\r\\n\\r\\n                    NATHAN A SUSTERSI...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>PORTLAND</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>36:42</td>\n",
+       "      <td>5:55</td>\n",
+       "      <td>36:45</td>\n",
+       "      <td>\\n\\r\\n                            INTEL TEAM ...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>[3</td>\n",
+       "      <td>687</td>\n",
+       "      <td>\\r\\n\\r\\n                    FRANCISCO MAYA\\r\\...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>PORTLAND</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>37:44</td>\n",
+       "      <td>6:05</td>\n",
+       "      <td>37:48</td>\n",
+       "      <td>]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>8</th>\n",
+       "      <td>[4</td>\n",
+       "      <td>623</td>\n",
+       "      <td>\\r\\n\\r\\n                    PAUL MORROW\\r\\n\\r...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>BEAVERTON</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>38:34</td>\n",
+       "      <td>6:13</td>\n",
+       "      <td>38:37</td>\n",
+       "      <td>]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>9</th>\n",
+       "      <td>[5</td>\n",
+       "      <td>569</td>\n",
+       "      <td>\\r\\n\\r\\n                    DEREK G OSBORNE\\r...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>HILLSBORO</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>39:21</td>\n",
+       "      <td>6:20</td>\n",
+       "      <td>39:24</td>\n",
+       "      <td>\\n\\r\\n                            INTEL TEAM ...</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "             0      1                                                  2  \\\n",
+       "0           []   None                                               None   \n",
+       "1  [Finishers:   577]                                               None   \n",
+       "2       [Male:   414]                                               None   \n",
+       "3     [Female:   163]                                               None   \n",
+       "4           []   None                                               None   \n",
+       "5           [1    814   \\r\\n\\r\\n                    JARED WILSON\\r\\n\\...   \n",
+       "6           [2    573   \\r\\n\\r\\n                    NATHAN A SUSTERSI...   \n",
+       "7           [3    687   \\r\\n\\r\\n                    FRANCISCO MAYA\\r\\...   \n",
+       "8           [4    623   \\r\\n\\r\\n                    PAUL MORROW\\r\\n\\r...   \n",
+       "9           [5    569   \\r\\n\\r\\n                    DEREK G OSBORNE\\r...   \n",
+       "\n",
+       "      3           4     5       6      7       8  \\\n",
+       "0  None        None  None    None   None    None   \n",
+       "1  None        None  None    None   None    None   \n",
+       "2  None        None  None    None   None    None   \n",
+       "3  None        None  None    None   None    None   \n",
+       "4  None        None  None    None   None    None   \n",
+       "5     M      TIGARD    OR   36:21   5:51   36:24   \n",
+       "6     M    PORTLAND    OR   36:42   5:55   36:45   \n",
+       "7     M    PORTLAND    OR   37:44   6:05   37:48   \n",
+       "8     M   BEAVERTON    OR   38:34   6:13   38:37   \n",
+       "9     M   HILLSBORO    OR   39:21   6:20   39:24   \n",
+       "\n",
+       "                                                   9  \n",
+       "0                                               None  \n",
+       "1                                               None  \n",
+       "2                                               None  \n",
+       "3                                               None  \n",
+       "4                                               None  \n",
+       "5                                                  ]  \n",
+       "6   \\n\\r\\n                            INTEL TEAM ...  \n",
+       "7                                                  ]  \n",
+       "8                                                  ]  \n",
+       "9   \\n\\r\\n                            INTEL TEAM ...  "
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df1.head(10)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Está começando a ficar bonito. Vamos fazer mais algumas limpezas. Leia e compreenda o código. Se tiver dúvidas, pergunte (embora isso não deva ser novidade se você fez o curso gratuito de <a href=\"https://www.datascienceacademy.com.br/course?courseid=python-fundamentos\">Python Fundamentos</a> aqui na DSA)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [],
+   "source": [
+    "# Removemos colchetes de abertura (lado esquerdo) do texto\n",
+    "df1[0] = df1[0].str.strip('[')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>0</th>\n",
+       "      <th>1</th>\n",
+       "      <th>2</th>\n",
+       "      <th>3</th>\n",
+       "      <th>4</th>\n",
+       "      <th>5</th>\n",
+       "      <th>6</th>\n",
+       "      <th>7</th>\n",
+       "      <th>8</th>\n",
+       "      <th>9</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>Finishers:</td>\n",
+       "      <td>577]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>Male:</td>\n",
+       "      <td>414]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>Female:</td>\n",
+       "      <td>163]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>1</td>\n",
+       "      <td>814</td>\n",
+       "      <td>\\r\\n\\r\\n                    JARED WILSON\\r\\n\\...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>TIGARD</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>36:21</td>\n",
+       "      <td>5:51</td>\n",
+       "      <td>36:24</td>\n",
+       "      <td>]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>2</td>\n",
+       "      <td>573</td>\n",
+       "      <td>\\r\\n\\r\\n                    NATHAN A SUSTERSI...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>PORTLAND</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>36:42</td>\n",
+       "      <td>5:55</td>\n",
+       "      <td>36:45</td>\n",
+       "      <td>\\n\\r\\n                            INTEL TEAM ...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>3</td>\n",
+       "      <td>687</td>\n",
+       "      <td>\\r\\n\\r\\n                    FRANCISCO MAYA\\r\\...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>PORTLAND</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>37:44</td>\n",
+       "      <td>6:05</td>\n",
+       "      <td>37:48</td>\n",
+       "      <td>]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>8</th>\n",
+       "      <td>4</td>\n",
+       "      <td>623</td>\n",
+       "      <td>\\r\\n\\r\\n                    PAUL MORROW\\r\\n\\r...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>BEAVERTON</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>38:34</td>\n",
+       "      <td>6:13</td>\n",
+       "      <td>38:37</td>\n",
+       "      <td>]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>9</th>\n",
+       "      <td>5</td>\n",
+       "      <td>569</td>\n",
+       "      <td>\\r\\n\\r\\n                    DEREK G OSBORNE\\r...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>HILLSBORO</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>39:21</td>\n",
+       "      <td>6:20</td>\n",
+       "      <td>39:24</td>\n",
+       "      <td>\\n\\r\\n                            INTEL TEAM ...</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "            0      1                                                  2     3  \\\n",
+       "0           ]   None                                               None  None   \n",
+       "1  Finishers:   577]                                               None  None   \n",
+       "2       Male:   414]                                               None  None   \n",
+       "3     Female:   163]                                               None  None   \n",
+       "4           ]   None                                               None  None   \n",
+       "5           1    814   \\r\\n\\r\\n                    JARED WILSON\\r\\n\\...     M   \n",
+       "6           2    573   \\r\\n\\r\\n                    NATHAN A SUSTERSI...     M   \n",
+       "7           3    687   \\r\\n\\r\\n                    FRANCISCO MAYA\\r\\...     M   \n",
+       "8           4    623   \\r\\n\\r\\n                    PAUL MORROW\\r\\n\\r...     M   \n",
+       "9           5    569   \\r\\n\\r\\n                    DEREK G OSBORNE\\r...     M   \n",
+       "\n",
+       "            4     5       6      7       8  \\\n",
+       "0        None  None    None   None    None   \n",
+       "1        None  None    None   None    None   \n",
+       "2        None  None    None   None    None   \n",
+       "3        None  None    None   None    None   \n",
+       "4        None  None    None   None    None   \n",
+       "5      TIGARD    OR   36:21   5:51   36:24   \n",
+       "6    PORTLAND    OR   36:42   5:55   36:45   \n",
+       "7    PORTLAND    OR   37:44   6:05   37:48   \n",
+       "8   BEAVERTON    OR   38:34   6:13   38:37   \n",
+       "9   HILLSBORO    OR   39:21   6:20   39:24   \n",
+       "\n",
+       "                                                   9  \n",
+       "0                                               None  \n",
+       "1                                               None  \n",
+       "2                                               None  \n",
+       "3                                               None  \n",
+       "4                                               None  \n",
+       "5                                                  ]  \n",
+       "6   \\n\\r\\n                            INTEL TEAM ...  \n",
+       "7                                                  ]  \n",
+       "8                                                  ]  \n",
+       "9   \\n\\r\\n                            INTEL TEAM ...  "
+      ]
+     },
+     "execution_count": 22,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df1.head(10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Extraímos o cabeçalho de todas as tabelas no código HTML\n",
+    "col_labels = soup.find_all('th')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[<th>Place</th>,\n",
+       " <th>Bib</th>,\n",
+       " <th>Name</th>,\n",
+       " <th>Gender</th>,\n",
+       " <th>City</th>,\n",
+       " <th>State</th>,\n",
+       " <th>Chip Time</th>,\n",
+       " <th>Chip Pace</th>,\n",
+       " <th>Gun Time</th>,\n",
+       " <th>Team</th>]"
+      ]
+     },
+     "execution_count": 24,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "col_labels"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Extraímos texto entre tags html dos cabeçalhos de tabela (extraímos o nome)\n",
+    "all_header = []\n",
+    "col_str = str(col_labels)\n",
+    "cleantext2 = bs(col_str, \"lxml\").get_text()\n",
+    "all_header.append(cleantext2)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "['[Place, Bib, Name, Gender, City, State, Chip Time, Chip Pace, Gun Time, Team]']\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(all_header)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Convertendo a lista de cabeçalhos em um dataframe do pandas\n",
+    "df2 = pd.DataFrame(all_header)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>0</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>[Place, Bib, Name, Gender, City, State, Chip T...</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                                                   0\n",
+       "0  [Place, Bib, Name, Gender, City, State, Chip T..."
+      ]
+     },
+     "execution_count": 28,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df2.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Dividindo a coluna \"0\" em várias colunas na posição de vírgula para todas as linhas\n",
+    "df3 = df2[0].str.split(',', expand = True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>0</th>\n",
+       "      <th>1</th>\n",
+       "      <th>2</th>\n",
+       "      <th>3</th>\n",
+       "      <th>4</th>\n",
+       "      <th>5</th>\n",
+       "      <th>6</th>\n",
+       "      <th>7</th>\n",
+       "      <th>8</th>\n",
+       "      <th>9</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>[Place</td>\n",
+       "      <td>Bib</td>\n",
+       "      <td>Name</td>\n",
+       "      <td>Gender</td>\n",
+       "      <td>City</td>\n",
+       "      <td>State</td>\n",
+       "      <td>Chip Time</td>\n",
+       "      <td>Chip Pace</td>\n",
+       "      <td>Gun Time</td>\n",
+       "      <td>Team]</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "        0     1      2        3      4       5           6           7  \\\n",
+       "0  [Place   Bib   Name   Gender   City   State   Chip Time   Chip Pace   \n",
+       "\n",
+       "           8       9  \n",
+       "0   Gun Time   Team]  "
+      ]
+     },
+     "execution_count": 30,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df3.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Concatenando os 2 dataframes\n",
+    "frames = [df3, df1]\n",
+    "df4 = pd.concat(frames)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>0</th>\n",
+       "      <th>1</th>\n",
+       "      <th>2</th>\n",
+       "      <th>3</th>\n",
+       "      <th>4</th>\n",
+       "      <th>5</th>\n",
+       "      <th>6</th>\n",
+       "      <th>7</th>\n",
+       "      <th>8</th>\n",
+       "      <th>9</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>[Place</td>\n",
+       "      <td>Bib</td>\n",
+       "      <td>Name</td>\n",
+       "      <td>Gender</td>\n",
+       "      <td>City</td>\n",
+       "      <td>State</td>\n",
+       "      <td>Chip Time</td>\n",
+       "      <td>Chip Pace</td>\n",
+       "      <td>Gun Time</td>\n",
+       "      <td>Team]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>Finishers:</td>\n",
+       "      <td>577]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>Male:</td>\n",
+       "      <td>414]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>Female:</td>\n",
+       "      <td>163]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>1</td>\n",
+       "      <td>814</td>\n",
+       "      <td>\\r\\n\\r\\n                    JARED WILSON\\r\\n\\...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>TIGARD</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>36:21</td>\n",
+       "      <td>5:51</td>\n",
+       "      <td>36:24</td>\n",
+       "      <td>]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>2</td>\n",
+       "      <td>573</td>\n",
+       "      <td>\\r\\n\\r\\n                    NATHAN A SUSTERSI...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>PORTLAND</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>36:42</td>\n",
+       "      <td>5:55</td>\n",
+       "      <td>36:45</td>\n",
+       "      <td>\\n\\r\\n                            INTEL TEAM ...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>3</td>\n",
+       "      <td>687</td>\n",
+       "      <td>\\r\\n\\r\\n                    FRANCISCO MAYA\\r\\...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>PORTLAND</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>37:44</td>\n",
+       "      <td>6:05</td>\n",
+       "      <td>37:48</td>\n",
+       "      <td>]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>8</th>\n",
+       "      <td>4</td>\n",
+       "      <td>623</td>\n",
+       "      <td>\\r\\n\\r\\n                    PAUL MORROW\\r\\n\\r...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>BEAVERTON</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>38:34</td>\n",
+       "      <td>6:13</td>\n",
+       "      <td>38:37</td>\n",
+       "      <td>]</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "            0      1                                                  2  \\\n",
+       "0      [Place    Bib                                               Name   \n",
+       "0           ]   None                                               None   \n",
+       "1  Finishers:   577]                                               None   \n",
+       "2       Male:   414]                                               None   \n",
+       "3     Female:   163]                                               None   \n",
+       "4           ]   None                                               None   \n",
+       "5           1    814   \\r\\n\\r\\n                    JARED WILSON\\r\\n\\...   \n",
+       "6           2    573   \\r\\n\\r\\n                    NATHAN A SUSTERSI...   \n",
+       "7           3    687   \\r\\n\\r\\n                    FRANCISCO MAYA\\r\\...   \n",
+       "8           4    623   \\r\\n\\r\\n                    PAUL MORROW\\r\\n\\r...   \n",
+       "\n",
+       "         3           4       5           6           7          8  \\\n",
+       "0   Gender        City   State   Chip Time   Chip Pace   Gun Time   \n",
+       "0     None        None    None        None        None       None   \n",
+       "1     None        None    None        None        None       None   \n",
+       "2     None        None    None        None        None       None   \n",
+       "3     None        None    None        None        None       None   \n",
+       "4     None        None    None        None        None       None   \n",
+       "5        M      TIGARD      OR       36:21        5:51      36:24   \n",
+       "6        M    PORTLAND      OR       36:42        5:55      36:45   \n",
+       "7        M    PORTLAND      OR       37:44        6:05      37:48   \n",
+       "8        M   BEAVERTON      OR       38:34        6:13      38:37   \n",
+       "\n",
+       "                                                   9  \n",
+       "0                                              Team]  \n",
+       "0                                               None  \n",
+       "1                                               None  \n",
+       "2                                               None  \n",
+       "3                                               None  \n",
+       "4                                               None  \n",
+       "5                                                  ]  \n",
+       "6   \\n\\r\\n                            INTEL TEAM ...  \n",
+       "7                                                  ]  \n",
+       "8                                                  ]  "
+      ]
+     },
+     "execution_count": 32,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df4.head(10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 33,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Atribuindo a primeira coluna como cabeçalho\n",
+    "df5 = df4.rename(columns = df4.iloc[0])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 34,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>[Place</th>\n",
+       "      <th>Bib</th>\n",
+       "      <th>Name</th>\n",
+       "      <th>Gender</th>\n",
+       "      <th>City</th>\n",
+       "      <th>State</th>\n",
+       "      <th>Chip Time</th>\n",
+       "      <th>Chip Pace</th>\n",
+       "      <th>Gun Time</th>\n",
+       "      <th>Team]</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>[Place</td>\n",
+       "      <td>Bib</td>\n",
+       "      <td>Name</td>\n",
+       "      <td>Gender</td>\n",
+       "      <td>City</td>\n",
+       "      <td>State</td>\n",
+       "      <td>Chip Time</td>\n",
+       "      <td>Chip Pace</td>\n",
+       "      <td>Gun Time</td>\n",
+       "      <td>Team]</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>Finishers:</td>\n",
+       "      <td>577]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>Male:</td>\n",
+       "      <td>414]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>Female:</td>\n",
+       "      <td>163]</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "      <td>None</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "       [Place    Bib   Name   Gender   City   State   Chip Time   Chip Pace  \\\n",
+       "0      [Place    Bib   Name   Gender   City   State   Chip Time   Chip Pace   \n",
+       "0           ]   None   None     None   None    None        None        None   \n",
+       "1  Finishers:   577]   None     None   None    None        None        None   \n",
+       "2       Male:   414]   None     None   None    None        None        None   \n",
+       "3     Female:   163]   None     None   None    None        None        None   \n",
+       "\n",
+       "    Gun Time   Team]  \n",
+       "0   Gun Time   Team]  \n",
+       "0       None    None  \n",
+       "1       None    None  \n",
+       "2       None    None  \n",
+       "3       None    None  "
+      ]
+     },
+     "execution_count": 34,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df5.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 35,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(583, 10)"
+      ]
+     },
+     "execution_count": 35,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Shape\n",
+    "df5.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.core.frame.DataFrame'>\n",
+      "Int64Index: 583 entries, 0 to 581\n",
+      "Data columns (total 10 columns):\n",
+      " #   Column      Non-Null Count  Dtype \n",
+      "---  ------      --------------  ----- \n",
+      " 0   [Place      583 non-null    object\n",
+      " 1    Bib        581 non-null    object\n",
+      " 2    Name       578 non-null    object\n",
+      " 3    Gender     578 non-null    object\n",
+      " 4    City       578 non-null    object\n",
+      " 5    State      578 non-null    object\n",
+      " 6    Chip Time  578 non-null    object\n",
+      " 7    Chip Pace  578 non-null    object\n",
+      " 8    Gun Time   578 non-null    object\n",
+      " 9    Team]      578 non-null    object\n",
+      "dtypes: object(10)\n",
+      "memory usage: 50.1+ KB\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Obtendo uma visão geral dos dados para análise\n",
+    "df5.info()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[Place        0\n",
+       " Bib          2\n",
+       " Name         5\n",
+       " Gender       5\n",
+       " City         5\n",
+       " State        5\n",
+       " Chip Time    5\n",
+       " Chip Pace    5\n",
+       " Gun Time     5\n",
+       " Team]        5\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 37,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Verificando valores ausentes\n",
+    "df5.isnull().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Removendo todas as linhas com valores ausentes\n",
+    "df6 = df5.dropna(axis = 0, how = 'any')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 39,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Descartando o cabeçalho da tabela replicada como a primeira linha no df5\n",
+    "df7 = df6.drop(df6.index[0])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Renomeando as colunas [Place e Team] \n",
+    "df7.rename(columns = {'[Place': 'Place'}, inplace = True)\n",
+    "df7.rename(columns = {' Team]': 'Team'}, inplace = True)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Limpeza final dos dados - remoção do colchete de fechamento das células na coluna \"Team\".\n",
+    "df7['Team'] = df7['Team'].str.strip(']')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Place</th>\n",
+       "      <th>Bib</th>\n",
+       "      <th>Name</th>\n",
+       "      <th>Gender</th>\n",
+       "      <th>City</th>\n",
+       "      <th>State</th>\n",
+       "      <th>Chip Time</th>\n",
+       "      <th>Chip Pace</th>\n",
+       "      <th>Gun Time</th>\n",
+       "      <th>Team</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>1</td>\n",
+       "      <td>814</td>\n",
+       "      <td>\\r\\n\\r\\n                    JARED WILSON\\r\\n\\...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>TIGARD</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>36:21</td>\n",
+       "      <td>5:51</td>\n",
+       "      <td>36:24</td>\n",
+       "      <td></td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>2</td>\n",
+       "      <td>573</td>\n",
+       "      <td>\\r\\n\\r\\n                    NATHAN A SUSTERSI...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>PORTLAND</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>36:42</td>\n",
+       "      <td>5:55</td>\n",
+       "      <td>36:45</td>\n",
+       "      <td>\\n\\r\\n                            INTEL TEAM ...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>3</td>\n",
+       "      <td>687</td>\n",
+       "      <td>\\r\\n\\r\\n                    FRANCISCO MAYA\\r\\...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>PORTLAND</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>37:44</td>\n",
+       "      <td>6:05</td>\n",
+       "      <td>37:48</td>\n",
+       "      <td></td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>8</th>\n",
+       "      <td>4</td>\n",
+       "      <td>623</td>\n",
+       "      <td>\\r\\n\\r\\n                    PAUL MORROW\\r\\n\\r...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>BEAVERTON</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>38:34</td>\n",
+       "      <td>6:13</td>\n",
+       "      <td>38:37</td>\n",
+       "      <td></td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>9</th>\n",
+       "      <td>5</td>\n",
+       "      <td>569</td>\n",
+       "      <td>\\r\\n\\r\\n                    DEREK G OSBORNE\\r...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>HILLSBORO</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>39:21</td>\n",
+       "      <td>6:20</td>\n",
+       "      <td>39:24</td>\n",
+       "      <td>\\n\\r\\n                            INTEL TEAM ...</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  Place   Bib                                               Name  Gender  \\\n",
+       "5     1   814   \\r\\n\\r\\n                    JARED WILSON\\r\\n\\...       M   \n",
+       "6     2   573   \\r\\n\\r\\n                    NATHAN A SUSTERSI...       M   \n",
+       "7     3   687   \\r\\n\\r\\n                    FRANCISCO MAYA\\r\\...       M   \n",
+       "8     4   623   \\r\\n\\r\\n                    PAUL MORROW\\r\\n\\r...       M   \n",
+       "9     5   569   \\r\\n\\r\\n                    DEREK G OSBORNE\\r...       M   \n",
+       "\n",
+       "         City  State  Chip Time  Chip Pace  Gun Time  \\\n",
+       "5      TIGARD     OR      36:21       5:51     36:24   \n",
+       "6    PORTLAND     OR      36:42       5:55     36:45   \n",
+       "7    PORTLAND     OR      37:44       6:05     37:48   \n",
+       "8   BEAVERTON     OR      38:34       6:13     38:37   \n",
+       "9   HILLSBORO     OR      39:21       6:20     39:24   \n",
+       "\n",
+       "                                                Team  \n",
+       "5                                                     \n",
+       "6   \\n\\r\\n                            INTEL TEAM ...  \n",
+       "7                                                     \n",
+       "8                                                     \n",
+       "9   \\n\\r\\n                            INTEL TEAM ...  "
+      ]
+     },
+     "execution_count": 42,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df7.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Análise de Dados"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 43,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Convertendo a coluna \"Chip Time\" em apenas minutos\n",
+    "# Chip time é o tempo total de corrida medido com a leitura do sensor RFID no selo da camisa do participante\n",
+    "time_list = df7[' Chip Time'].tolist()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[' 36:42', ' 37:44', ' 38:34', ' 39:21']"
+      ]
+     },
+     "execution_count": 44,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Visualizando uma amostra de dados\n",
+    "time_list[1:5]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Lista para receber o resultado da conversão\n",
+    "time_mins = []"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Loop para conversão\n",
+    "for i in time_list:\n",
+    "    i = i.strip(' ')\n",
+    "    if len(i)!=7:\n",
+    "        i = '0:' + i\n",
+    "    h, m, s = i.split(':')\n",
+    "    math = (int(h) * 3600 + int(m) * 60 + int(s))/60\n",
+    "    time_mins.append(math)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Convertendo a lista novamente em um dataframe e criamos uma nova coluna (\"Runner_mins\") como tempo total de corrida, mas agora em minutos."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 47,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Nova coluna\n",
+    "df7['Runner_mins'] = time_mins"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 48,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Place</th>\n",
+       "      <th>Bib</th>\n",
+       "      <th>Name</th>\n",
+       "      <th>Gender</th>\n",
+       "      <th>City</th>\n",
+       "      <th>State</th>\n",
+       "      <th>Chip Time</th>\n",
+       "      <th>Chip Pace</th>\n",
+       "      <th>Gun Time</th>\n",
+       "      <th>Team</th>\n",
+       "      <th>Runner_mins</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>5</th>\n",
+       "      <td>1</td>\n",
+       "      <td>814</td>\n",
+       "      <td>\\r\\n\\r\\n                    JARED WILSON\\r\\n\\...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>TIGARD</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>36:21</td>\n",
+       "      <td>5:51</td>\n",
+       "      <td>36:24</td>\n",
+       "      <td></td>\n",
+       "      <td>36.350000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>6</th>\n",
+       "      <td>2</td>\n",
+       "      <td>573</td>\n",
+       "      <td>\\r\\n\\r\\n                    NATHAN A SUSTERSI...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>PORTLAND</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>36:42</td>\n",
+       "      <td>5:55</td>\n",
+       "      <td>36:45</td>\n",
+       "      <td>\\n\\r\\n                            INTEL TEAM ...</td>\n",
+       "      <td>36.700000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>7</th>\n",
+       "      <td>3</td>\n",
+       "      <td>687</td>\n",
+       "      <td>\\r\\n\\r\\n                    FRANCISCO MAYA\\r\\...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>PORTLAND</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>37:44</td>\n",
+       "      <td>6:05</td>\n",
+       "      <td>37:48</td>\n",
+       "      <td></td>\n",
+       "      <td>37.733333</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>8</th>\n",
+       "      <td>4</td>\n",
+       "      <td>623</td>\n",
+       "      <td>\\r\\n\\r\\n                    PAUL MORROW\\r\\n\\r...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>BEAVERTON</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>38:34</td>\n",
+       "      <td>6:13</td>\n",
+       "      <td>38:37</td>\n",
+       "      <td></td>\n",
+       "      <td>38.566667</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>9</th>\n",
+       "      <td>5</td>\n",
+       "      <td>569</td>\n",
+       "      <td>\\r\\n\\r\\n                    DEREK G OSBORNE\\r...</td>\n",
+       "      <td>M</td>\n",
+       "      <td>HILLSBORO</td>\n",
+       "      <td>OR</td>\n",
+       "      <td>39:21</td>\n",
+       "      <td>6:20</td>\n",
+       "      <td>39:24</td>\n",
+       "      <td>\\n\\r\\n                            INTEL TEAM ...</td>\n",
+       "      <td>39.350000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "  Place   Bib                                               Name  Gender  \\\n",
+       "5     1   814   \\r\\n\\r\\n                    JARED WILSON\\r\\n\\...       M   \n",
+       "6     2   573   \\r\\n\\r\\n                    NATHAN A SUSTERSI...       M   \n",
+       "7     3   687   \\r\\n\\r\\n                    FRANCISCO MAYA\\r\\...       M   \n",
+       "8     4   623   \\r\\n\\r\\n                    PAUL MORROW\\r\\n\\r...       M   \n",
+       "9     5   569   \\r\\n\\r\\n                    DEREK G OSBORNE\\r...       M   \n",
+       "\n",
+       "         City  State  Chip Time  Chip Pace  Gun Time  \\\n",
+       "5      TIGARD     OR      36:21       5:51     36:24   \n",
+       "6    PORTLAND     OR      36:42       5:55     36:45   \n",
+       "7    PORTLAND     OR      37:44       6:05     37:48   \n",
+       "8   BEAVERTON     OR      38:34       6:13     38:37   \n",
+       "9   HILLSBORO     OR      39:21       6:20     39:24   \n",
+       "\n",
+       "                                                Team  Runner_mins  \n",
+       "5                                                       36.350000  \n",
+       "6   \\n\\r\\n                            INTEL TEAM ...    36.700000  \n",
+       "7                                                       37.733333  \n",
+       "8                                                       38.566667  \n",
+       "9   \\n\\r\\n                            INTEL TEAM ...    39.350000  "
+      ]
+     },
+     "execution_count": 48,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df7.head()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 49,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Place           object\n",
+       " Bib            object\n",
+       " Name           object\n",
+       " Gender         object\n",
+       " City           object\n",
+       " State          object\n",
+       " Chip Time      object\n",
+       " Chip Pace      object\n",
+       " Gun Time       object\n",
+       "Team            object\n",
+       "Runner_mins    float64\n",
+       "dtype: object"
+      ]
+     },
+     "execution_count": 49,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df7.dtypes"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 50,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Runner_mins</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>count</th>\n",
+       "      <td>577.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>mean</th>\n",
+       "      <td>60.035933</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>std</th>\n",
+       "      <td>11.970623</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>min</th>\n",
+       "      <td>36.350000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>25%</th>\n",
+       "      <td>51.000000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>50%</th>\n",
+       "      <td>59.016667</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>75%</th>\n",
+       "      <td>67.266667</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>max</th>\n",
+       "      <td>101.300000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "       Runner_mins\n",
+       "count   577.000000\n",
+       "mean     60.035933\n",
+       "std      11.970623\n",
+       "min      36.350000\n",
+       "25%      51.000000\n",
+       "50%      59.016667\n",
+       "75%      67.266667\n",
+       "max     101.300000"
+      ]
+     },
+     "execution_count": 50,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Cálculo de estatísticas para colunas numéricas no dataframe\n",
+    "df7.describe(include = [np.number])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**Análise**:\n",
+    "\n",
+    "- O tempo médio de chip para todos os corredores foi de ~ 60 minutos (a média na tabela acima).\n",
+    "- O corredor 10K mais rápido terminou em 36,35 minutos (valor mínimo na tabela acima).\n",
+    "- O corredor mais lento terminou em 101,30 minutos (valor máximo na tabela acima)."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Vamos criar um boxplot para sumarizar nossa análise."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 51,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Plot\n",
+    "ax = sns.boxplot(x = df7[\"Runner_mins\"], palette = \"Set3\", orient = \"v\")\n",
+    "plt.ylabel('Chip Time')\n",
+    "plt.xlabel('Runners')\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Acima estão as estatísticas de resumo de dados para os corredores mostrados em um boxplot: Máximo, mínimo, médio, primeiro quartil, terceiro quartil, incluindo valores extremos."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Criaremos agora um gráfico de distribuição dos tempos dos chips dos corredores usando a biblioteca seaborn."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 52,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Plot\n",
+    "x = df7['Runner_mins']\n",
+    "ax = sns.distplot(x, hist = True, kde = True, rug = False, color = 'blue', bins = 25, hist_kws = {'edgecolor':'black'})\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "A distribuição da variável parece quase normal. Mas vamos realizar um teste estatístico para confirmar.\n",
+    "\n",
+    "Um ponto de decisão importante ao trabalhar com uma amostra de dados é usar métodos estatísticos paramétricos ou não paramétricos.\n",
+    "\n",
+    "Os métodos estatísticos paramétricos assumem que os dados têm uma distribuição conhecida e específica, geralmente uma distribuição gaussiana (normal). Se uma amostra de dados não é gaussiana, as suposições dos testes estatísticos paramétricos são violadas e métodos estatísticos não paramétricos devem ser utilizados.\n",
+    "\n",
+    "Há várias técnicas que você pode usar para verificar se sua amostra de dados se desvia de uma distribuição gaussiana, chamada testes de normalidade.\n",
+    "\n",
+    "O pacote stats do SciPy fornece uma função para um dos testes de normalidade mais comuns, o Shapiro-Wilk Test. Usaremos ainda a função normality do pacote Pengouin.\n",
+    "\n",
+    "O Shapiro-Wilk é um teste de hipóteses, que testa essas duas hipóteses:\n",
+    "\n",
+    "**A hipótese nula deste teste é que a população é normalmente distribuída. Assim, se o valor-p for menor que o nível alfa escolhido (normalmente definido em 0,05), a hipótese nula será rejeitada e há evidências de que os dados testados não são normalmente distribuídos.**\n",
+    "\n",
+    "O resultado do teste de Shapiro-Wilk deve ser interpretado com cautela no caso de amostras grandes. "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 53,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Valor de x\n",
+    "x = df7['Runner_mins']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 54,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(0.9625251889228821, 5.836563177208376e-11)"
+      ]
+     },
+     "execution_count": 54,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Teste de normalidade com Scipy\n",
+    "stats.shapiro(x)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 55,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>W</th>\n",
+       "      <th>pval</th>\n",
+       "      <th>normal</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>Runner_mins</th>\n",
+       "      <td>0.962525</td>\n",
+       "      <td>5.836563e-11</td>\n",
+       "      <td>False</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                    W          pval  normal\n",
+       "Runner_mins  0.962525  5.836563e-11   False"
+      ]
+     },
+     "execution_count": 55,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Teste de normalidade com Pingouin\n",
+    "pg.normality(x)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**Análise**:\n",
+    "\n",
+    "- A variável não segue uma distribuição normal, uma vez que o valor-p é menor que 0.05 e assim há evidências estatísticas para rejeitar a hipótese nula. A função normality() do pacote Pingouin coloca essa informação na última coluna."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Vamos agora descobrir se houve alguma diferença de desempenho entre homens e mulheres de várias faixas etárias."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 56,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Separando os dados\n",
+    "f_runners = df7.loc[df7[' Gender'] == ' F']['Runner_mins']\n",
+    "m_runners = df7.loc[df7[' Gender'] == ' M']['Runner_mins']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 57,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<matplotlib.legend.Legend at 0x7f8bd85c3d50>"
+      ]
+     },
+     "execution_count": 57,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Criaremos os 2 plots em uma só figura para facilitar a comparação\n",
+    "sns.distplot(f_runners, hist = True, kde = True, rug = False, hist_kws = {'edgecolor':'black'}, label = 'Mulher')\n",
+    "sns.distplot(m_runners, hist = False, kde = True, rug = False, hist_kws = {'edgecolor':'black'}, label = 'Homem')\n",
+    "plt.legend()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**Análise**:\n",
+    "\n",
+    "- A distribuição indica que as mulheres eram mais lentas que os homens, em média."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 58,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead tr th {\n",
+       "        text-align: left;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead tr:last-of-type th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr>\n",
+       "      <th></th>\n",
+       "      <th colspan=\"8\" halign=\"left\">Runner_mins</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th></th>\n",
+       "      <th>count</th>\n",
+       "      <th>mean</th>\n",
+       "      <th>std</th>\n",
+       "      <th>min</th>\n",
+       "      <th>25%</th>\n",
+       "      <th>50%</th>\n",
+       "      <th>75%</th>\n",
+       "      <th>max</th>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>Gender</th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "      <th></th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>F</th>\n",
+       "      <td>163.0</td>\n",
+       "      <td>66.119223</td>\n",
+       "      <td>12.184440</td>\n",
+       "      <td>43.766667</td>\n",
+       "      <td>58.758333</td>\n",
+       "      <td>64.616667</td>\n",
+       "      <td>72.058333</td>\n",
+       "      <td>101.300000</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>M</th>\n",
+       "      <td>414.0</td>\n",
+       "      <td>57.640821</td>\n",
+       "      <td>11.011857</td>\n",
+       "      <td>36.350000</td>\n",
+       "      <td>49.395833</td>\n",
+       "      <td>55.791667</td>\n",
+       "      <td>64.804167</td>\n",
+       "      <td>98.516667</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "        Runner_mins                                                         \\\n",
+       "              count       mean        std        min        25%        50%   \n",
+       " Gender                                                                      \n",
+       " F            163.0  66.119223  12.184440  43.766667  58.758333  64.616667   \n",
+       " M            414.0  57.640821  11.011857  36.350000  49.395833  55.791667   \n",
+       "\n",
+       "                                \n",
+       "               75%         max  \n",
+       " Gender                         \n",
+       " F       72.058333  101.300000  \n",
+       " M       64.804167   98.516667  "
+      ]
+     },
+     "execution_count": 58,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Computando estatísticas resumidas para homens e mulheres separadamente usando o método groupby ()\n",
+    "g_stats = df7.groupby(\" Gender\", as_index = True).describe()\n",
+    "g_stats"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "**Análise**:\n",
+    "    \n",
+    "- O tempo médio de chip para todas as mulheres e homens foi de ~ 66 minutos e ~ 58 minutos, respectivamente, comprovando a análise do gráfico. "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Um boxplot ajuda a comparar as amostras de homens e mulheres."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 59,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Text(0.5, 0.98, '')"
+      ]
+     },
+     "execution_count": 59,
+     "metadata": {},
+     "output_type": "execute_result"
+    },
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Plot\n",
+    "df7.boxplot(column = 'Runner_mins', by = ' Gender')\n",
+    "plt.ylabel('Chip Time')\n",
+    "plt.suptitle(\"\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Nossa fonte de dados possui resultados de diversas corridas. Material em abundância para você praticar seus conhecimentos em análise de dados."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Fim"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.6"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 4
+}

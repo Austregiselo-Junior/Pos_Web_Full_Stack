@@ -1,0 +1,123 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Redes Neurais Artificiais - Perceptrons 02 - Implementando uma Rede com Numpy 02.ipynb",
+      "provenance": []
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 3
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython3",
+      "version": "3.6.5"
+    },
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "XosGphWAXE6W",
+        "colab_type": "code",
+        "outputId": "79f45533-eede-451e-9444-8b0c0cf7fa38",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 51
+        }
+      },
+      "source": [
+        "# -*- coding: utf-8 -*-\n",
+        "\"\"\"\n",
+        "Created on Mon Sep 18 14:16:04 2017\n",
+        "\n",
+        "@author: Ricardo Roberto de Lima\n",
+        "Implementação de Perceptron de Camada 2 - Implementação básica. Rede Neural 2\n",
+        "\n",
+        "\"\"\"\n",
+        "import numpy as np\n",
+        "\n",
+        "entradas = np.array([0, 1])\n",
+        "pesos = np.array([0.5, 0.5])\n",
+        "\n",
+        "def soma(e, p):\n",
+        "    return e.dot(p)\n",
+        "# dot product / produto escalar\n",
+        "        \n",
+        "s = soma(entradas, pesos)\n",
+        "\n",
+        "def stepFunction(soma):\n",
+        "    if (soma >= 1):\n",
+        "        return 1\n",
+        "    return 0\n",
+        "\n",
+        "r = stepFunction(s)\n",
+        "print(r)\n",
+        "print('Soma dos elementos de camada2: ', s)"
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "0\n",
+            "Soma dos elementos de camada2:  0.5\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "NJnCrH9JXE6c",
+        "colab_type": "code",
+        "outputId": "028b707d-6273-4591-fb2d-60c382a88582",
+        "colab": {}
+      },
+      "source": [
+        "print(\"Attempting to Import Gym\")\n",
+        "print(\"Remember you can use pip install gym at your command line.\")\n",
+        "import gym\n",
+        "print(gym.__version__)\n",
+        "print(\"It worked!\")\n"
+      ],
+      "execution_count": 0,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Attempting to Import Gym\n",
+            "Remember you can use pip install gym at your command line.\n",
+            "0.10.9\n",
+            "It worked!\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "ezv2G5Q3XE6g",
+        "colab_type": "code",
+        "colab": {}
+      },
+      "source": [
+        ""
+      ],
+      "execution_count": 0,
+      "outputs": []
+    }
+  ]
+}

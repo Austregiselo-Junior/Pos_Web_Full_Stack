@@ -1,0 +1,1118 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Autor: Ricardo Roberto de Lima\n",
+    "# Curso de Extensão em Python para Cientistas de Dados"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Importando os dados\n",
+    "# Importando os módulos\n",
+    "import pandas as pd                 \n",
+    "import matplotlib.pyplot as plt    \n",
+    "import numpy as np                \n",
+    "%matplotlib inline  "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Carregando o dataset\n",
+    "df = pd.read_csv(\"NBA_player_of_the_week.csv\")  "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(1145, 13)"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Verificando o formato dos dados\n",
+    "df.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Age</th>\n",
+       "      <th>Conference</th>\n",
+       "      <th>Date</th>\n",
+       "      <th>Draft Year</th>\n",
+       "      <th>Height</th>\n",
+       "      <th>Player</th>\n",
+       "      <th>Position</th>\n",
+       "      <th>Season</th>\n",
+       "      <th>Season short</th>\n",
+       "      <th>Seasons in league</th>\n",
+       "      <th>Team</th>\n",
+       "      <th>Weight</th>\n",
+       "      <th>Real_value</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>29</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Apr 14, 1985</td>\n",
+       "      <td>1978</td>\n",
+       "      <td>6-5</td>\n",
+       "      <td>Micheal Ray Richardson</td>\n",
+       "      <td>PG</td>\n",
+       "      <td>1984-1985</td>\n",
+       "      <td>1985</td>\n",
+       "      <td>6</td>\n",
+       "      <td>New Jersey Nets</td>\n",
+       "      <td>189</td>\n",
+       "      <td>1.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>23</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Apr 7, 1985</td>\n",
+       "      <td>1982</td>\n",
+       "      <td>6-6</td>\n",
+       "      <td>Derek Smith</td>\n",
+       "      <td>SG</td>\n",
+       "      <td>1984-1985</td>\n",
+       "      <td>1985</td>\n",
+       "      <td>2</td>\n",
+       "      <td>Los Angeles Clippers</td>\n",
+       "      <td>205</td>\n",
+       "      <td>1.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>28</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Apr 1, 1985</td>\n",
+       "      <td>1979</td>\n",
+       "      <td>6-6</td>\n",
+       "      <td>Calvin Natt</td>\n",
+       "      <td>F</td>\n",
+       "      <td>1984-1985</td>\n",
+       "      <td>1985</td>\n",
+       "      <td>5</td>\n",
+       "      <td>Denver Nuggets</td>\n",
+       "      <td>220</td>\n",
+       "      <td>1.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>37</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Mar 24, 1985</td>\n",
+       "      <td>1969</td>\n",
+       "      <td>7-2</td>\n",
+       "      <td>Kareem Abdul-Jabbar</td>\n",
+       "      <td>C</td>\n",
+       "      <td>1984-1985</td>\n",
+       "      <td>1985</td>\n",
+       "      <td>15</td>\n",
+       "      <td>Los Angeles Lakers</td>\n",
+       "      <td>225</td>\n",
+       "      <td>1.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>28</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Mar 17, 1985</td>\n",
+       "      <td>1978</td>\n",
+       "      <td>6-9</td>\n",
+       "      <td>Larry Bird</td>\n",
+       "      <td>SF</td>\n",
+       "      <td>1984-1985</td>\n",
+       "      <td>1985</td>\n",
+       "      <td>5</td>\n",
+       "      <td>Boston Celtics</td>\n",
+       "      <td>220</td>\n",
+       "      <td>1.0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   Age Conference          Date  Draft Year Height                  Player  \\\n",
+       "0   29        NaN  Apr 14, 1985        1978    6-5  Micheal Ray Richardson   \n",
+       "1   23        NaN   Apr 7, 1985        1982    6-6             Derek Smith   \n",
+       "2   28        NaN   Apr 1, 1985        1979    6-6             Calvin Natt   \n",
+       "3   37        NaN  Mar 24, 1985        1969    7-2     Kareem Abdul-Jabbar   \n",
+       "4   28        NaN  Mar 17, 1985        1978    6-9              Larry Bird   \n",
+       "\n",
+       "  Position     Season  Season short  Seasons in league                  Team  \\\n",
+       "0       PG  1984-1985          1985                  6       New Jersey Nets   \n",
+       "1       SG  1984-1985          1985                  2  Los Angeles Clippers   \n",
+       "2        F  1984-1985          1985                  5        Denver Nuggets   \n",
+       "3        C  1984-1985          1985                 15    Los Angeles Lakers   \n",
+       "4       SF  1984-1985          1985                  5        Boston Celtics   \n",
+       "\n",
+       "   Weight  Real_value  \n",
+       "0     189         1.0  \n",
+       "1     205         1.0  \n",
+       "2     220         1.0  \n",
+       "3     225         1.0  \n",
+       "4     220         1.0  "
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Verificando as primeiras linhas do dataset\n",
+    "df.head(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Age</th>\n",
+       "      <th>Conference</th>\n",
+       "      <th>Date</th>\n",
+       "      <th>Draft Year</th>\n",
+       "      <th>Height</th>\n",
+       "      <th>Player</th>\n",
+       "      <th>Position</th>\n",
+       "      <th>Season</th>\n",
+       "      <th>Season short</th>\n",
+       "      <th>Seasons in league</th>\n",
+       "      <th>Team</th>\n",
+       "      <th>Weight</th>\n",
+       "      <th>Real_value</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>1140</th>\n",
+       "      <td>28</td>\n",
+       "      <td>West</td>\n",
+       "      <td>Nov 6, 2017</td>\n",
+       "      <td>2009</td>\n",
+       "      <td>196</td>\n",
+       "      <td>James Harden</td>\n",
+       "      <td>SG</td>\n",
+       "      <td>2017-2018</td>\n",
+       "      <td>2018</td>\n",
+       "      <td>8</td>\n",
+       "      <td>Houston Rockets</td>\n",
+       "      <td>100</td>\n",
+       "      <td>0.5</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1141</th>\n",
+       "      <td>25</td>\n",
+       "      <td>East</td>\n",
+       "      <td>Oct 30, 2017</td>\n",
+       "      <td>2013</td>\n",
+       "      <td>193</td>\n",
+       "      <td>Victor Oladipo</td>\n",
+       "      <td>G</td>\n",
+       "      <td>2017-2018</td>\n",
+       "      <td>2018</td>\n",
+       "      <td>4</td>\n",
+       "      <td>Indiana Pacers</td>\n",
+       "      <td>95</td>\n",
+       "      <td>0.5</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1142</th>\n",
+       "      <td>27</td>\n",
+       "      <td>West</td>\n",
+       "      <td>Oct 30, 2017</td>\n",
+       "      <td>2010</td>\n",
+       "      <td>211</td>\n",
+       "      <td>DeMarcus Cousins</td>\n",
+       "      <td>C</td>\n",
+       "      <td>2017-2018</td>\n",
+       "      <td>2018</td>\n",
+       "      <td>7</td>\n",
+       "      <td>New Orleans Pelicans</td>\n",
+       "      <td>122</td>\n",
+       "      <td>0.5</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1143</th>\n",
+       "      <td>23</td>\n",
+       "      <td>East</td>\n",
+       "      <td>Oct 23, 2017</td>\n",
+       "      <td>2013</td>\n",
+       "      <td>211</td>\n",
+       "      <td>Giannis Antetokounmpo</td>\n",
+       "      <td>F</td>\n",
+       "      <td>2017-2018</td>\n",
+       "      <td>2018</td>\n",
+       "      <td>4</td>\n",
+       "      <td>Milwaukee Bucks</td>\n",
+       "      <td>101</td>\n",
+       "      <td>0.5</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1144</th>\n",
+       "      <td>28</td>\n",
+       "      <td>West</td>\n",
+       "      <td>Oct 23, 2017</td>\n",
+       "      <td>2009</td>\n",
+       "      <td>196</td>\n",
+       "      <td>James Harden</td>\n",
+       "      <td>SG</td>\n",
+       "      <td>2017-2018</td>\n",
+       "      <td>2018</td>\n",
+       "      <td>8</td>\n",
+       "      <td>Houston Rockets</td>\n",
+       "      <td>100</td>\n",
+       "      <td>0.5</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "      Age Conference          Date  Draft Year Height                 Player  \\\n",
+       "1140   28       West   Nov 6, 2017        2009    196           James Harden   \n",
+       "1141   25       East  Oct 30, 2017        2013    193         Victor Oladipo   \n",
+       "1142   27       West  Oct 30, 2017        2010    211       DeMarcus Cousins   \n",
+       "1143   23       East  Oct 23, 2017        2013    211  Giannis Antetokounmpo   \n",
+       "1144   28       West  Oct 23, 2017        2009    196           James Harden   \n",
+       "\n",
+       "     Position     Season  Season short  Seasons in league  \\\n",
+       "1140       SG  2017-2018          2018                  8   \n",
+       "1141        G  2017-2018          2018                  4   \n",
+       "1142        C  2017-2018          2018                  7   \n",
+       "1143        F  2017-2018          2018                  4   \n",
+       "1144       SG  2017-2018          2018                  8   \n",
+       "\n",
+       "                      Team  Weight  Real_value  \n",
+       "1140       Houston Rockets     100         0.5  \n",
+       "1141        Indiana Pacers      95         0.5  \n",
+       "1142  New Orleans Pelicans     122         0.5  \n",
+       "1143       Milwaukee Bucks     101         0.5  \n",
+       "1144       Houston Rockets     100         0.5  "
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Verificando as últimas linhas do dataset\n",
+    "df.tail(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "True"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Verificando se existem valores nulos\n",
+    "df.isnull().values.any()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Identificando a correlação entre as variáveis\n",
+    "# Correlação não implica causalidade\n",
+    "def plot_corr(df, size=10):\n",
+    "    corr = df.corr()    \n",
+    "    fig, ax = plt.subplots(figsize = (size, size))\n",
+    "    ax.matshow(corr)  \n",
+    "    plt.xticks(range(len(corr.columns)), corr.columns) \n",
+    "    plt.yticks(range(len(corr.columns)), corr.columns)  "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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beEOH9/bGWYcSu/+padePsY4a1/32+c5k+zThW2/KqvzIv/7oQ5JAIDDmZg8SGOM/2fdYwAAWBf/NzcAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCTN8oi8AAAJeUlEQVQAANOOWvcA2Lc//9g98sgXP3Xdw9gW7vx3Y91D2BaOv+z26x7CtnHqB35w3UPYNq79vv9v3UPYFr78leevewjsxswkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA08QkAADTxCQAANPEJAAA07Z1TLb9pbZP3nD9krYv2nD9F9s+dS+Pf/N+bOO6tidssvyctg+eGTcAwOFiW8dkkjcneXCStL1dkhOSnLbh9gcnedOeHjzGOJgYPGfXtgEAjlTbPSbflC8E3WlJ3p3k79vete0dknxlkivaPr3t29u+q+1P7Hpw2xuWv2/X9lfaXtP2VW3/qO25G7bzI23f2fbqtqe2PSXJBUme0vbKtt+wBc8VAOCQO2rdA1inMcbftL2p7b2yisq3JDkpydlJPpnkXVnNIN4vydcmaZJXtn3oGOOyDav6jiSnJHlAkrsn+d9Jfn3D7dePMR7U9olJnjbG+L62L0xywxjjFzYbW9vzk5yfJEcde9dD9IwBAA6t7T4zmXxhdnJXTL5lw/U3J3nE8ueKJO9McmpWcbnRQ5K8dIxxyxjjw0n+eLfbX7H8fXlW0blPY4wLxxhnjTHO2nHnOx/ocwIA2BLbemZyseu8yQdkdZj7g0l+NMmnsppdPCfJz44x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\n",
+      "text/plain": [
+       "<Figure size 720x720 with 1 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Criando o gráfico\n",
+    "plot_corr(df)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Age</th>\n",
+       "      <th>Draft Year</th>\n",
+       "      <th>Season short</th>\n",
+       "      <th>Seasons in league</th>\n",
+       "      <th>Weight</th>\n",
+       "      <th>Real_value</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>Age</th>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>-0.347512</td>\n",
+       "      <td>-0.029326</td>\n",
+       "      <td>0.886507</td>\n",
+       "      <td>-0.038520</td>\n",
+       "      <td>0.086594</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>Draft Year</th>\n",
+       "      <td>-0.347512</td>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>0.938776</td>\n",
+       "      <td>-0.140436</td>\n",
+       "      <td>-0.255652</td>\n",
+       "      <td>-0.808007</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>Season short</th>\n",
+       "      <td>-0.029326</td>\n",
+       "      <td>0.938776</td>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>0.205049</td>\n",
+       "      <td>-0.262036</td>\n",
+       "      <td>-0.854013</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>Seasons in league</th>\n",
+       "      <td>0.886507</td>\n",
+       "      <td>-0.140436</td>\n",
+       "      <td>0.205049</td>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>-0.028302</td>\n",
+       "      <td>-0.160651</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>Weight</th>\n",
+       "      <td>-0.038520</td>\n",
+       "      <td>-0.255652</td>\n",
+       "      <td>-0.262036</td>\n",
+       "      <td>-0.028302</td>\n",
+       "      <td>1.000000</td>\n",
+       "      <td>0.138873</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>Real_value</th>\n",
+       "      <td>0.086594</td>\n",
+       "      <td>-0.808007</td>\n",
+       "      <td>-0.854013</td>\n",
+       "      <td>-0.160651</td>\n",
+       "      <td>0.138873</td>\n",
+       "      <td>1.000000</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "                        Age  Draft Year  Season short  Seasons in league  \\\n",
+       "Age                1.000000   -0.347512     -0.029326           0.886507   \n",
+       "Draft Year        -0.347512    1.000000      0.938776          -0.140436   \n",
+       "Season short      -0.029326    0.938776      1.000000           0.205049   \n",
+       "Seasons in league  0.886507   -0.140436      0.205049           1.000000   \n",
+       "Weight            -0.038520   -0.255652     -0.262036          -0.028302   \n",
+       "Real_value         0.086594   -0.808007     -0.854013          -0.160651   \n",
+       "\n",
+       "                     Weight  Real_value  \n",
+       "Age               -0.038520    0.086594  \n",
+       "Draft Year        -0.255652   -0.808007  \n",
+       "Season short      -0.262036   -0.854013  \n",
+       "Seasons in league -0.028302   -0.160651  \n",
+       "Weight             1.000000    0.138873  \n",
+       "Real_value         0.138873    1.000000  "
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Visualizando a correlação em tabela\n",
+    "# Coeficiente de correlação: \n",
+    "# +1  = forte correlação positiva\n",
+    "# 0   = não há correlação\n",
+    "# -1  = forte correlação negativa\n",
+    "df.corr()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Definindo as classes\n",
+    "nba_map = {1.0 : 1, 0.5 : 0}"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Aplicando o mapeamento ao dataset\n",
+    "df['Real_value'] = df['Real_value'].map(nba_map)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Age</th>\n",
+       "      <th>Conference</th>\n",
+       "      <th>Date</th>\n",
+       "      <th>Draft Year</th>\n",
+       "      <th>Height</th>\n",
+       "      <th>Player</th>\n",
+       "      <th>Position</th>\n",
+       "      <th>Season</th>\n",
+       "      <th>Season short</th>\n",
+       "      <th>Seasons in league</th>\n",
+       "      <th>Team</th>\n",
+       "      <th>Weight</th>\n",
+       "      <th>Real_value</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>29</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Apr 14, 1985</td>\n",
+       "      <td>1978</td>\n",
+       "      <td>6-5</td>\n",
+       "      <td>Micheal Ray Richardson</td>\n",
+       "      <td>PG</td>\n",
+       "      <td>1984-1985</td>\n",
+       "      <td>1985</td>\n",
+       "      <td>6</td>\n",
+       "      <td>New Jersey Nets</td>\n",
+       "      <td>189</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>23</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Apr 7, 1985</td>\n",
+       "      <td>1982</td>\n",
+       "      <td>6-6</td>\n",
+       "      <td>Derek Smith</td>\n",
+       "      <td>SG</td>\n",
+       "      <td>1984-1985</td>\n",
+       "      <td>1985</td>\n",
+       "      <td>2</td>\n",
+       "      <td>Los Angeles Clippers</td>\n",
+       "      <td>205</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>28</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Apr 1, 1985</td>\n",
+       "      <td>1979</td>\n",
+       "      <td>6-6</td>\n",
+       "      <td>Calvin Natt</td>\n",
+       "      <td>F</td>\n",
+       "      <td>1984-1985</td>\n",
+       "      <td>1985</td>\n",
+       "      <td>5</td>\n",
+       "      <td>Denver Nuggets</td>\n",
+       "      <td>220</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>37</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Mar 24, 1985</td>\n",
+       "      <td>1969</td>\n",
+       "      <td>7-2</td>\n",
+       "      <td>Kareem Abdul-Jabbar</td>\n",
+       "      <td>C</td>\n",
+       "      <td>1984-1985</td>\n",
+       "      <td>1985</td>\n",
+       "      <td>15</td>\n",
+       "      <td>Los Angeles Lakers</td>\n",
+       "      <td>225</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>28</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Mar 17, 1985</td>\n",
+       "      <td>1978</td>\n",
+       "      <td>6-9</td>\n",
+       "      <td>Larry Bird</td>\n",
+       "      <td>SF</td>\n",
+       "      <td>1984-1985</td>\n",
+       "      <td>1985</td>\n",
+       "      <td>5</td>\n",
+       "      <td>Boston Celtics</td>\n",
+       "      <td>220</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   Age Conference          Date  Draft Year Height                  Player  \\\n",
+       "0   29        NaN  Apr 14, 1985        1978    6-5  Micheal Ray Richardson   \n",
+       "1   23        NaN   Apr 7, 1985        1982    6-6             Derek Smith   \n",
+       "2   28        NaN   Apr 1, 1985        1979    6-6             Calvin Natt   \n",
+       "3   37        NaN  Mar 24, 1985        1969    7-2     Kareem Abdul-Jabbar   \n",
+       "4   28        NaN  Mar 17, 1985        1978    6-9              Larry Bird   \n",
+       "\n",
+       "  Position     Season  Season short  Seasons in league                  Team  \\\n",
+       "0       PG  1984-1985          1985                  6       New Jersey Nets   \n",
+       "1       SG  1984-1985          1985                  2  Los Angeles Clippers   \n",
+       "2        F  1984-1985          1985                  5        Denver Nuggets   \n",
+       "3        C  1984-1985          1985                 15    Los Angeles Lakers   \n",
+       "4       SF  1984-1985          1985                  5        Boston Celtics   \n",
+       "\n",
+       "   Weight  Real_value  \n",
+       "0     189           1  \n",
+       "1     205           1  \n",
+       "2     220           1  \n",
+       "3     225           1  \n",
+       "4     220           1  "
+      ]
+     },
+     "execution_count": 17,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Verificando as primeiras linhas do dataset\n",
+    "df.head(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "C:\\Anaconda3\\lib\\site-packages\\sklearn\\cross_validation.py:41: DeprecationWarning: This module was deprecated in version 0.18 in favor of the model_selection module into which all the refactored classes and functions are moved. Also note that the interface of the new CV iterators are different from that of this module. This module will be removed in 0.20.\n",
+      "  \"This module will be removed in 0.20.\", DeprecationWarning)\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Separação dos Dados\n",
+    "from sklearn.cross_validation import train_test_split"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Age</th>\n",
+       "      <th>Conference</th>\n",
+       "      <th>Date</th>\n",
+       "      <th>Draft Year</th>\n",
+       "      <th>Height</th>\n",
+       "      <th>Player</th>\n",
+       "      <th>Position</th>\n",
+       "      <th>Season</th>\n",
+       "      <th>Season short</th>\n",
+       "      <th>Seasons in league</th>\n",
+       "      <th>Team</th>\n",
+       "      <th>Weight</th>\n",
+       "      <th>Real_value</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>1140</th>\n",
+       "      <td>28</td>\n",
+       "      <td>West</td>\n",
+       "      <td>Nov 6, 2017</td>\n",
+       "      <td>2009</td>\n",
+       "      <td>196</td>\n",
+       "      <td>James Harden</td>\n",
+       "      <td>SG</td>\n",
+       "      <td>2017-2018</td>\n",
+       "      <td>2018</td>\n",
+       "      <td>8</td>\n",
+       "      <td>Houston Rockets</td>\n",
+       "      <td>100</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1141</th>\n",
+       "      <td>25</td>\n",
+       "      <td>East</td>\n",
+       "      <td>Oct 30, 2017</td>\n",
+       "      <td>2013</td>\n",
+       "      <td>193</td>\n",
+       "      <td>Victor Oladipo</td>\n",
+       "      <td>G</td>\n",
+       "      <td>2017-2018</td>\n",
+       "      <td>2018</td>\n",
+       "      <td>4</td>\n",
+       "      <td>Indiana Pacers</td>\n",
+       "      <td>95</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1142</th>\n",
+       "      <td>27</td>\n",
+       "      <td>West</td>\n",
+       "      <td>Oct 30, 2017</td>\n",
+       "      <td>2010</td>\n",
+       "      <td>211</td>\n",
+       "      <td>DeMarcus Cousins</td>\n",
+       "      <td>C</td>\n",
+       "      <td>2017-2018</td>\n",
+       "      <td>2018</td>\n",
+       "      <td>7</td>\n",
+       "      <td>New Orleans Pelicans</td>\n",
+       "      <td>122</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1143</th>\n",
+       "      <td>23</td>\n",
+       "      <td>East</td>\n",
+       "      <td>Oct 23, 2017</td>\n",
+       "      <td>2013</td>\n",
+       "      <td>211</td>\n",
+       "      <td>Giannis Antetokounmpo</td>\n",
+       "      <td>F</td>\n",
+       "      <td>2017-2018</td>\n",
+       "      <td>2018</td>\n",
+       "      <td>4</td>\n",
+       "      <td>Milwaukee Bucks</td>\n",
+       "      <td>101</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1144</th>\n",
+       "      <td>28</td>\n",
+       "      <td>West</td>\n",
+       "      <td>Oct 23, 2017</td>\n",
+       "      <td>2009</td>\n",
+       "      <td>196</td>\n",
+       "      <td>James Harden</td>\n",
+       "      <td>SG</td>\n",
+       "      <td>2017-2018</td>\n",
+       "      <td>2018</td>\n",
+       "      <td>8</td>\n",
+       "      <td>Houston Rockets</td>\n",
+       "      <td>100</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "      Age Conference          Date  Draft Year Height                 Player  \\\n",
+       "1140   28       West   Nov 6, 2017        2009    196           James Harden   \n",
+       "1141   25       East  Oct 30, 2017        2013    193         Victor Oladipo   \n",
+       "1142   27       West  Oct 30, 2017        2010    211       DeMarcus Cousins   \n",
+       "1143   23       East  Oct 23, 2017        2013    211  Giannis Antetokounmpo   \n",
+       "1144   28       West  Oct 23, 2017        2009    196           James Harden   \n",
+       "\n",
+       "     Position     Season  Season short  Seasons in league  \\\n",
+       "1140       SG  2017-2018          2018                  8   \n",
+       "1141        G  2017-2018          2018                  4   \n",
+       "1142        C  2017-2018          2018                  7   \n",
+       "1143        F  2017-2018          2018                  4   \n",
+       "1144       SG  2017-2018          2018                  8   \n",
+       "\n",
+       "                      Team  Weight  Real_value  \n",
+       "1140       Houston Rockets     100           0  \n",
+       "1141        Indiana Pacers      95           0  \n",
+       "1142  New Orleans Pelicans     122           0  \n",
+       "1143       Milwaukee Bucks     101           0  \n",
+       "1144       Houston Rockets     100           0  "
+      ]
+     },
+     "execution_count": 19,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Verificando as últimas linhas do dataset\n",
+    "df.tail(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Seleção de variáveis (Feature Selection)\n",
+    "atributos = ['Age','Draft Year','Season short','Seasons in league','Weight']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Variável a ser prevista\n",
+    "atrib_prev = ['Real_value']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Criando objetos\n",
+    "X = df[atributos].values\n",
+    "Y = df[atrib_prev].values"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Definindo a taxa de split\n",
+    "split_test_size = 0.30"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Criando dados de treino e de teste\n",
+    "X_treino, X_teste, Y_treino, Y_teste = train_test_split(X, Y, test_size = split_test_size, random_state = 42)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "69.96% nos dados de treino\n",
+      "30.04% nos dados de teste\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Imprimindo os resultados\n",
+    "print(\"{0:0.2f}% nos dados de treino\".format((len(X_treino)/len(df.index)) * 100))\n",
+    "print(\"{0:0.2f}% nos dados de teste\".format((len(X_teste)/len(df.index)) * 100))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Verificando o Split"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Original True : 384 (33.54%)\n",
+      "Original False : 761 (66.46%)\n",
+      "\n",
+      "Training True : 259 (32.33%)\n",
+      "Training False : 542 (67.67%)\n",
+      "\n",
+      "Test True : 125 (36.34%)\n",
+      "Test False : 219 (63.66%)\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(\"Original True : {0} ({1:0.2f}%)\".format(len(df.loc[df['Real_value'] == 1]), \n",
+    "                                               (len(df.loc[df['Real_value'] ==1])/len(df.index) * 100)))\n",
+    "\n",
+    "print(\"Original False : {0} ({1:0.2f}%)\".format(len(df.loc[df['Real_value'] == 0]), \n",
+    "                                               (len(df.loc[df['Real_value'] == 0])/len(df.index) * 100)))\n",
+    "print(\"\")\n",
+    "print(\"Training True : {0} ({1:0.2f}%)\".format(len(Y_treino[Y_treino[:] == 1]), \n",
+    "                                               (len(Y_treino[Y_treino[:] == 1])/len(Y_treino) * 100)))\n",
+    "\n",
+    "print(\"Training False : {0} ({1:0.2f}%)\".format(len(Y_treino[Y_treino[:] == 0]), \n",
+    "                                               (len(Y_treino[Y_treino[:] == 0])/len(Y_treino) * 100)))\n",
+    "print(\"\")\n",
+    "print(\"Test True : {0} ({1:0.2f}%)\".format(len(Y_teste[Y_teste[:] == 1]), \n",
+    "                                               (len(Y_teste[Y_teste[:] == 1])/len(Y_teste) * 100)))\n",
+    "\n",
+    "print(\"Test False : {0} ({1:0.2f}%)\".format(len(Y_teste[Y_teste[:] == 0]), \n",
+    "                                               (len(Y_teste[Y_teste[:] == 0])/len(Y_teste) * 100)))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Construindo e treinando o modelo"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Utilizando um classificador Naive Bayes\n",
+    "from sklearn.naive_bayes import GaussianNB"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Criando o modelo preditivo\n",
+    "modelo_v1 = GaussianNB()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "GaussianNB(priors=None)"
+      ]
+     },
+     "execution_count": 29,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Treinando o modelo\n",
+    "modelo_v1.fit(X_treino, Y_treino.ravel())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

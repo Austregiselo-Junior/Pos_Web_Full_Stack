@@ -1,0 +1,39 @@
+Parte II.
+Pyspark - Ações com Valores do Tipo (Chave Valor) - 
+
+compras = sc.parallelize([(1,200), (2,300), (3,120), (4,250), (5,78)])
+
+// Exibindo somente as chaves das compras..
+chaves = compras.keys()
+chaves.collect()
+
+// Exibindo somente os valores das compras..
+valores = compras.values()
+valores.collect()
+
+// somandos valores com countByKey e mapValues..
+compras.countByKey()
+soma = compras.mapValues(lambda soma: soma + 1)
+soma.collect()
+
+// agrupamento por chaves..
+agrupa = compras.groupByKey().mapValues(list)
+agrupa.collect()
+
+
+// Criando uma nova Coleção Chave / Valor chamada débito.
+
+debitos = sc.parallelize([(1,20), (2,300)])
+
+// realizando o InerJoin entre as coleções..
+resultado = compras.join(debitos)
+resultado.collect()
+
+// subtração entre as coleções pela chave..
+semdebito = compras.subtractByKey(debitos)
+semdebito.collect()
+
+
+
+
+ 

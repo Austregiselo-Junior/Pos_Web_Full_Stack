@@ -1,0 +1,59 @@
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="ingestao_tst_treinamento_coii_${tabelaMunicipios}">
+	<global>
+		<job-tracker>${jobTracker}</job-tracker>
+		<name-node>${nameNode}</name-node>
+	</global>
+	
+	<start to="Obter_dados_banco"/>
+
+	<action name="Obter_dados_banco">
+		<sqoop
+			xmlns="uri:oozie:sqoop-action:0.2">
+			<job-tracker>${jobTracker}</job-tracker>
+			<name-node>${nameNode}</name-node>
+			<prepare>
+               <delete path="${stagingAreaMunicipios}/*"/>
+            </prepare>
+			<arg>import</arg>
+			<arg>-Dmapred.job.name=obter_dados_tst_treinamento_coii_${tabelaMunicipios}_job</arg>
+			<arg>-Dorg.apache.sqoop.splitter.allow_text_splitter=true</arg>
+			<arg>--connect</arg>
+			<arg>${stringBanco}</arg>
+			<arg>--username</arg>
+			<arg>${usuario}</arg>
+			<arg>--password</arg>
+			<arg>${senha}</arg>
+			<arg>--query</arg>
+			<arg>${sqlImportacaoMunicipios}</arg>
+			<arg>--split-by</arg>
+			<arg>${splitByMunicipios}</arg>
+			<arg>--hive-drop-import-delims</arg>
+			<arg>--target-dir</arg>
+			<arg>${stagingAreaMunicipios}</arg>
+			<arg>--fields-terminated-by</arg>
+			<arg>;</arg>
+			<arg>--enclosed-by</arg>
+			<arg>"</arg>
+			<arg>--escaped-by</arg>
+			<arg>\</arg>
+			<arg>--fetch-size</arg>
+			<arg>${fetchSize}</arg>
+			<arg>--append</arg>
+		</sqoop>
+		<ok to="Insert_Into_Table"/>
+		<error to="Kill_Job"/>
+	</action>
+	<action name="Insert_Into_Table">
+		<hive2
+			xmlns="uri:oozie:hive2-action:0.1">
+			<jdbc-url>${jdbcUrl}</jdbc-url>
+			<script>${diretorioScripts}/${tabelaMunicipios}_insert.sql</script>
+		</hive2>
+		<ok to="end"/>
+		<error to="Kill_Job"/>
+	</action>	
+	<kill name="Kill_Job">
+		<message>Job failed</message>
+	</kill>
+	<end name="end"/>
+</workflow-app>

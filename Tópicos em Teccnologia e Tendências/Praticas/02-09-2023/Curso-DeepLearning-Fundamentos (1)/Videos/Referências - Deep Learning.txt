@@ -1,0 +1,17 @@
+DEEP LEARNING EXPLICADO.
+https://www.youtube.com/watch?v=ggmDI9_fm54
+
+Introdução às Redes Neurais Convolucionais (ML de Zero a 100, parte 3).
+https://www.youtube.com/watch?v=zAfBy74c2AI
+
+Modelando Sequências com Redes Neurais Recorrentes (RRNs) - Deep Learning - Leonardo Ribeiro.
+https://www.youtube.com/watch?v=elyOXSwL8xI
+
+Áras de Aplicações com Deep Learning.
+https://www.youtube.com/watch?v=qX32ZtPMgSw
+
+
+
+
+
+

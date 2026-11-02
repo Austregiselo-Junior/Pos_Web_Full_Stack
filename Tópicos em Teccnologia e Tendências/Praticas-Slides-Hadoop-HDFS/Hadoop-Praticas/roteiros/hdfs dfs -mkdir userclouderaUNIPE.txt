@@ -1,0 +1,29 @@
+Primeiros comandos básicos do HDFS.
+
+# Comentario: Comandos do HDFS -mkdir (Criar Diretórios).
+hdfs dfs -mkdir /user/cloudera/UNIPE
+hdfs dfs -mkdir /user/cloudera/UNIPE/ciencia_dados
+hdfs dfs -mkdir /user/cloudera/UNIPE/engenharia_dados
+
+# Comentário: Comando HDFS -ls (Listar Arquivos e Diretórios).
+hdfs dfs -ls /user/cloudera
+hdfs dfs -ls /user/cloudera/UNIPE
+
+# Comentário: comandos HDFS -du -s (Mostra o tamanho em bytes de arquivos e diretórios).
+hadoop fs -du -s /user/cloudera/UNIPE
+
+# Comentário: comandos HDFS -put  (Copiar arquivo do sistema local para o HDFS)..
+hdfs dfs -put /home/cloudera/Downloads/cota_parlamentar.csv.gz /user/cloudera/UNIPE/ciencia_dados
+
+hdfs dfs -put /home/cloudera/Downloads/cota_parlamentar.csv.gz /user/cloudera/UNIPE/engenharia_dados
+
+hdfs dfs -du -s -h /user/cloudera/UNIPE/engenharia_dados
+
+
+
+
+
+
+
+
+
